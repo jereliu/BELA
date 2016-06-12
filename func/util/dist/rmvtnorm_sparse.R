@@ -10,10 +10,9 @@ rmvtnorm_sparse <-
         cov_sparse(
           n_block, rep(n_sample/n_block, n_block), 
           theta) %>% abs
-      diag(Sigma) <- 0.5
     }
     
     # generate mtv normal
     Q <- rmvnorm(n_OTU, rep(0, n_sample), Sigma)
-    Q
+    list(Q = Q, Sigma = Sigma)
   }

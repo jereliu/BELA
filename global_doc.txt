@@ -1,0 +1,19 @@
+info: various information needed for operation
+	stat: statistics
+		I:
+		J:
+		n:
+
+	oper: parameters for gradient descent operations
+		n_sample:
+		iter:
+
+	sample: temporary generated samples for gradient descent operation
+		u:
+	
+	copula: copula tree structure
+		
+
+par: updated variational parameters through gradient descent
+	marginal:
+	copula:

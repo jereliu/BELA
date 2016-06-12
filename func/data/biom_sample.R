@@ -1,14 +1,14 @@
 library(VineCopula)
 library(clusterGeneration)
 
-
 biom_sample <- 
   function(n_sample = 50, n_OTU = 20, 
            n_obs = 100,
            pois_eps = 1e-3, pois_sample = c(1,1),
            cop_type = "Gauss", cop_par, 
            inv_cdf = qnorm, 
-           return = "N"
+           n_block = 5, 
+           theta = 0.5
   ){
     # INPUT: 
     # > data parameters
@@ -49,28 +49,31 @@ biom_sample <-
       matrix(., ncol = 1)
     
     #### 2. Generate Q_{ji} ####
-    Q <- rmvtnorm_sparse(n_OTU, n_sample)
+    Q_out <- rmvtnorm_sparse(
+      n_OTU, n_sample, 
+      n_block = n_block, 
+      theta = theta)
+    Q <- Q_out$Q %>% t
+    Sigma <- Q_out$Sigma
     
     #### 3. Assemble ####
     P <- 
       # assemble
-      apply(Q, 2, function(q) pmax(q, 0)^2*sigma) %>%
+      apply(Q, 1, function(q) pmax(q, 0)^2*sigma) %>%
       # normalize
-      apply(1, function(p_j) p_j/sum(p_j)) %>% t
+      apply(2, function(p_j) p_j/sum(p_j)) %>% t
     
     #### 4. Generate ####
     sample <- 
-      sapply(1:n_sample, 
-             function(j) rmultinom(1, n_obs, P[, j]))
+      sapply(
+        1:n_sample, 
+        function(j) 
+          rmultinom(1, n_obs, P[j, ]))
     
-    # return 
+    # re-structure then return 
     sample <- 
       sample %>% t %>% as.data.frame %>% 
       set_names(paste0("OTU_", 1:n_OTU))
     
-    if (return == "Q"){
-      return(Q)
-    } else {
-      return(sample)
-    }
+    list(N = sample, Q = Q, Sigma = Sigma)
   }
