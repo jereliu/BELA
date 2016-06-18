@@ -1,50 +1,57 @@
-source("../DirichletFactor/MCMC_fns.R")
-source("../DirichletFactor/utilities.R")
-source("../DirichletFactor/simulation_study/contour_sim.R")
-
 require(magrittr)
 require(dplyr)
 
 source("./func/util/source_Dir.R")
 sourceDir("./func")
-sourceDir("./func_MFVI")
 
+#### 1. Data Generation ####
+n <- 10
+p <- 20
+alpha <- 0.01 * p
 
+sigma.value <- seq(0.001,0.999,0.001)
+n_sigval <- length(sigma.value)
 
-#### 1. Brute-Force MF Variational Inference ####
-alpha = 10
-n = 22
-p = 68
-sigma.value = seq(0.001,0.999,0.001)
-tmp = c(0, pbeta( sigma.value, alpha/p, 1/2-alpha/p ) )
-sigma.prior = sapply( 1:999, function(x) tmp[x+1]-tmp[x] )
-sigma.prior[length(sigma.prior)] = sigma.prior[length(sigma.prior)] + 1-sum(sigma.prior)
+sigma.prob <- 
+  # generate quantile 
+  c(0, pbeta(sigma.value, alpha/p, 1/2-alpha/p)) %>% 
+  # compute interval length
+  (function(tmp) (tmp[-1] - tmp[-length(tmp)])) %>%
+  # force to sum to 1
+  extract(-n_sigval) %>% 
+  (function(tmp) c(tmp, 1-sum(tmp)))
+
 
 data <- 
-  sim.for.contour(1000, n = 20, p = 10, 
-                  m = 3, 
-                  K = 2, 
-                  a.er = 1, 
-                  b.er = 0.3, 
-                  sigma.value,
-                  sigma.prior, 
-                  strength = 3 )
+  boyu_sample(
+    lscounts = 100, # num measure per sample
+    n = n, # num of samples 
+    p = p, # num of categories
+    m = 3, # factor dimension
+    K = 2, # population groups
+    a.er = 1, b.er = 0.3, #
+    sigma.value = sigma.value, 
+    sigma.prob = sigma.prob, 
+    strength = 3)
 
-data <- 
-  biom_sample(n_sample = 20, n_OTU = 50, 
-              n_block = 2, n_obs = 50)
+N <- data$data[[1]] %>% t
+Sigma_true <- t(data$Y.tru) %*% data$Y.tru 
+Sigma_obs <- cov(data$Q)
 
-N <- data$N
-Sigma <- data$Sigma
+
+#### 2. Brute-Force MF Variational Inference ####
+prior_sigma <- 
+  list(sigma = list(a = alpha/p, b = 1/2-alpha/p))
 
 res <- main_MFVI(
-  N, Sigma, 
-  prior = NULL,
+  N, Sigma_obs, 
+  prior = prior_sigma,
   init = NULL, 
   iter_max = 1e3,
   iter_crit = 1e-3,
   method = "MFVI",
   verbose = TRUE)
+
 
 #### 3. Reconstruction result ####
 lambda <- res$lambda
@@ -65,3 +72,4 @@ density <-
            lambda_Q1 = 0.1, lambda_Q2 = 100, 
            n_ij = 0, s_j = 1)
 plot(x, density, type = "l")
+

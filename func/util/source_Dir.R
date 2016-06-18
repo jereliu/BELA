@@ -9,3 +9,7 @@ sourceDir <- function(path, trace = TRUE, ...) {
     if(trace) cat("\n")
   }
 }
+
+reload <- function(dir = "./func/"){
+  sourceDir(dir)
+}
