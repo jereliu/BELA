@@ -98,3 +98,10 @@ denom <-
 # -a * Phi(lambda, a, b) + 
 # (a + b + lambda) * Phi(lambda, a+1, b) - 
 # lambda * Phi(lambda, a+2, b) = 0
+
+
+cov_est <- (t(data.sim$Y.tru) %*% data.sim$Y.tru + 
+              diag(rep(data.sim$er, ncol(data.sim$Y.tru)))) 
+cov2cor(cov_est) %>% image
+
+info$mean$Q1 %>% t %>% cor %>% image

@@ -6,21 +6,11 @@ Q2_dist <-
     mean(abs(dist))
   }
 
-pred_dist <- 
-  function(info, N){
-    pred_mat <- 
-      (info$mean$sigma * t(info$mean$Q2)) %>% t
-    dist <- 
-      apply(N, 1, function(x) x/sum(x)) - 
-      apply(pred_mat, 1, function(x) x/sum(x))
-    mean(abs(dist))
-  }
-
 plot_diag <- FALSE
 iter_idx <- 150:211
 
 if (plot_diag){
-  res_name <- "sigma"
+  res_name <- "Q2"
   res_type <- "par"
   # graphically examing change in mean_Q2 over iteration
   data_plot_raw <- iter[[res_type]][[res_name]]
