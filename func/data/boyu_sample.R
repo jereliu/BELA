@@ -2,7 +2,7 @@ boyu_sample <-
   function(lscounts, n, p, m, K, 
            a.er, b.er, 
            sigma.value, sigma.prob, 
-           strength )
+           strength)
   {
     #we consider K block simulation stucture
     #browser()

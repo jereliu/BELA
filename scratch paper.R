@@ -14,7 +14,6 @@ file_pref <- "./temp_plot/meanQ2 "
 round(info$mean$Q2, 3)
 apply(data$Q, 1, function(r) pmax(0, r))^2 %>% round(3)
 
-
 for (i in 1:I){
   for (j in 1:J){
     pdf(paste0(file_pref, " ", j, "-", i, 

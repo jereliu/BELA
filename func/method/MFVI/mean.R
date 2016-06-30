@@ -48,7 +48,7 @@ mean_sigma <- function(
   log_normalizer <- 
     sapply(1:I, 
            function(i){
-             sigma_val <- seq(0, 1, 1e-4)
+             sigma_val <- seq(0, 1, 1e-5)
              kernel_val <- 
                sigma_kernel(
                  sigma_val, 
@@ -60,25 +60,63 @@ mean_sigma <- function(
              max(kernel_val[finite_id])
            }
     )
+  
+  x_min <- 
+    sapply(1:I, 
+           function(i){
+             sigma_val <- seq(0, 1, 1e-5)
+             kernel_val <- 
+               sigma_kernel(
+                 sigma_val, 
+                 lambda = lambda_sigma[i], 
+                 alpha = a + n_i[i], beta = b,
+                 log_normalizer = log_normalizer[i])
+             # plot(sigma_val, exp(kernel_val))
+             finite_id <- 
+               (is.finite(kernel_val) & 
+                  (kernel_val > 1e-20))
+             min(sigma_val[finite_id])
+           }
+    )
+  x_max <- 
+    sapply(1:I, 
+           function(i){
+             sigma_val <- seq(0, 1, 1e-5)
+             kernel_val <- 
+               sigma_kernel(
+                 sigma_val, 
+                 lambda = lambda_sigma[i], 
+                 alpha = a + n_i[i], beta = b,
+                 log_normalizer = log_normalizer[i])
+             # plot(sigma_val, exp(kernel_val))
+             finite_id <- 
+               (is.finite(kernel_val) & 
+                  (kernel_val > 1e-20))
+             max(sigma_val[finite_id])
+           }
+    )
+  
   #
   nom <- sapply(
     1:I,
     function(i)
       integral(fun = sigma_kernel,
-               xmin = eps, xmax = 1-eps,
+               xmin = x_min[i], 
+               xmax = x_max[i],
                lambda = lambda_sigma[i],
                alpha = a + n_i[i] + 1, beta = b,
                log_normalizer = log_normalizer[i])
   ) %>% log
   
-  denom <- 
+  denom <- # something wrong with denom
     sapply(1:I,
            function(i){
              if (nom[i] == -Inf){
                1
              } else {
                integral(fun = sigma_kernel,
-                        xmin = eps, xmax = 1-eps,
+                        xmin = x_min[i], 
+                        xmax = x_max[i],
                         lambda = lambda_sigma[i],
                         alpha = a + n_i[i], beta = b,
                         log_normalizer = log_normalizer[i])
@@ -207,6 +245,67 @@ mean_Q1_no_n <-
       return(p_1 * m_1 + p_2 * m_2)
   }
 
+var_Q1_no_n <- 
+  function(lambda_Q1, lambda_Q2, s_j){
+    # function to calculate E(|Q|_+) when n_ij = 0
+    # appr with mixture normal    
+    mu_1 <- lambda_Q1
+    mu_2 <- lambda_Q1/(1 + 2 * lambda_Q2 * s_j)
+    sd_1 <- sqrt(s_j)
+    sd_2 <- sd_1/sqrt(1 + 2 * lambda_Q2 * s_j)
+    
+    #
+    beta <- -mu_1/sd_1
+    lambda_1 <- 
+      (dnorm(beta, log = TRUE) - 
+         pnorm(beta, log.p = TRUE)) %>% exp
+    delta_1 <- lambda_1 * (lambda_1 + beta)
+    
+    m_1 <- mu_1 - sd_2 * delta_1
+    var_1 <- sd_2^2 * (1 - delta_1)
+    
+    #
+    alpha <- -mu_2/sd_2
+    lambda_2 <- 
+      (dnorm(alpha, log = TRUE) - 
+         pnorm(alpha, lower.tail = FALSE, log.p = TRUE)) %>% 
+      exp
+    delta_2 <- lambda_2 * (lambda_2 - alpha)
+    
+    m_2 <- mu_2 + sd_2 * lambda_2
+    var_2 <- sd_2^2 * (1 - delta_2)    
+    
+    #   
+    p_denom_log <- 
+      logSumExp(
+        c(
+          dnorm(0, mu_1, sd_1, log = TRUE) + 
+            pnorm(0, mu_2, sd_2, log.p = TRUE, 
+                  lower.tail = FALSE),
+          dnorm(0, mu_2, sd_2, log = TRUE) + 
+            pnorm(0, mu_1, sd_1, log.p = TRUE)
+        )
+      )
+    
+    p_1 <- 
+      (dnorm(0, mu_2, sd_2, log = TRUE) + 
+         pnorm(0, mu_1, sd_1, log.p = TRUE) -
+         p_denom_log) %>% exp
+    p_2 <- 
+      (dnorm(0, mu_1, sd_1, log = TRUE) + 
+         pnorm(0, mu_2, sd_2, lower.tail = FALSE, log.p = TRUE) -
+         p_denom_log) %>% exp
+    
+    #
+    if (p_1 == 0) {
+      # handle 0*Inf = NaN
+      return(v_2)
+    } else if (p_2 == 0) {
+      return(v_1)
+    } else 
+      return(p_1^2 * var_1 + p_2^2 * var_2)
+  }
+
 mean_Q2_no_n <- 
   function(lambda_Q1, lambda_Q2, s_j){
     # function to calculate E(|Q|_+^2) when n_ij = 0
@@ -260,9 +359,9 @@ test_mean_Q1 <- FALSE
 test_mean_Q2 <- FALSE
 
 if (test_mean_Q1){
-  mean_Q1_no_n(lambda_Q1 = lambda_Q1[j, i],
-               lambda_Q2 = lambda_Q2[j, i],
-               s_j = s_j[j])
+  mean_Q1_no_n(lambda_Q1 = lambda$Q1[j, i],
+               lambda_Q2 = lambda$Q2[j, i],
+               s_j = sqrt(prior$Q$Sg_cond)[j])
   
   integral(fun = Q_kernelxQ,
            xmin = -10,
@@ -284,8 +383,8 @@ if (test_mean_Q1){
 
 if (test_mean_Q2) {
   mean_Q2_no_n(lambda_Q1 = lambda_Q1[j, i],
-               lambda_Q2 = lambda_Q2[j, i],
-               s_j = s_j[j])
+              lambda_Q2 = lambda_Q2[j, i],
+              s_j = sqrt(prior$Q$Sg_cond)[j])
   
   # numeric ground truth
   integral(fun = Q_kernel, 

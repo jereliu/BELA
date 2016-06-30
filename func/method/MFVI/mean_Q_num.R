@@ -29,8 +29,11 @@ mean_Q1 <- function(
     1 + 2 * lambda_Q2 * S_j_mat
   
   info$plot$Q1$mode_est <- mode_est <- 
-    (lambda_Q1 + sqrt(lambda_Q1^2 + 16*n_ij*S_j_mat*lambda_S_1))/
-    (4 * lambda_S_1)
+    (lambda_Q1 + 
+       sqrt(lambda_Q1^4 + 
+              64*n_ij*(S_j_mat^4)*lambda_S_1 + 
+              32 * n *(S_j_mat^2)))/
+    (8 * lambda_S_1 * (S_j_mat^2) + 4)
   
   if (finer_mode){
     # find out value & position of mode
@@ -249,9 +252,12 @@ mean_Q2 <-
     lambda_S_1 <- 
       1 + 2 * lambda_Q2 * S_j_mat
     
-    mode_est <- 
-      (lambda_Q1 + sqrt(lambda_Q1^2 + 8*n_ij*S_j_mat*lambda_S_1))/
-      (2 * lambda_S_1)
+    info$plot$Q1$mode_est <- mode_est <- 
+      (lambda_Q1 + 
+         sqrt(lambda_Q1^4 + 
+                64*n_ij*(S_j_mat^4)*lambda_S_1 + 
+                32 * n *(S_j_mat^2)))/
+      (8 * lambda_S_1 * (S_j_mat^2) + 4)
     
     if (finer_mode){
       # find out value & position of mode
@@ -480,8 +486,6 @@ mean_Q2 <-
 
 
 #### 2. posterior kernel function ####
-
-
 Q_kernel <- 
   function(Q_ij, lambda_Q1, lambda_Q2, 
            n_ij, s_j, log_const_adj = 0, 
@@ -517,20 +521,19 @@ Q_kernelxQ <-
     }
   }
 
-Q_kernel_v0 <- 
+Q_kernelxQ_n <- 
   function(Q_ij, lambda_Q1, lambda_Q2, 
-           n_ij, s_j, const_adj = 1){
+           n_ij, s_j, log_const_adj = 0, 
+           n = 2, log = FALSE){
+    log_out <- 
+      n * log(Q_ij) + (2*n_ij) * log(pmax(Q_ij, 0)) -
+      lambda_Q2 * pmax(Q_ij, 0)^2 - 
+      0.5 * Q_ij^2 /s_j + lambda_Q1 * Q_ij /s_j - 
+      log_const_adj
     
-    (pmax(Q_ij, 0))^(2*n_ij) /const_adj * 
-      exp(-lambda_Q2 * pmax(Q_ij, 0)^2 - 
-            0.5 * Q_ij^2 /s_j + lambda_Q1 * Q_ij /s_j)
-  }
-
-Q_kernelxQ_v0 <- 
-  function(Q_ij, lambda_Q1, lambda_Q2, 
-           n_ij, s_j, const_adj = 1){
-    
-    Q_ij * (pmax(Q_ij, 0))^(2*n_ij) /const_adj * 
-      exp(-lambda_Q2 * pmax(Q_ij, 0)^2 - 
-            0.5 * Q_ij^2 /s_j + lambda_Q1 * Q_ij/s_j)
+    if (log) {
+      return(log_out)
+    } else {
+      return(exp(log_out))
+    }
   }

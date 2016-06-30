@@ -6,8 +6,8 @@ source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 #### 1. Data Generation ####
-n <- 10
-p <- 30
+n <- 22
+p <- 64
 alpha <- 10
 
 sigma.value <- seq(0.001,0.999,0.001)
@@ -43,8 +43,9 @@ if (exists("data.sim")){
   load(paste0(file_addr_MCMC, "data.RData"))
 }
 
-hyper <- list( nv = 3, a.er = 1, b.er = 0.3, 
-               a1 = 3, a2 = 4, m = n )
+hyper <- 
+  list(nv = 3, a.er = 1, b.er = 0.3, 
+       a1 = 3, a2 = 4, m = n )
 
 for( i in 1:length(data.sim$data) ){
   time.start <- proc.time()
@@ -111,10 +112,15 @@ N <- data.sim$data[[1]] %>% t
 Sigma_true <- t(data.sim$Y.tru) %*% data.sim$Y.tru 
 Sigma_obs <- cov(data.sim$Q)
 
+P <- 
+  (data.sim$sigma * 
+     pmax(data.sim$Q, 0)^2) %>% t %>% 
+  apply(1, function(x) x/sum(x)) %>% t
+
 prior_sigma <- 
   list(sigma = list(a = alpha/p, b = 1/2-alpha/p))
 init_T <- 
-  list(T = rowSums(N) * 20)
+  list(T = rowSums(N)/100)
 
 res_MFVI <- 
   main_MFVI(
@@ -126,16 +132,17 @@ res_MFVI <-
     method = "MFVI",
     verbose = TRUE, 
     # debug parameters
-    par_to_update = c("sigma", "Q", "G"),
+    par_to_update = c("T", "sigma", "Q", "G"),
     early_termination = TRUE, 
     early_termination_crit = 1e-4)
 
 save(res_MFVI, file = paste0(file_addr_MFVI, "res_MFVI.RData"))
+load(paste0(file_addr_MFVI, "res_MFVI.RData"))
 
 lambda <- res_MFVI$lambda
 info <- res_MFVI$info
 iter <- res_MFVI$iter
-  
+
 plot_diag <- TRUE
 if (plot_diag){
   iter_idx <- 1:(info$oper$iter-1)
@@ -199,11 +206,18 @@ mean(as.matrix(abs(P_j - P_emp)))
 # covariance estimate
 cov_est <- (t(data.sim$Y.tru) %*% data.sim$Y.tru + 
               diag(rep(data.sim$er, ncol(data.sim$Y.tru)))) 
-
+cov_mvi <- #iter$E$Q1[459, , ] %>% t %>% cor
+  info$mean$Q1 %>% t %>% cor
+  
 heatmap(cov2cor(cov_est))
 heatmap(info$mean$Q1 %>% t %>% cor)
 
-heatmap(
-(cov2cor(cov_est) - 
-  (info$mean$Q1 %>% t %>% cor)) 
-)
+
+heatmap((cov2cor(cov_est) - cov_mvi)/cov2cor(cov_est))
+
+
+# ELBO assessment
+elbo_plot <- iter$crit$ELBO[
+  is.finite(iter$crit$ELBO)]
+plot(elbo_plot, type = "l", 
+     xlab = "Iterations", ylab = "Unnormalized ELBO")

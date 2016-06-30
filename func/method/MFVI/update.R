@@ -150,7 +150,7 @@ update_MFVI_G <-
     
     # MoM Estimation
     lambda_G2 <- 
-      (lambda$G1/lambda$G1) * 
+      (lambda$G1/lambda$G1) * # just a filter
       (info$mean$Q1/(info$mean$Q2 - info$mean$Q1^2))
     lambda_G1 <- 
       info$mean$Q1 * lambda_G2

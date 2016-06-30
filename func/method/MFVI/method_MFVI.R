@@ -2,11 +2,15 @@ default_val <- FALSE
 if (default_val){
   Sigma = Sigma_obs
   prior = prior_sigma
-  init = NULL 
-  iter_max = 1e3
-  iter_crit = 1e-3
+  init = init_T 
+  iter_max = 1e4
+  iter_crit = 5e-5
   method = "MFVI"
   verbose = TRUE
+  # debug parameters
+  par_to_update = c("sigma", "Q", "G")
+  early_termination = TRUE
+  early_termination_crit = 1e-4
 }
 
 main_MFVI <- 
@@ -20,7 +24,7 @@ main_MFVI <-
            par_to_update = c("T", "sigma", "Q", "G"),
            # shut down update scheme for converged parameter
            early_termination = FALSE, 
-           early_termination_crit = 1e-3
+           early_termination_crit = 1e-4
   )
   {
     # the meta function where all things goes together
@@ -133,6 +137,10 @@ main_MFVI <-
     iter$E$sigma <- array(NaN, dim = c(iter_max, I))
     iter$E$Q1 <- array(NaN, dim = c(iter_max, J, I)) 
     iter$E$Q2 <- array(NaN, dim = c(iter_max, J, I)) 
+
+    iter$crit$ELBO <- array(NaN, dim = c(iter_max)) 
+    iter$crit$par_dist <- array(NaN, dim = c(iter_max)) 
+    iter$crit$prd_dist <- array(NaN, dim = c(iter_max)) 
     
     #### > 1.3 par_cur: Marginal Parameter Container ====
     lambda <- init
@@ -221,15 +229,22 @@ main_MFVI <-
                      abs %>% mean(na.rm = TRUE)
                  }) %>% set_names(names(info$mean))
         
-        dist_total <- mean(abs(unlist(dist_list)))
+        pred_dist_total <- pred_dist(info, N)
+        par_dist_total <- mean(abs(unlist(dist_list)))
+        elbo_total <- ELBO_full(lambda, prior, info)
         
         if (verbose) {
           for(name in names(mean_prev)){
             cat(paste0(name, " = ", 
                        round(dist_list[[name]], 4), "; "))
           } 
-          cat("Dist =", pred_dist(info, N), " ")
-          cat("Total =", dist_total, "\n")
+          cat("Predist =", pred_dist_total, " ")
+          cat("ELBO =", elbo_total, " ")
+          cat("Pardist =", par_dist_total, "\n")
+          
+          iter$crit$ELBO[i] <- elbo_total
+          iter$crit$prd_dist[i] <- pred_dist_total
+          iter$crit$par_dist[i] <- par_dist_total
         }
         
         # if a parameter converged, don't update it anymore
@@ -254,10 +269,10 @@ main_MFVI <-
           }
         }
         
-        if (dist_total <= iter_crit){
+        if (par_dist_total <= iter_crit){
           cat("\n\n TOTAL CONVERGENCE!!! ᕕ( ᐛ )ᕗ \n ")
           break
-        } else if ((dist_total > iter_crit) & (i == iter_max)){
+        } else if ((par_dist_total > iter_crit) & (i == iter_max)){
           cat("\n limit reached and no convergence... _(:3」∠)_  \n")
         }
       }
@@ -276,6 +291,7 @@ main_MFVI <-
       iter$E$Q1[i, , ] <- info$mean$Q1
       iter$E$Q2[i, , ] <- info$mean$Q2
     }
+    time <- (proc.time() - time_start)/60
     
     #### 3. Compute Linear Response Covariance ####
     
@@ -283,6 +299,5 @@ main_MFVI <-
     
     
     #### 4. Return ####
-    time <- (proc.time() - time_start)/60
     list(lambda = lambda, info = info, iter = iter, time = time)
   }
