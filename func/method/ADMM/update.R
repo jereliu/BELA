@@ -27,7 +27,7 @@ update_ADMM <-
     update_list
   }
 
-update_ADMM_Q <- 
+update_ADMM_Q_identity <- 
   function(par, prior, info, verbose = FALSE){
     verbose = FALSE
     #### 1 assemble stats ####
@@ -109,4 +109,9 @@ update_ADMM_Q <-
     
     #### 3 return ####
     list(par = par, info = info)
+  }
+
+update_ADMM_Q_Sigma <- 
+  function(par, prior, info, verbose = FALS){
+    
   }
