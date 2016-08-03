@@ -104,3 +104,10 @@ cov_est <- (t(data.sim$Y.tru) %*% data.sim$Y.tru +
 cov2cor(cov_est) %>% image
 
 info$mean$Q1 %>% t %>% cor %>% image
+
+# 
+one_mat <- function(x, y, X, Y){
+  out <- matrix(0, nrow = X, ncol = Y)
+  out[x, y] <- 1
+  out
+}
