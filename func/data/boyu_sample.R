@@ -2,11 +2,13 @@ boyu_sample <-
   function(lscounts, n, p, m, K, 
            a.er, b.er, 
            sigma.value, sigma.prob, 
-           strength)
+           strength, link = "soft")
   {
     #we consider K block simulation stucture
     #browser()
-    
+    link_func <- 
+      paste0("link_", link) %>% 
+      parse(text = .) %>% eval
     #### 2.1. Q ----
     sigma <-  
       sample(sigma.value, p, replace = T, 
@@ -35,7 +37,7 @@ boyu_sample <-
       ) %>% t
     
     #### 3. Final Assemble and Sampling ====
-    final.weights <-  sigma*(Q*(Q>=0))
+    final.weights <-  sigma * link_func(Q)
     data <-  
       lapply(lscounts, 
              function(counts) 

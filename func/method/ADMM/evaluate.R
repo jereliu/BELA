@@ -1,27 +1,29 @@
 objective <- 
-  function(par, prior, info, 
+  function(par, prior, info,
            type = c("original", "primal", "dual")){
-    f_Q <- par$Q * (par$Q > 0)
+    link_func <- 
+      paste0("link_", prior$Q$link) %>% 
+      parse(text = .) %>% eval
+    
+    f_Q <- link_func(par$Q)
     sigma_T_Q <- (par$T %*% t(par$sigma)) * f_Q
     sigma_T_Q[sigma_T_Q == 0] <- .Machine$double.eps
     
     loss <- 
       sigma_T_Q - info$stat$n_ij * log(sigma_T_Q)
     
-    Q_aug <- par$Q
-    
     if (type == "original"){
       penalty <- 
-        prior$lambda$Q * nuclear(Q_aug)
+        prior$lambda$Q * nuclear(par$Q)
     } else if (type == "primal"){
       penalty <- 
         c(prior$lambda$Q * nuclear(par$Z),
-          prior$rho * sum((par$Z - Q_aug)^2)/2)
+          prior$rho * sum((par$Z - par$Q)^2)/2)
       } else if (type == "dual"){
       penalty <- 
         c(prior$lambda$Q * nuclear(par$Z),
-          sum(par$U * (Q_aug - par$Z)),
-          prior$rho * sum((par$Z - Q_aug)^2)/2
+          sum(par$U * (par$Q - par$Z)),
+          prior$rho * sum((par$Z - par$Q)^2)/2
           )
     }
     list(total = sum(loss) + sum(penalty), 

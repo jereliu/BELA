@@ -27,24 +27,30 @@ update_ADMM <-
     update_list
   }
 
-update_ADMM_Q_identity <- 
+update_ADMM_Q <- 
   function(par, prior, info, verbose = FALSE){
-    verbose = FALSE
+    # parse function
+    update_func <- 
+      paste0("update_ADMM_Q_",
+             ifelse(is.null(prior$Q$Sigma), 
+                    "vanila", "sigma"))  %>% 
+      parse(text = .) %>% eval
+    
+    # obtain result
+    update_list <- 
+      update_func(par, prior, info, verbose)
+    
+    update_list
+  }
+
+update_ADMM_Q_vanila <- 
+  function(par, prior, info, verbose = FALSE){
+    verbose = TRUE
     #### 1 assemble stats ####
     # TODO: Figure out what's going on!
-    sigma_T <- 
-      (par$T %*% t(par$sigma))
-    # prior$Q$Sigma$Y %*% (par$T %*% t(par$sigma)) %*%
-    # prior$Q$Sigma$X
-    N <- 
-      info$stat$n_ij
-    # prior$Q$Sigma$Y %*% (info$stat$n_ij) %*%
-    # prior$Q$Sigma$X
-    noisy_Z <- 
-      (par$Z - par$U/prior$rho)
-    # prior$Q$Sigma$Y %*% t(prior$Q$Gamma$Y) %*% 
-    # (par$Z - par$U/prior$rho) %*%
-    # prior$Q$Gamma$X %*% prior$Q$Sigma$X
+    sigma_T <- (par$T %*% t(par$sigma))
+    N <- info$stat$n_ij
+    noisy_Z <- (par$Z - par$U/prior$rho)
     
     #### 2 update ####
     #### 2.1 get dual problem by min aug lagrangian ####
@@ -55,23 +61,9 @@ update_ADMM_Q_identity <-
         (function(x) c(x$scaler, x$total)) %>%
         round(3) %>% print    
     }
-    
-    delta <- 
-      (noisy_Z - sigma_T/prior$rho)^2 + 4*N/prior$rho
-    par$Q[(par$Q > 0)] <-
-      0.5 * (
-        (noisy_Z - 
-           sigma_T/prior$rho)[(par$Q > 0)] + 
-          sqrt(delta[(par$Q > 0)])
-      )
-    
-    if (verbose)
-      objective(par, prior, info, type = "dual") %>%
-      (function(x) c(x$scaler, x$total)) %>%
-      round(3) %>% print
-    
-    par$Q[par$Q <= 0] <-
-      (noisy_Z[par$Q <= 0]) %>% (function(x) x*(x <= 0))
+    par$Q <-
+      update_Q(par$Q, prior$rho, sigma_T, N, noisy_Z, 
+               link = prior$Q$link)
     
     if (verbose)
       objective(par, prior, info, type = "dual") %>%
@@ -111,7 +103,88 @@ update_ADMM_Q_identity <-
     list(par = par, info = info)
   }
 
-update_ADMM_Q_Sigma <- 
-  function(par, prior, info, verbose = FALS){
+update_ADMM_Q_sigma <- 
+  function(par, prior, info, verbose = FALSE){
+    #### 1. Q update ####
+    # TODO: Figure out what's going on!
+    sigma_T <- (par$T %*% t(par$sigma))
+    N <- info$stat$n_ij
+    noisy_Q <- (par$Q + par$Us/prior$rho)
     
+    if (verbose){
+      cat("\n")
+      objective(par, prior, info, type = "dual") %>%
+        (function(x) c(x$scaler, x$total)) %>%
+        round(3) %>% print    
+    }
+    
+    par$Q <-
+      update_Q(par$Q, prior$rho, sigma_T, N, noisy_Q, 
+               link = prior$Q$link)
+    
+    if (verbose){
+      cat("\n")
+      objective(par, prior, info, type = "dual") %>%
+        (function(x) c(x$scaler, x$total)) %>%
+        round(3) %>% print    
+    }
+    
+    #### 2. S and W update ####
+    
+    
+  }
+
+update_Q <- 
+  function(Q, rho,
+           sigma_T, N, noisy_Z,
+           link = "pos")
+  {
+    if (link == "pos"){
+      # close form when link_func(X) <- X * I(X>0)
+      delta <- 
+        (noisy_Z - sigma_T/rho)^2 + 4*N/rho
+      Q[(Q > 0)] <-
+        0.5 * 
+        ((noisy_Z - sigma_T/rho) + sqrt(delta))[(Q > 0)]
+      Q[Q <= 0] <-
+        (noisy_Z[Q <= 0]) %>% (function(x) x*(x <= 0))
+    } else {
+      link_func <- 
+        paste0("link_", link) %>% 
+        parse(text = .) %>% eval
+      link_func_dir <- 
+        paste0("link_", link, "_dir") %>% 
+        parse(text = .) %>% eval
+      # gradient descent when other link function
+      # Q <- par$Q
+      step <- 1e-4
+      thres <- 1e-4
+      grad_norm <- Inf
+      eps <- .Machine$double.eps
+      # obj_list <- vector("numeric", 1e5)
+      # grad_list <- vector("numeric", 1e5)
+      
+      i <- 0
+      while (grad_norm > thres){
+        grad <- 
+          (sigma_T - N/(link_func(Q) + eps)) * 
+          link_func_dir(Q) + 
+          rho * (Q - noisy_Z)
+        Q <- Q - step * grad
+        grad_norm <- mean(grad^2)
+        
+        i <- i + 1
+        obj <-
+          sum(sigma_T * link_func(Q) -
+                N * log(link_func(Q) + eps)) +
+          0.5 * rho * sum((Q - noisy_Z)^2)
+        # obj_list[i] <- obj
+        # grad_list[i] <- grad_norm
+        
+        if (i %% 1000 == 0) 
+          cat(paste0(round(obj, 3), ".."))
+      }
+      cat("\n")
+    }
+    Q
   }

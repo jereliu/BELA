@@ -33,7 +33,8 @@ data.sim <-
     a.er = 1, b.er = 0.3, #
     sigma.value = sigma.value, 
     sigma.prob = sigma.prob, 
-    strength = 3)
+    strength = 3, 
+    link = "soft")
 
 
 #### 2. Gold Standard MCMC ####
@@ -116,10 +117,10 @@ N <- data.sim$data[[1]] %>% t
 
 prior <- 
   list(sigma = list(a = alpha/p, b = 1/2-alpha/p))
-prior$lambda <- list(Q = 0.1, sigma = 0.1)
-prior$Q$Sigma <- 
-  list(X = diag(ncol(N)), 
-       Y = diag(nrow(N)))
+prior$lambda <- list(Q = 1, sigma = 0.1)
+# prior$Q$Sigma <- 
+#   list(X = diag(ncol(N)), 
+#        Y = diag(nrow(N)))
          #t(data.sim$Y.tru) %*% data.sim$Y.tru)
 
 init <- NULL

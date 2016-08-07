@@ -72,15 +72,17 @@ main_ADMM <-
         print(paste0("sigma prior not in (0,", 0.5*I, ")"))
       }
     }
-    
-    if (is.null(prior$Q$Sigma)){
-      prior$Q$Sigma$X <- diag(info$stat$I)
-      prior$Q$Sigma$Y <- diag(info$stat$J)
+
+    if (is.null(prior$Q$link)){
+      prior$Q$link <- "pos"
     }
-    prior$Q$Sigma$X <- prior$Q$Sigma$X %>% cov2cor
-    prior$Q$Sigma$Y <- prior$Q$Sigma$Y %>% cov2cor
     
-    if (is.null(prior$Q$Gamma)){
+    if (!is.null(prior$Q$Sigma)){
+      prior$Q$Sigma$X <- prior$Q$Sigma$X %>% cov2cor
+      prior$Q$Sigma$Y <- prior$Q$Sigma$Y %>% cov2cor
+    }
+    
+    if (!is.null(prior$Q$Sigma)){
       prior$Q$Gamma$X <- 
         prior$Q$Sigma$X %>% pinv %>% eigen %>%
         (function(x) 
@@ -107,20 +109,29 @@ main_ADMM <-
     #### > 1.1 Parameter & Sample ====
     # T
     if (is.null(init$T)) 
-      init$T <- info$stat$n_j 
+      init$T <- info$stat$n_j/10
     # sigma
     if (is.null(init$sigma)) 
       init$sigma <- rep(1, I)
     # Q
-    if (is.null(init$Q))
+    if (is.null(init$Q)){
       init$Q <- 
-      N / (init$T %*% t(init$sigma))
-    if (is.null(init$Z))
-      init$Z <- 
-      prior$Q$Gamma$Y %*% init$Q %*% t(prior$Q$Gamma$X)
-    if (is.null(init$U))
+        N / (init$T %*% t(init$sigma))
+      init$Q[init$Q <= 0] <- -1
+    }
+    # Q, other
+    if (is.null(prior$Q$Sigma)){
+      init$Z <- init$Q
       init$U <- matrix(0, nrow = J, ncol = I)
-    
+    } else {
+      init$S <- init$Q
+      init$W <- init$S %*% t(prior$Q$Gamma$Y)
+      init$Z <- prior$Q$Gamma$X %*% init$W
+      
+      init$Us <- matrix(0, nrow = J, ncol = I)
+      init$Uw <- matrix(0, nrow = J, ncol = I)
+      init$Uz <- matrix(0, nrow = J, ncol = I)
+    }
     #### > 1.2 iter: Marginal Parameter History ====
     iter <- NULL
     
