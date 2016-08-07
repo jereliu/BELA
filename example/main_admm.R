@@ -7,8 +7,8 @@ source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 #### 1. Data Generation ####
-n <- 20
-p <- 100
+n <- 100
+p <- 500
 alpha <- 10
 
 sigma.value <- seq(0.001,0.999,0.001)
