@@ -105,7 +105,8 @@ update_ADMM_Q_vanila <-
 
 update_ADMM_Q_sigma <- 
   function(par, prior, info, verbose = FALSE){
-    #### 1. Q update ####
+    verbose = FALSE
+    #### 1.1. Q update ####
     # TODO: Figure out what's going on!
     sigma_T <- (par$T %*% t(par$sigma))
     N <- info$stat$n_ij
@@ -115,7 +116,8 @@ update_ADMM_Q_sigma <-
       cat("\n")
       objective(par, prior, info, type = "dual") %>%
         (function(x) c(x$scaler, x$total)) %>%
-        round(3) %>% print    
+        round(3) %>%
+        (function(x) c("Q", x)) %>% print    
     }
     
     par$Q <-
@@ -126,12 +128,76 @@ update_ADMM_Q_sigma <-
       cat("\n")
       objective(par, prior, info, type = "dual") %>%
         (function(x) c(x$scaler, x$total)) %>%
-        round(3) %>% print    
+        round(3) %>%
+        (function(x) c("Q", x)) %>% print   
     }
     
-    #### 2. S and W update ####
+    #### 1.2. S and W update ####
+    # least square solution
+    par$S <- 
+      (prior$rho * par$Q - par$Us + 
+         (prior$rho * par$W + par$Uw) %*% 
+         prior$Q$Gamma$Y) %*% 
+      solve(prior$rho * diag(info$stat$I) + 
+              prior$rho * prior$Q$Sigma$Y_inv)
     
+    par$Us <- 
+      par$Us + prior$rho * (par$S - par$Q)
     
+    if (verbose){
+      cat("\n")
+      objective(par, prior, info, type = "dual") %>%
+        (function(x) c(x$scaler, x$total)) %>%
+        round(3) %>%
+        (function(x) c("S", x)) %>% print   
+    }
+    
+    par$W <- 
+      solve(
+        prior$rho * diag(info$stat$J) + 
+          prior$rho * prior$Q$Sigma$X_inv
+        ,
+        (prior$rho * par$S %*% t(prior$Q$Gamma$Y) - 
+           par$Uw + 
+           t(prior$Q$Gamma$X) %*% 
+           (prior$rho * par$Z + par$Uz)
+        )
+      ) 
+    
+    par$Uw <- 
+      par$Uw + 
+      prior$rho * 
+      (par$W - par$S %*% t(prior$Q$Gamma$Y))
+
+    if (verbose){
+      cat("\n")
+      objective(par, prior, info, type = "dual") %>%
+        (function(x) c(x$scaler, x$total)) %>%
+        round(3) %>%
+        (function(x) c("W", x)) %>% print   
+    }    
+    
+    #### 1.3. Z update ####
+    Z_target <- 
+      prior$Q$Gamma$X %*% par$W - 
+      par$Uz/prior$rho
+    par$Z <- update_Z(Z_target , prior)
+    
+    par$Uz <- 
+      par$Uz + 
+      prior$rho * 
+      (par$Z - prior$Q$Gamma$X %*% par$W)
+    
+    if (verbose){
+      cat("\n")
+      objective(par, prior, info, type = "dual") %>%
+        (function(x) c(x$scaler, x$total)) %>%
+        round(3) %>%
+        (function(x) c("Z", x)) %>% print   
+    } 
+    
+    #### 2. return ####
+    list(par = par, info = info)
   }
 
 update_Q <- 
@@ -187,4 +253,19 @@ update_Q <-
       cat("\n")
     }
     Q
+  }
+
+update_Z <- 
+  function(Q, prior,
+           blow_factor = 1e3){
+    # soft thresholding operator for target Q
+    SVD_Q <- svd(Q*blow_factor)
+    thres <- which(SVD_Q$d/blow_factor > prior$lambda$Q/prior$rho)
+    eigen_thres <- 
+      SVD_Q$d[thres]/blow_factor - prior$lambda$Q/prior$rho
+    Z <- 
+      (SVD_Q$u[, thres] %*% 
+         diag(eigen_thres, nrow = length(eigen_thres)) %*% 
+         t(SVD_Q$v[, thres]))
+    Z
   }

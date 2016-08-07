@@ -5,7 +5,7 @@ if (default_val){
   prior = prior
   init = init 
   iter_max = 1e4
-  iter_crit = 1e-5
+  iter_crit = 1e-4
   verbose = TRUE
   # debug parameters
   method = "ADMM"
@@ -72,7 +72,7 @@ main_ADMM <-
         print(paste0("sigma prior not in (0,", 0.5*I, ")"))
       }
     }
-
+    
     if (is.null(prior$Q$link)){
       prior$Q$link <- "pos"
     }
@@ -80,17 +80,19 @@ main_ADMM <-
     if (!is.null(prior$Q$Sigma)){
       prior$Q$Sigma$X <- prior$Q$Sigma$X %>% cov2cor
       prior$Q$Sigma$Y <- prior$Q$Sigma$Y %>% cov2cor
+      prior$Q$Sigma$X_inv <- prior$Q$Sigma$X %>% pinv
+      prior$Q$Sigma$Y_inv <- prior$Q$Sigma$Y %>% pinv
     }
     
     if (!is.null(prior$Q$Sigma)){
       prior$Q$Gamma$X <- 
-        prior$Q$Sigma$X %>% pinv %>% eigen %>%
+        prior$Q$Sigma$X_inv %>% eigen %>%
         (function(x) 
           diag(sqrt(x$values * (x$values > 0))) %*%
            t(x$vector)
         )
       prior$Q$Gamma$Y <- 
-        prior$Q$Sigma$Y %>% pinv %>% eigen %>%
+        prior$Q$Sigma$Y_inv %>% pinv %>% eigen %>%
         (function(x) 
           diag(sqrt(x$values * (x$values > 0))) %*%
            t(x$vector)
@@ -138,8 +140,19 @@ main_ADMM <-
     iter$par$T <- array(NaN, dim = c(iter_max, J))
     iter$par$sigma <- array(NaN, dim = c(iter_max, I))
     iter$par$Q <- array(NaN, dim = c(iter_max, J, I)) 
-    iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
-    iter$par$U <- array(NaN, dim = c(iter_max, J, I)) 
+    
+    if (is.null(prior$Q$Sigma)){
+      iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
+      iter$par$U <- array(NaN, dim = c(iter_max, J, I)) 
+    } else {
+      iter$par$S <- array(NaN, dim = c(iter_max, J, I)) 
+      iter$par$W <- array(NaN, dim = c(iter_max, J, I)) 
+      iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
+      
+      iter$par$Us <- array(NaN, dim = c(iter_max, J, I)) 
+      iter$par$Uw <- array(NaN, dim = c(iter_max, J, I)) 
+      iter$par$Uz <- array(NaN, dim = c(iter_max, J, I)) 
+    }
     
     iter$crit$par_dist <- array(NaN, dim = c(iter_max)) 
     iter$crit$feas_gap <- array(NaN, dim = c(iter_max)) 
@@ -204,8 +217,15 @@ main_ADMM <-
         obj_dual <- 
           objective(par_cur, prior, info, type = "dual")$total
         
-        feas_gap <- 
-          max(abs(par_cur$Q - par_cur$Z))
+        if (is.null(prior$Q$Sigma)) {
+          feas_gap <- (par_cur$Q - par_cur$Z) %>% 
+            abs %>% max
+        } else {
+          feas_gap <- 
+            (par_cur$Q - 
+               prior$Q$Gamma$X %*% par_cur$Z %*% 
+               t(prior$Q$Gamma$Y)) %>% abs %>% max
+        }
         
         if (verbose) {
           for(name in names(par_prev)){
@@ -232,8 +252,19 @@ main_ADMM <-
       iter$par$T[i, ] <- par_cur$T
       iter$par$sigma[i, ] <- par_cur$sigma
       iter$par$Q[i, , ] <- par_cur$Q
-      iter$par$Z[i, , ] <- par_cur$Z
-      iter$par$U[i, , ] <- par_cur$U
+      
+      if (is.null(prior$Q$Sigma)){
+        iter$par$Z[i, , ] <- par_cur$Z
+        iter$par$U[i, , ] <- par_cur$U
+      } else {
+        iter$par$S[i, , ] <- par_cur$S
+        iter$par$W[i, , ] <- par_cur$W
+        iter$par$Z[i, , ] <- par_cur$Z
+        
+        iter$par$Us[i, , ] <- par_cur$Us
+        iter$par$Uw[i, , ] <- par_cur$Uw
+        iter$par$Uz[i, , ] <- par_cur$Uz
+      }
       
       iter$crit$par_dist[i] <- par_dist_total
       iter$crit$feas_gap[i] <- feas_gap

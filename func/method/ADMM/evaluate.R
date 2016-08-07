@@ -12,24 +12,56 @@ objective <-
     loss <- 
       sigma_T_Q - info$stat$n_ij * log(sigma_T_Q)
     
-    if (type == "original"){
-      penalty <- 
-        prior$lambda$Q * nuclear(par$Q)
-    } else if (type == "primal"){
-      penalty <- 
-        c(prior$lambda$Q * nuclear(par$Z),
-          prior$rho * sum((par$Z - par$Q)^2)/2)
+    if (is.null(prior$Q$Sigma)){
+      # objective function with 1 parameter ADMM
+      if (type == "original"){
+        penalty <- 
+          prior$lambda$Q * nuclear(par$Q)
+      } else if (type == "primal"){
+        penalty <- 
+          c(prior$lambda$Q * nuclear(par$Z),
+            prior$rho * sum((par$Z - par$Q)^2)/2)
       } else if (type == "dual"){
-      penalty <- 
-        c(prior$lambda$Q * nuclear(par$Z),
-          sum(par$U * (par$Q - par$Z)),
-          prior$rho * sum((par$Z - par$Q)^2)/2
+        penalty <- 
+          c(prior$lambda$Q * nuclear(par$Z),
+            sum(par$U * (par$Q - par$Z)),
+            prior$rho * sum((par$Z - par$Q)^2)/2
           )
+      }
+    } else {
+      # objective function for 4 parameter ADMM
+      if (type == "original"){
+        penalty <- 
+          prior$lambda$Q * nuclear(par$Q)
+      } else if (type == "primal"){
+        penalty <- 
+          c(prior$lambda$Q * nuclear(par$Z),
+            prior$rho * 
+              sum((par$Z - prior$Q$Gamma$X %*% par$W)^2)/2,
+            prior$rho * 
+              sum((par$W - par$S %*% t(prior$Q$Gamma$Y))^2)/2,
+            prior$rho * sum((par$S - par$Q)^2)/2
+          )
+      } else if (type == "dual"){
+        penalty <- 
+          c(prior$lambda$Q * nuclear(par$Z),
+            prior$rho * 
+              sum((par$Z - prior$Q$Gamma$X %*% par$W)^2)/2,
+            prior$rho * 
+              sum((par$W - par$S %*% t(prior$Q$Gamma$Y))^2)/2,
+            prior$rho * sum((par$S - par$Q)^2)/2,
+            sum(par$Uz * (par$Z - prior$Q$Gamma$X %*% par$W)),
+            sum(par$Uw * (par$W - par$S %*% t(prior$Q$Gamma$Y))),
+            sum(par$Us * (par$S - par$Q))
+          )
+      }
     }
+    
     list(total = sum(loss) + sum(penalty), 
          scaler = c(sum(loss), penalty), 
          loss_mat = loss)
   }
+
 
 pred_dist_abs <- 
   function(par, prior, info){

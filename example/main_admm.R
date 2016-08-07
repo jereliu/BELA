@@ -118,10 +118,10 @@ N <- data.sim$data[[1]] %>% t
 prior <- 
   list(sigma = list(a = alpha/p, b = 1/2-alpha/p))
 prior$lambda <- list(Q = 1, sigma = 0.1)
-# prior$Q$Sigma <- 
-#   list(X = diag(ncol(N)), 
-#        Y = diag(nrow(N)))
-         #t(data.sim$Y.tru) %*% data.sim$Y.tru)
+prior$Q$Sigma <-
+  list(X = t(data.sim$Y.tru) %*% data.sim$Y.tru,
+       Y = diag(ncol(N)))
+prior$Q$link = "soft"
 
 init <- NULL
 #init$sigma <- data.sim$sigma
