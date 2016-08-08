@@ -1,4 +1,5 @@
 require(irlba)
+require(Matrix)
 
 default_val <- FALSE
 if (default_val){
@@ -20,7 +21,8 @@ main_ADMM <-
            method = c("ADMM", "SGLD"),
            verbose = FALSE,
            # choose parameters to update
-           par_to_update = c("T", "sigma", "Q")
+           par_to_update = c("T", "sigma", "Q"), 
+           record = FALSE
   )
   {
     # the meta function where all things goes together
@@ -86,16 +88,27 @@ main_ADMM <-
     
     if (!is.null(prior$Q$Sigma)){
       prior$Q$Gamma$X <- 
-        prior$Q$Sigma$X_inv %>% eigen %>%
+        prior$Q$Sigma$X %>% eigen %>%
         (function(x) 
-          diag(sqrt(x$values * (x$values > 0))) %*%
-           t(x$vector)
+          diag(1/sqrt(x$values[x$values > 1e-8])) %*%
+           t(x$vector[, x$values > 1e-8])
+        )
+      prior$Q$Gamma$X <- 
+        rbind(
+          prior$Q$Gamma$X, 
+          matrix(0, ncol = J, nrow = J - nrow(prior$Q$Gamma$X))
+        )
+      
+      prior$Q$Gamma$Y <- 
+        prior$Q$Sigma$Y %>% pinv %>% eigen %>%
+        (function(x) 
+          diag(1/sqrt(x$values[x$values > 1e-8])) %*%
+           t(x$vector[, x$values > 1e-8])
         )
       prior$Q$Gamma$Y <- 
-        prior$Q$Sigma$Y_inv %>% pinv %>% eigen %>%
-        (function(x) 
-          diag(sqrt(x$values * (x$values > 0))) %*%
-           t(x$vector)
+        rbind(
+          prior$Q$Gamma$Y, 
+          matrix(0, ncol = I, nrow = I - nrow(prior$Q$Gamma$Y))
         )
     }
     
@@ -135,32 +148,33 @@ main_ADMM <-
       init$Uz <- matrix(0, nrow = J, ncol = I)
     }
     #### > 1.2 iter: Marginal Parameter History ====
-    iter <- NULL
-    
-    iter$par$T <- array(NaN, dim = c(iter_max, J))
-    iter$par$sigma <- array(NaN, dim = c(iter_max, I))
-    iter$par$Q <- array(NaN, dim = c(iter_max, J, I)) 
-    
-    if (is.null(prior$Q$Sigma)){
-      iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
-      iter$par$U <- array(NaN, dim = c(iter_max, J, I)) 
-    } else {
-      iter$par$S <- array(NaN, dim = c(iter_max, J, I)) 
-      iter$par$W <- array(NaN, dim = c(iter_max, J, I)) 
-      iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
+    if (record){
+      iter <- NULL
       
-      iter$par$Us <- array(NaN, dim = c(iter_max, J, I)) 
-      iter$par$Uw <- array(NaN, dim = c(iter_max, J, I)) 
-      iter$par$Uz <- array(NaN, dim = c(iter_max, J, I)) 
+      iter$par$T <- array(NaN, dim = c(iter_max, J))
+      iter$par$sigma <- array(NaN, dim = c(iter_max, I))
+      iter$par$Q <- array(NaN, dim = c(iter_max, J, I)) 
+      
+      if (is.null(prior$Q$Sigma)){
+        iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
+        iter$par$U <- array(NaN, dim = c(iter_max, J, I)) 
+      } else {
+        iter$par$S <- array(NaN, dim = c(iter_max, J, I)) 
+        iter$par$W <- array(NaN, dim = c(iter_max, J, I)) 
+        iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
+        
+        iter$par$Us <- array(NaN, dim = c(iter_max, J, I)) 
+        iter$par$Uw <- array(NaN, dim = c(iter_max, J, I)) 
+        iter$par$Uz <- array(NaN, dim = c(iter_max, J, I)) 
+      }
+      
+      iter$crit$par_dist <- array(NaN, dim = c(iter_max)) 
+      iter$crit$feas_gap <- array(NaN, dim = c(iter_max)) 
+      
+      iter$crit$obj_orig <- array(NaN, dim = c(iter_max))
+      iter$crit$obj_prim <- array(NaN, dim = c(iter_max)) 
+      iter$crit$obj_dual <- array(NaN, dim = c(iter_max)) 
     }
-    
-    iter$crit$par_dist <- array(NaN, dim = c(iter_max)) 
-    iter$crit$feas_gap <- array(NaN, dim = c(iter_max)) 
-    
-    iter$crit$obj_orig <- array(NaN, dim = c(iter_max))
-    iter$crit$obj_prim <- array(NaN, dim = c(iter_max)) 
-    iter$crit$obj_dual <- array(NaN, dim = c(iter_max)) 
-    
     #### 2. Sampling ####
     # parameters in each type to be updated
     
@@ -172,7 +186,7 @@ main_ADMM <-
     
     for (i in 1:iter_max){
       if (i > 2){
-        if (feas_gap <= iter_crit){
+        if (par_dist_total <= iter_crit){
           break
         }
       }
@@ -221,10 +235,8 @@ main_ADMM <-
           feas_gap <- (par_cur$Q - par_cur$Z) %>% 
             abs %>% max
         } else {
-          feas_gap <- 
-            (par_cur$Q - 
-               prior$Q$Gamma$X %*% par_cur$Z %*% 
-               t(prior$Q$Gamma$Y)) %>% abs %>% max
+          feas_gap <- (par_cur$Q - par_cur$S) %>% 
+            abs %>% max
         }
         
         if (verbose) {
@@ -239,7 +251,7 @@ main_ADMM <-
         }
         
         if (i > 1){
-          if (feas_gap <= iter_crit){
+          if (par_dist_total <= iter_crit){
             cat("\n\n TOTAL CONVERGENCE!!! ᕕ( ᐛ )ᕗ \n ")
             break
           } else if ((par_dist_total > iter_crit) & (i == iter_max)){
@@ -248,34 +260,43 @@ main_ADMM <-
         }
       }
       
+      
       # store
-      iter$par$T[i, ] <- par_cur$T
-      iter$par$sigma[i, ] <- par_cur$sigma
-      iter$par$Q[i, , ] <- par_cur$Q
-      
-      if (is.null(prior$Q$Sigma)){
-        iter$par$Z[i, , ] <- par_cur$Z
-        iter$par$U[i, , ] <- par_cur$U
-      } else {
-        iter$par$S[i, , ] <- par_cur$S
-        iter$par$W[i, , ] <- par_cur$W
-        iter$par$Z[i, , ] <- par_cur$Z
+      if (record){
+        iter$par$T[i, ] <- par_cur$T
+        iter$par$sigma[i, ] <- par_cur$sigma
+        iter$par$Q[i, , ] <- par_cur$Q
         
-        iter$par$Us[i, , ] <- par_cur$Us
-        iter$par$Uw[i, , ] <- par_cur$Uw
-        iter$par$Uz[i, , ] <- par_cur$Uz
+        if (is.null(prior$Q$Sigma)){
+          iter$par$Z[i, , ] <- par_cur$Z
+          iter$par$U[i, , ] <- par_cur$U
+        } else {
+          iter$par$S[i, , ] <- par_cur$S
+          iter$par$W[i, , ] <- par_cur$W
+          iter$par$Z[i, , ] <- par_cur$Z
+          
+          iter$par$Us[i, , ] <- par_cur$Us
+          iter$par$Uw[i, , ] <- par_cur$Uw
+          iter$par$Uz[i, , ] <- par_cur$Uz
+        }
+        
+        iter$crit$par_dist[i] <- par_dist_total
+        iter$crit$feas_gap[i] <- feas_gap
+        iter$crit$obj_orig[i] <- obj_orig
+        iter$crit$obj_prim[i] <- obj_prim
+        iter$crit$obj_dual[i] <- obj_dual
       }
-      
-      iter$crit$par_dist[i] <- par_dist_total
-      iter$crit$feas_gap[i] <- feas_gap
-      iter$crit$obj_orig[i] <- obj_orig
-      iter$crit$obj_prim[i] <- obj_prim
-      iter$crit$obj_dual[i] <- obj_dual
     }
     
     time <- (proc.time() - time_start)/60
     
     #### 3. Return ####
-    list(par = par_cur, info = info, 
-         iter = iter, time = time)
+    out_list <- 
+      list(par = par_cur, info = info, time = time)
+    
+    if (record) {
+      out_list$iter <- iter
+    }
+    
+    out_list
   }

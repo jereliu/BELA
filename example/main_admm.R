@@ -9,7 +9,7 @@ sourceDir("./func")
 #### 1. Data Generation ####
 n <- 100
 p <- 500
-alpha <- 10
+alpha <- 5
 
 sigma.value <- seq(0.001,0.999,0.001)
 n_sigval <- length(sigma.value)
@@ -28,13 +28,13 @@ data.sim <-
     lscounts = 1000, # num measure per sample
     n = n, # num of samples 
     p = p, # num of categories
-    m = 20, # factor dimension
+    m = 15, # factor dimension
     K = 2, # population groups
     a.er = 1, b.er = 0.3, #
     sigma.value = sigma.value, 
     sigma.prob = sigma.prob, 
     strength = 3, 
-    link = "soft")
+    link = "pos")
 
 
 #### 2. Gold Standard MCMC ####
@@ -121,7 +121,7 @@ prior$lambda <- list(Q = 1, sigma = 0.1)
 prior$Q$Sigma <-
   list(X = t(data.sim$Y.tru) %*% data.sim$Y.tru,
        Y = diag(ncol(N)))
-prior$Q$link = "soft"
+prior$Q$link = "pos"
 
 init <- NULL
 #init$sigma <- data.sim$sigma
@@ -130,22 +130,24 @@ res_ADMM <-
     N,
     prior = prior,
     init = init, 
-    iter_max = 1e3,
-    iter_crit = 1e-5,
+    iter_max = 1e4,
+    iter_crit = 1e-4,
     verbose = TRUE,
     # debug parameters
     method = "ADMM",
     par_to_update = c("Q")
   )
 
-res_ADMM$iter <- NULL
-
-save(res_ADMM, file = paste0(file_addr_ADMM, "res_ADMM.RData"))
-load(paste0(file_addr_ADMM, "res_ADMM.RData"))
+#save(res_ADMM, file = paste0(file_addr_ADMM, "res_ADMM.RData"))
+#load(paste0(file_addr_ADMM, "res_ADMM.RData"))
 
 par <- res_ADMM$par
 info <- res_ADMM$info
-res_ADMM$iter <- NULL
+#res_ADMM$iter <- NULL
+
+rv_coef(par$S %>% t %>% cor, 
+        t(data.sim$Y.tru) %*% data.sim$Y.tru)
+
 
 #### 3.1. Reconstruction result ####
 heatmap_2 <- 
@@ -162,7 +164,7 @@ cor_tru <-
   cov2cor
 
 cor_mvi <- data.sim$Q %>% cor
-cor_est <- par$Q %>% t %>% cor
+cor_est <- par$S %>% t %>% cor
 
 heatmap_2(cor_tru)
 heatmap_2(cor_mvi)
