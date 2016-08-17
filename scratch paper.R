@@ -1,5 +1,4 @@
 #### 1. calculate mean for each Q_ij, Q_ij^2 ####
-
 mode_est <- info$plot$Q1$mode_est
 normalizer <- info$plot$Q1$normalizer
 n_ij <- info$stat$n_ij

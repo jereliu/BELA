@@ -7,9 +7,10 @@ source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 #### 1. Data Generation ####
-n <- 22
-p <- 100
-alpha <- 5
+n <- 100
+p <- 200
+m <- 10
+alpha <- 2
 
 sigma.value <- seq(0.001,0.999,0.001)
 n_sigval <- length(sigma.value)
@@ -25,10 +26,10 @@ sigma.prob <-
 
 data.sim <- 
   boyu_sample(
-    lscounts = 1e4, # num measure per sample
+    lscounts = 1e3, # num measure per sample
     n = n, # num of samples 
     p = p, # num of categories
-    m = n, # factor dimension
+    m = m, # factor dimension
     K = 3, # population groups
     a.er = 1, b.er = 0.3, #
     sigma.value = sigma.value, 
@@ -110,22 +111,28 @@ if (do_MCMC){
 }
 
 #### 3. ADMM Optimization ####
-file_addr_ADMM <- "./temp_res/ADMM/"
+file_addr_FISTA <- "./temp_res/FISTA/"
 
 N <- data.sim$data[[1]] %>% t
+write.csv(N, file = "./func/method/FISTA/julia/N.csv", 
+          row.names = FALSE)
 
 prior <- 
   list(sigma = list(a = alpha/p, b = 1/2-alpha/p))
 prior$lambda <- list(Q = 1, sigma = 0.1)
 
+prior$Q$K <- m
+
 prior$Q$Sigma <-
-  list(X = t(data.sim$Y.tru) %*% data.sim$Y.tru,
-       Y = diag(ncol(N)))
-prior$Q$link = "pos"
+  list(X = diag(ncol(N)),
+       #t(data.sim$Y.tru) %*% data.sim$Y.tru,
+       Y = diag(nrow(N)))
+prior$Q$link = "identity"
+prior$eta <- 1.1 
 
 init <- NULL
 #init$sigma <- data.sim$sigma
-res_ADMM <- 
+res_FISTA <- 
   main_ADMM(
     N,
     prior = prior,
@@ -149,7 +156,7 @@ info <- res_ADMM$info
 #### 3.1. Reconstruction result ####
 # covariance estimate
 cor_tru <- 
-  (t(data.sim$Y.tru) %*% data.sim$Y.tru + 
+  (data.sim$Sigma.tru + 
      diag(rep(data.sim$er, ncol(data.sim$Y.tru)))) %>%
   cov2cor
 

@@ -19,19 +19,30 @@ boyu_sample <-
     
     #split the m factors into K blocks
     pop.indx.group <-  split( 1:n, cut( 1:n, breaks = K ) )
-    Y <-  matrix( 0, nrow = m, ncol = n )
+    # Sigma <- matrix(0, n, n)
+    # 
+    # for(x in 1:K){
+    #   Sigma[pop.indx.group[[x]] ,
+    #         pop.indx.group[[x]]] <- 1
+    # }
+    # Sigma[Sigma == 0] <- -1
+    # Y <- Sigma %>% eigen %>%
+    #   (function(x)
+    #     diag(sqrt(x$value*(x$value > 0))) %*% t(x$vector))
     
+    Y <-  matrix( 0, nrow = m, ncol = n )
+
     for( x in 1:K){
-      Y[,pop.indx.group[[x]]] <- 
-        (2*x - (K+1))*strength + 
-        matrix( rnorm( m*length(pop.indx.group[[x]]) ), 
+      Y[,pop.indx.group[[x]]] <-
+        (2*x - (K+1))*strength +
+        matrix( rnorm( m*length(pop.indx.group[[x]]) ),
                 ncol = length(pop.indx.group[[x]]) )
     }
     
     #### 2.3. Q ----
     er <-  1/rgamma(1, a.er, b.er) # sample Q error
     Q <-  
-      apply(t(Y)%*%X, 2, 
+      apply(t(Y) %*%X, 2, 
             function(x) 
               rnorm(length(x), mean = x, sd = sqrt(er) ) 
       ) %>% t
@@ -48,8 +59,9 @@ boyu_sample <-
       )
     
     #### 4. Return ====
-    return( 
+    return(
       list(sigma = sigma, Q = Q, data = data,
-           X.tru=X, Y.tru = Y, er = er) 
+           X.tru=X, Y.tru = Y, Sigma.tru = t(Y) %*% Y,
+           er = er)
     )
   }

@@ -214,6 +214,15 @@ update_Q <-
         ((noisy_Z - sigma_T/rho) + sqrt(delta))[(Q > 0)]
       Q[Q <= 0] <-
         (noisy_Z[Q <= 0]) %>% (function(x) x*(x <= 0))
+    } else if (link == "pos2"){
+      # close form when link_func(X) <- X * I(X>0)
+      delta <- 
+        (noisy_Z - sigma_T/rho)^2 + 4*N/rho
+      Q[(Q > 0)] <-
+        0.5 * 
+        ((noisy_Z - sigma_T/rho) + sqrt(delta))[(Q > 0)]
+      Q[Q <= 0] <-
+        (noisy_Z[Q <= 0]) %>% (function(x) x*(x <= 0))
     } else {
       link_func <- 
         paste0("link_", link) %>% 
