@@ -45,7 +45,7 @@ update_ADMM_Q <-
 
 update_ADMM_Q_vanila <- 
   function(par, prior, info, verbose = FALSE){
-    verbose = TRUE
+    verbose = FALSE
     #### 1 assemble stats ####
     # TODO: Figure out what's going on!
     sigma_T <- (par$T %*% t(par$sigma))

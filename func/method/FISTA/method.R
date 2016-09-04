@@ -5,13 +5,15 @@ default_val <- FALSE
 if (default_val){
   prior = prior
   init = init 
-  iter_max = 1e4
-  iter_crit = 1e-4
+  iter_max = 1e5
+  iter_crit = 1e-3
   verbose = TRUE
+  init_type = c("svd", "random")[1]
   # debug parameters
-  method = "ADMM"
+  method = "FISTA"
   par_to_update = c("Q")
   record = FALSE
+  verbose_freq = 100
 }
 
 main_FISTA <- 
@@ -19,11 +21,13 @@ main_FISTA <-
            prior = NULL,
            init = NULL, 
            iter_max = 1e4, iter_crit = 1e-3, 
-           method = c("ADMM", "SGLD"),
+           method = c("FISTA", "SGLD")[1],
            verbose = FALSE,
            # choose parameters to update
            par_to_update = c("T", "sigma", "Q"), 
-           record = FALSE
+           init_type = c("svd", "random")[1],
+           record = FALSE, 
+           verbose_freq = 1000
   )
   {
     # the meta function where all things goes together
@@ -80,7 +84,7 @@ main_FISTA <-
     }
     
     if (is.null(prior$Q$link)){
-      prior$Q$link <- "pos"
+      prior$Q$link <- "exp"
     }
     
     if (is.null(prior$Q$link)){
@@ -92,6 +96,18 @@ main_FISTA <-
       prior$Q$Sigma$Y <- prior$Q$Sigma$Y %>% cov2cor
       prior$Q$Sigma$X_inv <- prior$Q$Sigma$X %>% pinv
       prior$Q$Sigma$Y_inv <- prior$Q$Sigma$Y %>% pinv
+      # diagonal elements
+      prior$Q$Sigma$X_diag <- 
+        prior$lambda$X * diag(prior$Q$Sigma$X_inv)
+      prior$Q$Sigma$Y_diag <- 
+        prior$lambda$Y * diag(prior$Q$Sigma$Y_inv)
+      # off diagonal elements
+      prior$Q$Sigma$X_offd <- 
+        prior$lambda$X * 
+        (prior$Q$Sigma$X_inv - diag(diag(prior$Q$Sigma$X_inv)))
+      prior$Q$Sigma$Y_offd <- 
+        prior$lambda$Y *
+        (prior$Q$Sigma$Y_inv - diag(diag(prior$Q$Sigma$Y_inv)))
     }
     
     if (!is.null(prior$Q$Sigma)){
@@ -104,7 +120,8 @@ main_FISTA <-
       prior$Q$Gamma$X <- 
         rbind(
           prior$Q$Gamma$X, 
-          matrix(0, ncol = I, nrow = I - nrow(prior$Q$Gamma$X))
+          matrix(0, ncol = J, 
+                 nrow = J - nrow(prior$Q$Gamma$X))
         )
       
       prior$Q$Gamma$Y <- 
@@ -116,11 +133,9 @@ main_FISTA <-
       prior$Q$Gamma$Y <- 
         rbind(
           prior$Q$Gamma$Y, 
-          matrix(0, ncol = J, nrow = J - nrow(prior$Q$Gamma$Y))
+          matrix(0, ncol = I, nrow = I - nrow(prior$Q$Gamma$Y))
         )
     }
-    
-    
     
     if (is.null(prior$lambda)){
       prior$lambda <- list(Q = 0.1, sigma = 0.1)
@@ -135,43 +150,37 @@ main_FISTA <-
     #### > 1.1 Parameter & Sample ====
     # T
     if (is.null(init$T)) 
-      init$T <- info$stat$n_j/10
+      init$T <- info$stat$n_j
     # sigma
-    if (is.null(init$sigma)) 
-      init$sigma <- rep(1, I)
+    if (is.null(init$sigma))
+      init$sigma <- 
+      info$stat$n_i/median(info$stat$n_i)
     # Q
     if (is.null(init$Q)){
       init$Q <- 
-        Matrix(N / (init$T %*% t(init$sigma)), 
-               sparse = TRUE)
+        ((N / (init$T %*% t(init$sigma))) + 
+           .Machine$double.eps) %>% log
     }
     # Q, other (X and Y)
-    if (is.null(prior$Q$Sigma)){
-      Q_svd <- irlba(init$Q, nv = prior$Q$K)
+    if (init_type == "svd"){
+      Q_svd <- irlba(init$Q, prior$Q$K)
       init$X <- Q_svd$u %*% diag(sqrt(Q_svd$d))
       init$Y <- Q_svd$v %*% diag(sqrt(Q_svd$d))
-    } 
-    
+    } else if (init_type == "random"){
+      init$X <- matrix(rnorm(J*prior$Q$K), nrow = J)/1e3
+      init$Y <- matrix(rnorm(I*prior$Q$K), nrow = I)/1e3
+    }
     #### > 1.2 iter: Marginal Parameter History ====
+    iter <- NULL
+    iter$crit$obj <- array(NaN, dim = c(iter_max))
+    
     if (record){
-      iter <- NULL
-      
       iter$par$T <- array(NaN, dim = c(iter_max, J))
       iter$par$sigma <- array(NaN, dim = c(iter_max, I))
       iter$par$Q <- array(NaN, dim = c(iter_max, J, I)) 
       
-      if (is.null(prior$Q$Sigma)){
-        iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
-        iter$par$U <- array(NaN, dim = c(iter_max, J, I)) 
-      } else {
-        iter$par$S <- array(NaN, dim = c(iter_max, J, I)) 
-        iter$par$W <- array(NaN, dim = c(iter_max, J, I)) 
-        iter$par$Z <- array(NaN, dim = c(iter_max, J, I)) 
-        
-        iter$par$Us <- array(NaN, dim = c(iter_max, J, I)) 
-        iter$par$Uw <- array(NaN, dim = c(iter_max, J, I)) 
-        iter$par$Uz <- array(NaN, dim = c(iter_max, J, I)) 
-      }
+      iter$par$X <- array(NaN, dim = c(iter_max, J, K)) 
+      iter$par$Y <- array(NaN, dim = c(iter_max, I, K)) 
       
       iter$crit$par_dist <- array(NaN, dim = c(iter_max)) 
       iter$crit$feas_gap <- array(NaN, dim = c(iter_max)) 
@@ -186,31 +195,40 @@ main_FISTA <-
     
     #pb <- txtProgressBar(1, iter_max, style = 3)
     par_cur <- init
+    mat_cur <- 
+      (par_cur$X %*% t(par_cur$X)) %>% cov2cor
+    
     par_list <- par_to_update
     time_start <- proc.time()
+    
+    cov_crit_cur <- Inf
     par_dist_total <- Inf
+    obj_prev <- Inf
+    obj_cur <- 0
     
     for (i in 1:iter_max){
       if (i > 2){
-        if (par_dist_total <= iter_crit){
+        if (cov_crit_cur <= iter_crit){
           break
         }
       }
       #### > 2.1 Update meta info ====
+      mat_prev <- mat_cur
       par_prev <- par_cur
+      obj_prev <- obj_cur
       info$oper$iter <- i
       
       #### > 2.2 Update Parameter ====
-      if (verbose)
+      if (verbose & (i %% verbose_freq == 0))
         cat("\n >>> Iter", i, "Updating ")
       
       for (par_name in par_list){
-        if (verbose) {
+        if (verbose & (i %% verbose_freq == 0)) {
           cat("[", par_name, "]")
         }
         
         update_list <- 
-          update_ADMM(
+          update_FISTA(
             par_cur, prior, info, 
             par_name = par_name, 
             method = method,
@@ -219,8 +237,17 @@ main_FISTA <-
         # update result and mean parameter
         par_cur <- update_list$par
         info <- update_list$info
-        
-        #### > 2.3 Save History ====
+      }
+      
+      #### > 2.3 Save History ====
+      obj_cur <- 
+        objective_fista(par_cur, prior, info, 
+                        type = "original")$total
+      obj_part <- 
+        objective_fista(par_cur, prior, info, 
+                        type = "original")$scaler
+      
+      if (verbose & (i %% verbose_freq == 0)) {
         dist_list <- 
           lapply(names(par_cur), 
                  function(name){
@@ -230,61 +257,40 @@ main_FISTA <-
         
         par_dist_total <- mean(abs(unlist(dist_list)))
         
-        obj_orig <- 
-          objective(par_cur, prior, info, type = "original")$total
-        obj_prim <- 
-          objective(par_cur, prior, info, type = "primal")$total
-        obj_dual <- 
-          objective(par_cur, prior, info, type = "dual")$total
+        est_cur <- 
+          (par_cur$Y %*% t(par_cur$X)) %>% cor
+        mat_cur <- 
+          (par_cur$X %*% t(par_cur$X)) %>% cov2cor
+        cov_crit_cur <- norm(mat_cur - mat_prev)
         
-        if (is.null(prior$Q$Sigma)) {
-          feas_gap <- (par_cur$Q - par_cur$Z) %>% 
-            abs %>% max
-        } else {
-          feas_gap <- (par_cur$Q - par_cur$S) %>% 
-            abs %>% max
+        for(name in names(par_prev)){
+          cat(paste0(name, " = ", 
+                     round(dist_list[[name]], 4), "; "))
         }
-        
-        if (verbose) {
-          for(name in names(par_prev)){
-            cat(paste0(name, " = ", 
-                       round(dist_list[[name]], 4), "; "))
-          }
-          cat("rank =", rankMatrix(par_cur$Q, tol = 1e-4)[1])
-          cat(", norm =", sum(svd(par_cur$Q)$d))
-          cat(", neg =", sum(par_cur$Q <= 0))
-          cat(", obj =", obj_orig)
-        }
-        
-        if (i > 1){
-          if (par_dist_total <= iter_crit){
-            cat("\n\n TOTAL CONVERGENCE!!! ᕕ( ᐛ )ᕗ \n ")
-            break
-          } else if ((par_dist_total > iter_crit) & (i == iter_max)){
-            cat("\n limit reached and no convergence... _(:3」∠)_  \n")
-          }
+        cat(", logLik =", obj_part[1])
+        cat(", norm_X =", obj_part[2]/prior$lambda$X)
+        cat(", norm_Y =", obj_part[3]/prior$lambda$Y)
+        cat(", obj_diff =", cov_crit_cur)
+        cat(", cor_est =", median(abs(est_cur - init$cor_tru_Q)))
+        cat(", cor_prd =", median(abs(mat_cur - init$cor_tru_Q)))
+      }
+      
+      if (i > 2){
+        if (cov_crit_cur <= iter_crit){
+          cat("\n\n TOTAL CONVERGENCE!!! ᕕ( ᐛ )ᕗ \n ")
+          break
+        } else if ((par_dist_total > iter_crit) & (i == iter_max)){
+          cat("\n limit reached and no convergence... _(:3」∠)_  \n")
         }
       }
       
+      iter$crit$obj[i] <- obj_cur
       
       # store
       if (record){
         iter$par$T[i, ] <- par_cur$T
         iter$par$sigma[i, ] <- par_cur$sigma
         iter$par$Q[i, , ] <- par_cur$Q
-        
-        if (is.null(prior$Q$Sigma)){
-          iter$par$Z[i, , ] <- par_cur$Z
-          iter$par$U[i, , ] <- par_cur$U
-        } else {
-          iter$par$S[i, , ] <- par_cur$S
-          iter$par$W[i, , ] <- par_cur$W
-          iter$par$Z[i, , ] <- par_cur$Z
-          
-          iter$par$Us[i, , ] <- par_cur$Us
-          iter$par$Uw[i, , ] <- par_cur$Uw
-          iter$par$Uz[i, , ] <- par_cur$Uz
-        }
         
         iter$crit$par_dist[i] <- par_dist_total
         iter$crit$feas_gap[i] <- feas_gap
