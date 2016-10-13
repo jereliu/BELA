@@ -7,9 +7,9 @@ source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 #### 1. Data Generation ####
-n <- 1e3
-p <- 1e3
-m <- 20
+n <- 20
+p <- 1000
+m <- 5
 K <- 3
 alpha <- 2
 
@@ -38,7 +38,7 @@ data.sim <-
     type = "mult",
     link = "exp")
 
-#### 2. ADMM Optimization ####
+#### 2. FISTA Optimization ####
 file_addr_FISTA <- "./temp_res/FISTA/"
 
 N <- data.sim$data %>% t
@@ -58,8 +58,8 @@ prior$Q$K <- m
 
 
 prior$Q$Sigma <-
-  list(X = cor_tru_S,
-       #diag(nrow(N)), 
+  list(X = #cor_tru_S,
+        diag(nrow(N)), 
        Y = diag(ncol(N)))
 prior$Q$link <- "exp"
 
@@ -72,6 +72,8 @@ init$cor_tru_Q <- data.sim$Q %>% cor
 
 N_temp <- (init$sigma * exp(data.sim$Q)) %>% t
 
+method_mode <- 
+  list(optim = "FISTA", stoch = "MALA")
 # init$sigma <- data.sim$sigma
 # TODO:watch out for data scale!
 
@@ -80,26 +82,59 @@ res_FISTA <-
     N,
     prior = prior,
     init = init, 
-    iter_max = 1e3,
+    iter_max = 1e5,
     iter_crit = 1e-3,
     verbose = TRUE,
     # debug parameters
     method = "FISTA",
     par_to_update = c("Q"),
     record = FALSE,
-    verbose_freq = 100,
-    init_type = "random"
-  )
+    verbose_freq = 1e3,
+    # 
+    init_type = "random",
+    method_mode = method_mode,
+    # mcmc parameters
+    burn_in_ratio = 0.8, 
+    thin_step = 10
+    )
 
-#save(res_ADMM, file = paste0(file_addr_ADMM, "res_ADMM.RData"))
+plot(res_FISTA$iter$crit$obj[4e4:1e5], type = "l")
+
+#save(res_ADMM, 
+#     file = paste0(file_addr_ADMM, "res_ADMM.RData"))
 #load(paste0(file_addr_ADMM, "res_ADMM.RData"))
 
 par <- res_FISTA$par
 info <- res_FISTA$info
-#res_ADMM$iter <- NULL
 
 par_true <- par
 par_true$X <- data.sim$Y.tru %>% t
 par_true$Y <- data.sim$X.tru %>% t
 par_true$sigma <- data.sim$sigma
 par_true$T <- rowSums(N)
+
+# heatmap
+cor_tru <- 
+  (t(data.sim$Y.tru) %*% data.sim$Y.tru + 
+     diag(rep(data.sim$er, ncol(data.sim$Y.tru)))) %>%
+  cov2cor
+
+cor_mvi <- data.sim$Q %>% cor
+cor_est <- (par$Y %*% t(par$X)) %>% cor
+
+cor_est <-
+  res_FISTA$iter$est %>% 
+  apply(1, function(x) cor(x)) %>%
+  apply(1, mean) %>% 
+  matrix(n, n)
+
+cor_est <-
+  res_FISTA$iter$est %>% 
+  apply(1, mean) %>% 
+  matrix(n, p) %>% t %>% cor
+
+rv_coef(cor_est, cor_mvi)
+
+heatmap_2(cor_tru)
+heatmap_2(cor_mvi)
+heatmap_2(cor_est)
