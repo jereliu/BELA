@@ -18,7 +18,8 @@ glrm_sample <-
     family_name = c("gaussian", "poisson", "binomial"),
     Sig_type = rep("iid", 2),
     X_r = NULL, X_c = NULL,
-    Sig_u = NULL, Sig_v = NULL
+    Sig_u = NULL, Sig_v = NULL,
+    phi_sd = 1, noise_sd = 0.01
   )
   {
     family_name <- match.arg(family_name)
@@ -30,11 +31,11 @@ glrm_sample <-
     
     if (is.null(Sig_u)){
       if (Sig_type[1] == "iid")
-        Sig_u <- diag(n)
+        Sig_u <- diag(n) * phi_sd^2
     } 
     if (is.null(Sig_v)){
       if (Sig_type[2] == "iid")
-        Sig_v <- diag(p)
+        Sig_v <- diag(p) * phi_sd^2
     }
     
     #### 2. generate random parameter ####
@@ -56,7 +57,8 @@ glrm_sample <-
     #### > 2.2  U and V ####
     U <- rmvnorm(k, sigma = Sig_u) 
     V <- rmvnorm(k, sigma = Sig_v) 
-    Q <- t(U) %*% V
+    noise <- matrix(rnorm(n*p) * noise_sd, nrow = n)
+    Q <- t(U) %*% V + noise
     
     #### > 2.3  eta ####
     theta <- outer(r_i, c_j, "+") + Q

@@ -1,3 +1,5 @@
+rm(list = ls()) #WoG
+
 library(magrittr)
 library(dplyr)
 library(ggplot2)
@@ -10,51 +12,79 @@ sourceDir("./func")
 n <- 20
 p <- 100
 k <- 20
-
-data.sim <- 
-  glrm_sample(
-    n = n, # num of samples 
-    p = p, # num of categories
-    k = k, # factor dimension
-    family_name = "gaussian"
-  )
-
-#### 2. FISTA Optimization ####
-Y <- data.sim$Y
+family_name <- c("gaussian", "poisson")[1]
+samplr_name <- "hmc"
+snr <- 10
 
 
-#save(res_ADMM, 
-#     file = paste0(file_addr_ADMM, "res_ADMM.RData"))
-#load(paste0(file_addr_ADMM, "res_ADMM.RData"))
+for (family_name in c("gaussian", "poisson")){
+  #for (snr in c(100, 10, 1, 0.5)){
+  for (k in c(2, 5, 10, 15, 20)){
+    phi_sd = 0.5
+    step_optim = 0.001
+    step_sampl = 0.01
 
-par <- res_FISTA$par
-info <- res_FISTA$info
-
-obj_FISTA <- res_FISTA$iter$crit$obj
-obj_ISTA <- res_FISTA$iter$crit$obj
-
-rng <- 2e4:1e5
-plot(log(-obj_ISTA[rng]), type = "l")
-lines(log(-obj_FISTA[rng]), col = 2)
-#res_ADMM$iter <- NULL
-
-par_true <- par
-par_true$X <- data.sim$Y.tru %>% t
-par_true$Y <- data.sim$X.tru %>% t
-par_true$sigma <- data.sim$sigma
-par_true$T <- rowSums(N)
-
-# heatmap
-cor_tru <- 
-  (t(data.sim$Y.tru) %*% data.sim$Y.tru + 
-     diag(rep(data.sim$er, ncol(data.sim$Y.tru)))) %>%
-  cov2cor
-
-cor_mvi <- data.sim$Q %>% cor
-cor_est <- (par$Y %*% t(par$X)) %>% cor
-
-rv_coef(cor_est, cor_mvi)
-
-heatmap_2(cor_tru)
-heatmap_2(cor_mvi)
-heatmap_2(cor_est)
+    set.seed(100)
+    data.sim <- 
+      glrm_sample(
+        n = n, # num of samples 
+        p = p, # num of categories
+        k = k, # factor dimension
+        family_name = family_name,
+        phi_sd = phi_sd,
+        noise_sd = phi_sd/snr
+      )
+    
+    Y <- data.sim$Y
+    true_theta <- data.sim$theta
+    init <- NULL
+    init$V <- t(data.sim$V)
+    
+    for (samplr_name in c("gibbs", "hmc")){
+      if (samplr_name == "gibbs") {
+        iter_max <- c(1e5, 1e3)
+      } else if (samplr_name == "hmc"){
+        iter_max <- c(1e5, 2e5)
+      }
+      #### 2. Sampling ####
+      set.seed(1000)
+      rec <- 
+        glrm(Y, lambda = 1, 
+             k = k, true_theta = true_theta,
+             init = init,
+             samplr_name = samplr_name,
+             family_name = family_name,
+             iter_max = iter_max, 
+             record_freq = 10,
+             time_max = 60, 
+             step_size = c(step_optim, step_sampl), 
+             frog_step = 5,
+             rotn_freq = iter_max[2],
+             mmtm_freq = iter_max[2])
+      
+      #### 3. Evaluation ####
+      # plot
+      task_title <- 
+        paste0(
+          family_name, " ", 
+          samplr_name, " k=", k, " snr = ", snr)
+      plot(rec$time, rec$error, type = "l", 
+           main = paste0("sample error ", task_title))
+      plot(rec$pred_error, type = "l", 
+           main = paste0("prediction error ", task_title))
+      plot(rec$time, rec$obj, type = "l", 
+           main = paste0("obj ", task_title))
+      plot(rec$time[-1], rec$esdj, type = "l", 
+           main = paste0("obj ", task_title))
+      
+      # save 
+      var_name <- paste0("rec_", family_name, 
+                         "_k", k, "_snr", snr,
+                         "_", samplr_name)
+      paste0(var_name, " <- rec") %>% 
+        parse(text = .) %>% eval()
+      save(rec, file = paste0("./result/", var_name, ".RData"))
+    }
+  }
+}
+#}
