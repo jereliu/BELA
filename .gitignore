@@ -39,3 +39,6 @@ vignettes/*.pdf
 *.html
 
 /temp_*/
+
+# result dump files
+result/
