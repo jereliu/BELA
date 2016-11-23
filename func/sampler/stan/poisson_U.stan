@@ -2,8 +2,9 @@ data {
   int<lower=1> N;               // number of population
   int<lower=1> P;               // number of species
   int<lower=1> K;               // dimension of latent factors 
-  matrix[N,P] Y;                // data matrix of order [N,P]    
-  
+  int<lower=0> Y[N,P];          // data matrix of order [N,P]    
+  matrix[P,K] V;                // latent factor for species       
+
   real<lower=0> lambda_u;       // penalty for prior
   real<lower=0> lambda_v;  
 }
@@ -16,13 +17,12 @@ transformed data {
 
   mu_K = rep_vector(0.0, K);
   Sig_K = diag_matrix(rep_vector(1/lambda_u, K));
-  Sig_P = diag_matrix(rep_vector(1, P));
+  Sig_P = diag_matrix(rep_vector(1/lambda_v, P));
 }
 
 parameters {
   matrix[N, K] U;   // factor loading for population
-  matrix[P, K] V;   // latent factor for species      
-  /* 
+  /*
   matrix[N, P] e;     // factor noise
   */  
 }
@@ -36,17 +36,20 @@ transformed parameters{
 model {
   // the priors 
   for(i in 1:N){
-    // e[i] ~ multi_normal(mu_K, Sig_K); 
+    //e[i] ~ multi_normal(mu_K, Sig_K); 
     U[i] ~ multi_normal(mu_K, Sig_K);  
   }
   
+  /*
   for(i in 1:P){
     V[i] ~ multi_normal(mu_K, Sig_K);   
   }
-
+  */
+  
   //The likelihood
-
-  for(j in 1:N){
-    Y[j] ~ multi_normal(Theta[j], Sig_P); 
+  for(i in 1:N){
+    for (j in 1:P){
+      Y[i, j] ~  poisson_log(Theta[i, j]); 
+   }
   }
 }

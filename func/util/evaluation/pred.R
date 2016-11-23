@@ -2,8 +2,9 @@ library(abind)
 
 predMeanError <- function(rec, true_theta, num = 100){
   # use the first half as burn in
+  num <- min(dim(rec$U)[1], num)
   iter <- 
-    seq(dim(rec$U)[1]/2, 
+    seq(dim(rec$U)[1] * 0.25, 
         dim(rec$U)[1], length.out = num) %>% round
   
   # evaluate effective sample size/total sample size
@@ -17,7 +18,9 @@ predMeanError <- function(rec, true_theta, num = 100){
   
   mean_Pred <- 
     sapply(2:length(iter), function(i)
-      mean((apply(Theta[iter[1]:iter[i], , ], 2:3, mean) - true_theta)^2)
+      sqrt(mean((apply(Theta[iter[1]:iter[i], , ], 2:3, mean) - true_theta)^2)/
+        var(as.vector(true_theta))
+        )
     )
   
   time_Pred <- rec$time[iter[-1]]

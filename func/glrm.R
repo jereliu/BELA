@@ -3,12 +3,11 @@ require(coda)
 default <- FALSE
 
 if (default){
-  k <- 10
-  lambda = 1
-  samplr_name = c("gibbs", "hmc", "hmc_nuts", "rotation")[2]
-  family_name = c("gaussian", "poisson", "binomial")[2]
-  iter_max = c(1e5, 1e5)
-  record_freq = 10
+  lambda = 1/phi_sd
+  #samplr_name = c("gibbs", "hmc", "hmc_stan", "rotation")[3]
+  #family_name = c("gaussian", "poisson", "poisson_softplus", "poisson_reluaapr", "binomial")[1]
+  iter_max = c(1e5, 1e3)
+  record_freq = 1
   time_max = 60 
   pred_num = 100
   step_size = c(0.001, 0.1)
@@ -20,12 +19,13 @@ if (default){
 glrm <- 
   function(
     Y, X_r = NULL, X_c = NULL, lambda = 1,
-    k = NULL, true_theta = NULL,
+    k = NULL, true_par = NULL, 
     init = NULL, init_MAP = FALSE,
-    samplr_name = c("gibbs", "hmc", "hmc_nuts", "rotation"),
-    family_name = c("gaussian", "poisson", "binomial"),
+    samplr_name = c("gibbs", "gibbs_debug", "hmc_stan", "hmc_stan_debug", "vi_stan"),
+    family_name = c("gaussian", "poisson", "poisson_softplus", "binomial"),
     # sampler parameters: generic
-    iter_max = c(1e5, 1e4), record_freq = 10,
+    iter_max = c(1e5, 1e4), 
+    record_freq = 10,
     time_max = 60,
     pred_num = 100,
     ess_num = 100,
@@ -52,7 +52,7 @@ glrm <-
     config$sampler$iter_max <- iter_max[2]
     config$sampler$step_size <- step_size[2]
     
-    if (samplr_name == "hmc"){
+    if (length(grep("hmc", samplr_name)) > 0){
       config$sampler$frog_step <- frog_step
       config$sampler$mmtm_freq <- mmtm_freq
       config$sampler$rotn_freq <- rotn_freq
@@ -65,7 +65,8 @@ glrm <-
     if (is.null(k)){
       info$k <- min(n, p)
     } else info$k <- k
-    info$true_theta <- true_theta
+    info$true_par <- true_par
+    true_theta <- info$true_par$theta
     
     if (is.null(init$U)) 
       init$U <- matrix(rnorm(n*k, sd = 1e-2), nrow = n)
@@ -98,7 +99,6 @@ glrm <-
     }
     #### 4. Put initiation at MAP ####
     if (init_MAP){
-      
       rec_optim <- 
         glrm_optimizer(Y, lambda, family_name, 
                        init, config, rec_optim, info)
@@ -124,9 +124,13 @@ glrm <-
                    init, config, rec, info)
     
     # calculate effective sample size and prediction
-    rec$pred_error <- predMeanError(rec, true_theta, pred_num)
-    rec$ess <- essMatrix(rec, ess_num)
-    rec$esdj <- ESJD(rec, config)
+    if (length(grep("debug", samplr_name)) == 0){
+      rec$pred_error <- predMeanError(rec, data.sim$theta, pred_num)
+      rec$ess <- essMatrix(rec, ess_num)
+      rec$esdj <- ESJD(rec, config)
+    }
+    
+    rec$init <- init
     rec$true_theta <- true_theta
     
     #### 6. Results ####

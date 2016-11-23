@@ -1,11 +1,11 @@
-glrm_sampler_gibbs <- 
+glrm_sampler_gibbs_indiv <- 
   function(Y, lambda, family_name, 
            init, config, rec, info){
     # unpack family properties
     n <- info$n 
     p <- info$p
     k <- info$k
-    true_theta <- info$true_theta
+    true_theta <- info$true_par$theta
     
     family <- glmr_family(family_name)
     T <- family$sufficient(Y)
@@ -55,8 +55,11 @@ glrm_sampler_gibbs <-
       # metroplis step for U
       acc_U <- NULL
       acc_prob <- 
-        acc_prob_U(U_cur, U_old, V_cur, V_old, 
-                   lambda, family)
+        acc_prob_U_ind(U_cur, U_old, V_cur, V_old, 
+                       lambda, family)
+      if (family_name == "gaussian"){
+        acc_prob <- 1/acc_prob
+      }
       acc_U <- matrix(runif(n*k), n, k) < acc_prob
       U_cur <- U_cur * acc_U + U_old * (1 - acc_U)
       
@@ -67,26 +70,25 @@ glrm_sampler_gibbs <-
       B <- T + A_d1 - A_d2 * Theta_cur
       lnr_coef_v <- t(B) %*% U_cur # p x k, each row lnr coef for v_j
       
-      V_update <- FALSE
-      if (V_update){
-        
-        V_cur <-
-          lapply(1:ncol(A_d2),
-                 function(j){
-                   sigma <- solve(
-                     0.5 * t(U_cur) %*% diag(A_d2[, j]) %*% U_cur +
-                       lambda * diag(k))
-                   mu <- 0.5 * sigma %*% lnr_coef_v[j, ]
-                   rmvnorm(1, mean = mu, sigma = sigma)
-                 }
-          ) %>% do.call("rbind", .)
-      }
+      V_cur <-
+        lapply(1:ncol(A_d2),
+               function(j){
+                 sigma <- solve(
+                   0.5 * t(U_cur) %*% diag(A_d2[, j]) %*% U_cur +
+                     lambda * diag(k))
+                 mu <- 0.5 * sigma %*% lnr_coef_v[j, ]
+                 rmvnorm(1, mean = mu, sigma = sigma)
+               }
+        ) %>% do.call("rbind", .)
       
       # metroplis step for V
       acc_V <- NULL
       acc_prob <- 
-        acc_prob_V(U_cur, U_old, V_cur, V_old, 
-                   lambda, family)
+        acc_prob_V_ind(U_cur, U_old, V_cur, V_old, 
+                       lambda, family)
+      if (family_name == "gaussian"){
+        acc_prob <- 1/acc_prob
+      }      
       acc_V <- matrix(runif(p*k), p, k) < acc_prob
       V_cur <- V_cur * acc_V + V_old * (1 - acc_V)
       

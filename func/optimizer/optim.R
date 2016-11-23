@@ -1,9 +1,9 @@
 # TODO: Dynamically adjust step size
-
 glrm_optimizer <- 
   function(Y, lambda, family_name, 
            init, config, rec, info)
   {
+    #warning("V not updated")
     # unpack family properties
     n <- info$n
     p <- info$p
@@ -11,7 +11,7 @@ glrm_optimizer <-
     true_theta <- info$true_theta
     
     family <- glmr_family(family_name)
-    T <- family$sufficient(Y)
+    T_suff <- family$sufficient(Y)
     d1 <- family$partition$d
     d2 <- family$partition$d2
     negloglik <- family$negloglik
@@ -51,7 +51,7 @@ glrm_optimizer <-
         (1/(2 * (apply(A_d2, 1, max) + 2 * lambda))) *
         matrix(1, n, k)
       
-      grad <- grad_hmc_U(T, U_cur, V_cur, lambda, d1)
+      grad <- grad_hmc_U(T_suff, U_cur, V_cur, lambda/2, d1)
       U_cur <- 
         U_cur - 
         0.5 * step_size_true^2 * grad + 
@@ -60,17 +60,19 @@ glrm_optimizer <-
         Ru_cur - 0.5 * step_size_true * grad
       
       # sample for V, then acc/rej
-      step_size_true <- 
-        step_size * 
+      step_size_true <-
+        step_size *
         t((1/(2 * (apply(A_d2, 2, max) + 2 * lambda))) *
             matrix(1, k, p))
-      
-      grad <- 
-        grad_hmc_V(T, U_cur, V_cur, lambda, d1)
-      
-      V_cur <- 
-        V_cur - step_size_true * grad + 
+
+      grad <-
+        grad_hmc_V(T_suff, U_cur, V_cur, lambda/2, d1)
+
+      V_cur <-
+        V_cur - step_size_true * grad +
         step_size_true * Rv_cur
+      Rv_cur <- 
+        Rv_cur - 0.5 * step_size_true * grad
       
       
       # record
@@ -81,7 +83,7 @@ glrm_optimizer <-
         # rec$acc[iter/record_freq, ] <- 
         #   c(mean(acc_U), mean(acc_V))
         rec$obj[iter/record_freq] <- 
-          negloglik(T, U_cur %*% t(V_cur)) + 
+          negloglik(T_suff, U_cur %*% t(V_cur)) + 
           lambda * (sum(V_cur^2) + sum(U_cur^2))
         
         rec$time[iter/record_freq] <-

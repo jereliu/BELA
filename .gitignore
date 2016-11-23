@@ -42,3 +42,4 @@ vignettes/*.pdf
 
 # result dump files
 result/
+func/data/real/

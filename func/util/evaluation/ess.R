@@ -1,16 +1,18 @@
 essMatrix <- function(rec, num = 1e2){
+  num <- min(dim(rec$U)[1], num)
   # use the first half as burn in
   iter <- 
-    seq(dim(rec$U)[1]/2, dim(rec$U)[1], length.out = num) %>% round
+    seq(1, dim(rec$U)[1], length.out = num) %>% round
   
   # evaluate effective sample size/total sample size
   ess_U <- sapply(2:length(iter),
                   function(i) effectiveSize(rec$U[iter[1]:iter[i], 1, 1]))
-  ess_V <- sapply(2:length(iter),
-                  function(i) effectiveSize(rec$V[iter[1]:iter[i], 1, 1]))
+  #ess_V <- sapply(2:length(iter),
+  #                function(i) effectiveSize(rec$V[iter[1]:iter[i], 1, 1]))
   ess_time <- rec$time[iter[-1]]
   
-  list(time = ess_time - min(ess_time), U = ess_U, V = ess_V)
+  #list(time = ess_time - min(ess_time), U = ess_U, V = ess_V)
+  list(time = ess_time - min(ess_time), U = ess_U)
 }
 
 essMatrix_whole <- function(rec, num = 10){

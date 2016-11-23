@@ -3,6 +3,7 @@ data {
   int<lower=1> P;               // number of species
   int<lower=1> K;               // dimension of latent factors 
   matrix[N,P] Y;                // data matrix of order [N,P]    
+  matrix[P,K] V;                // latent factor for species      
   
   real<lower=0> lambda_u;       // penalty for prior
   real<lower=0> lambda_v;  
@@ -21,7 +22,6 @@ transformed data {
 
 parameters {
   matrix[N, K] U;   // factor loading for population
-  matrix[P, K] V;   // latent factor for species      
   /* 
   matrix[N, P] e;     // factor noise
   */  
@@ -40,9 +40,11 @@ model {
     U[i] ~ multi_normal(mu_K, Sig_K);  
   }
   
+  /*
   for(i in 1:P){
     V[i] ~ multi_normal(mu_K, Sig_K);   
   }
+  */
 
   //The likelihood
 

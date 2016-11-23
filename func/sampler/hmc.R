@@ -7,7 +7,7 @@ glrm_sampler_hmc <-
     n <- info$n 
     p <- info$p
     k <- info$k
-    true_theta <- info$true_theta
+    true_theta <- info$true_par$theta
     
     family <- glmr_family(family_name)
     T <- family$sufficient(Y)
