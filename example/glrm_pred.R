@@ -18,17 +18,20 @@ snr <- 100
 
 rand_seeds <- list(data = 4200, samplr = 1300)
 rec_plot <- FALSE
-cond_dens_plot <- TRUE
+cond_dens_plot_d1_U <- FALSE
+cond_dens_plot_d1_V <- FALSE
 marg_dens_plot <- FALSE
 
 
-pdf(paste0(addr_targ, "debug_marginal_varV_", family_name, ".pdf"), 
-    height = 4, width = 10)
-par(mfrow = c(1, 2))
+# addr_targ <-
+#  paste0("../../Dropbox (Personal)/Research/Harvard/Lorenzo/1. BayesOpt/Report/Progress/2017_Nov_Week_4/plot/")
+# pdf(paste0(addr_targ, "debug_marginal_varV_poisson.pdf"), height= 4, width = 10)
+# par(mfrow = c(1, 2))
 for (family_name in c("gaussian", "poisson")[1]){
   #for (snr in c(100, 10, 1, 0.5)){
-  for (k in c(1, 2, 5, 10, 15, 20)[1]){
-    lambda = 1
+  for (k in c(1, 2, 5, 10, 15, 20)[c(2, 4, 5)]){
+    #for (lambda in c(0.5, 1, 3, 5, 10, 20)[1]){
+    lambda = 2
     phi_sd = 1/sqrt(lambda)
     step_optim = 0.001
     step_sampl = 0.01
@@ -51,13 +54,13 @@ for (family_name in c("gaussian", "poisson")[1]){
     
     rec <- NULL
     #rec$init <- init_hmc
-    for (samplr_name in c("hmc_stan", "gibbs", "vi_stan")[c(1:2)]){
+    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan")[1:3]){
       # choose iter based on 
-      if (length(grep("gibbs", samplr_name)) > 0) {
-        iter_max <- c(1e5, 5e3) # 1e3)
+      if (length(grep("gibbs", samplr_name)) > 0){
+        iter_max <- c(1e5, 1e3) # 1e3)
       } else {
         # if sampler name contain "hmc"...
-        iter_max <- c(1e5, 1e4) # 1e4)
+        iter_max <- c(1e5, 1e3) # 1e4)
       }
       
       if (TRUE){
@@ -117,56 +120,122 @@ for (family_name in c("gaussian", "poisson")[1]){
         )
       }
       
-      if (cond_dens_plot){
+      if (cond_dens_plot_d1_U){ # U
         if (k !=1){
           stop("conditional density plot work only for k=1")
         }
         # exact posterior density matching for U[1, 1]
-        u_likhd <- 
-          function(u_range = seq(-3,3, 1e-2), data.sim, lambda, p, i = 1){
-            # exact likelihood for k=1 normal data
-            var <- 1/(sum(data.sim$V^2) + lambda)
-            mu <- var * data.sim$V %*% data.sim$Y[i, ]
-            dnorm(u_range, mu, sd = sqrt(var))
+        u_likhd <-
+          function(u_range = seq(-1,1, 1e-2), data.sim, lambda, 
+                   p, i = 1, family_name){
+            # exact likelihood for k=1
+            if (family_name == "gaussian"){
+              var <- 1/(sum(data.sim$V^2) + lambda)
+              mu <- var * data.sim$V %*% data.sim$Y[i, ]
+              density_out <- dnorm(u_range, mu, sd = sqrt(var))
+            } else {
+              family <- glmr_family(family_name)
+              T_suff <- family$sufficient(data.sim$Y)
+              VT <- data.sim$V %*% data.sim$Y[i, ]
+              lik_val <- 
+                sapply(u_range, 
+                       function(u){
+                         u * VT - sum(exp(u * data.sim$V)) -
+                           0.5 * lambda * u^2
+                       }
+                ) %>% exp 
+              density_out <- lik_val/max(lik_val)
+            }
+            density_out
           }
         
         emprden_hmc <- density(rec$U[, 1, 1])
-        u_range <- 
-          seq(min(emprden_hmc$x), max(emprden_hmc$x), 
+        u_range <-
+          seq(min(emprden_hmc$x), max(emprden_hmc$x),
               length.out = 1e3)
-        postden_hmc <- 
-          u_likhd(u_range = u_range, 
-                  data.sim, lambda = lambda, p)
+        postden_hmc <-
+          u_likhd(u_range = u_range,
+                  data.sim, lambda = lambda, p, 
+                  family_name = family_name)
         
         plot(emprden_hmc$x, emprden_hmc$y/max(emprden_hmc$y),
-             type = "l", main = task_title)
-        lines(u_range, postden_hmc/max(postden_hmc), 
+             type = "l", #xlim = c(-1, 0),
+             main = paste0(task_title, " lambda = ", lambda))
+        lines(u_range, postden_hmc/max(postden_hmc),
+              col = 2)
+      }
+      
+      if (cond_dens_plot_d1_V){ # V
+        if (k !=1){
+          stop("conditional density plot work only for k=1")
+        }
+        # exact posterior density matching for V[1, 1]
+        v_likhd <-
+          function(v_range = seq(-1,1, 1e-2), data.sim, lambda, 
+                   p, i = 1, family_name){
+            # exact likelihood for k=1
+            if (family_name == "gaussian"){
+              var <- 1/(sum(data.sim$U^2) + lambda)
+              mu <- var * data.sim$U %*% data.sim$Y[, i]
+              density_out <- dnorm(v_range, mu, sd = sqrt(var))
+            } else {
+              family <- glmr_family(family_name)
+              T_suff <- family$sufficient(data.sim$Y)
+              UT <- data.sim$U %*% T_suff[, i]
+              lik_val <- 
+                sapply(v_range, 
+                       function(v){
+                         v * UT - sum(exp(v * data.sim$U)) -
+                           0.5 * lambda * v^2
+                       }
+                ) %>% exp 
+              density_out <- lik_val/max(lik_val)
+            }
+            density_out
+          }
+        
+        
+        emprden_hmc <- density(rec$V[, 1, 1])
+        v_range <-
+          seq(min(emprden_hmc$x), max(emprden_hmc$x),
+              length.out = 1e3)
+        postden_hmc <-
+          v_likhd(v_range = v_range,
+                  data.sim, lambda = lambda, p, 
+                  family_name = family_name)
+        
+        plot(emprden_hmc$x, emprden_hmc$y/max(emprden_hmc$y),
+             type = "l", #xlim = c(-3, 3),
+             main = paste0(task_title, " lambda = ", lambda)
+        )
+        lines(v_range, postden_hmc/max(postden_hmc),
               col = 2)
       }
       
       if (marg_dens_plot){
         # exact posterior density matching for U[1, 1]
-        u_likhd <- 
-          function(u_range = seq(-3,3, 1e-2), data.sim, lambda, p, i = 1){
-            # exact likelihood for k=1 normal data
-            y2 <- sum(data.sim$Y^2)
-            
-            exp(- 0.5 * (y2 + lambda * u_range^2 + lambda^2) * u_range^2 / (u_range^2 + lambda)) * 
-              (u_range^2 + lambda)^(-p/2)
-          }
+        # u_likhd <- 
+        #   function(u_range = seq(-3,3, 1e-2), data.sim, lambda, p, i = 1){
+        #     # exact likelihood for k=1 normal data
+        #     y2 <- sum(data.sim$Y^2)
+        #     
+        #     exp(- 0.5 * (y2 + lambda * u_range^2 + lambda^2) * u_range^2 / (u_range^2 + lambda)) * 
+        #       (u_range^2 + lambda)^(-p/2)
+        #   }
         
         emprden_hmc <- density(rec$U[, 1, 1])
-        u_range <- 
-          seq(min(emprden_hmc$x, -3), max(emprden_hmc$x, 3), 
-              length.out = 1e3)
-        postden_hmc <- 
-          u_likhd(u_range = u_range, 
-                  data.sim, lambda = lambda, p)
+        # u_range <- 
+        #   seq(min(emprden_hmc$x, -3), max(emprden_hmc$x, 3), 
+        #       length.out = 1e3)
+        # postden_hmc <- 
+        #   u_likhd(u_range = u_range, 
+        #           data.sim, lambda = lambda, p)
         
         plot(emprden_hmc$x, emprden_hmc$y/max(emprden_hmc$y),
-             xlim = range(u_range), type= "l", main = task_title)
-        lines(u_range, postden_hmc/max(postden_hmc), 
-              col = 2)
+             xlim = c(-3, 3), #range(u_range), 
+             type= "l", main = task_title)
+        # lines(u_range, postden_hmc/max(postden_hmc), 
+        #       col = 2)
       }
       
       # save
@@ -190,10 +259,11 @@ for (family_name in c("gaussian", "poisson")[1]){
       #                    V = rec$V[length(rec$time), , ])
       #   save(init_hmc, file = paste0("./result/theta_", var_name, ".RData"))
       # }
+      #}
     }
   }
 }
-dev.off()
+# dev.off()
 
 
 post_diag <- FALSE
@@ -211,8 +281,8 @@ if (post_diag){
     )
   plot(likhd, type = "l")
   abline(
-    glmr_family(family_name)$negloglik(T_y, 
-                                       (rec$init$U) %*% t(rec$init$V))
+    glmr_family(family_name)$negloglik(
+      T_y, (rec$init$U) %*% t(rec$init$V))
   )
   
   # objective

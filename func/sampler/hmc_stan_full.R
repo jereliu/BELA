@@ -11,7 +11,7 @@ glrm_sampler_hmc_stan <-
     k <- info$k
     true_theta <- info$true_par$theta
     
-    family <- glmr_family(family_name)
+    family <- glrm_family(family_name)
     T_suff <- family$sufficient(Y)
     negloglik <- family$negloglik
     

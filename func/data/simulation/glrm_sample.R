@@ -69,7 +69,7 @@ glrm_sample <-
     
     #### 3. generate observation ####
     # obtain distribution family and link function
-    dist_family <- glmr_family(family_name)
+    dist_family <- glrm_family(family_name)
     dist_gen <- # obtain random sampler
       substr(family_name, 1, 5) %>% 
       paste0("_gen") %>% 
@@ -84,7 +84,7 @@ glrm_sample <-
     
     # generate observation
     Y <- par
-    Y[] <- vapply(Y, dist_gen, numeric(1))
+    Y[] <- vapply(par, dist_gen, numeric(1))
     
     outlist <- 
       list(Y = Y, theta = theta, 

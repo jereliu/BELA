@@ -11,7 +11,7 @@ glrm_sampler_hmc_stan_U <-
     k <- info$k
     true_theta <- info$true_par$theta
     
-    family <- glmr_family(family_name)
+    family <- glrm_family(family_name)
     T_suff <- family$sufficient(Y)
     negloglik <- family$negloglik
     
@@ -62,7 +62,8 @@ glrm_sampler_hmc_stan_U <-
     
     # return
     rec_list <- model_out@sim$samples[[1]]
-    rec_name <- sapply(names(rec_list), function(x) gsub("\\[.*", "", x)) 
+    rec_name <- sapply(names(rec_list), 
+                       function(x) gsub("\\[.*", "", x)) 
     
     rec <- NULL
 

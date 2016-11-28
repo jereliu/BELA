@@ -50,7 +50,7 @@ glrm_sampler_gibbs_debug <-
           Theta_old <- U_old %*% t(V_old)
           A_d1 <- d1(Theta_old)
           A_d2 <- d2(Theta_old)
-          B <- T_suff + A_d1 - A_d2 * Theta_old
+          B <- T_suff - A_d1 + A_d2 * Theta_old
           lnr_coef_u <- B %*% V_old    # n x k, each row lnr coef for u_i
           
           # sample for i^th row of U
@@ -90,7 +90,7 @@ glrm_sampler_gibbs_debug <-
           Theta_cur <- U_cur %*% t(V_cur)
           A_d1 <- d1(Theta_cur)
           A_d2 <- d2(Theta_cur)
-          B <- T_suff + A_d1 - A_d2 * Theta_cur
+          B <- T_suff - A_d1 + A_d2 * Theta_cur
           lnr_coef_v <- t(B) %*% U_cur # p x k, each row lnr coef for v_j
           
           # sample for i^th row of U

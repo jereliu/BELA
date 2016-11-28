@@ -17,7 +17,7 @@ transformed data {
 
   mu_K = rep_vector(0.0, K);
   Sig_K = diag_matrix(rep_vector(1/lambda_u, K));
-  Sig_P = diag_matrix(rep_vector(1/lambda_v, P));
+  Sig_P = diag_matrix(rep_vector(1, P));
 }
 
 parameters {

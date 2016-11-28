@@ -1,4 +1,4 @@
-glmr_family <- 
+glrm_family <- 
   function(family_name = c("gaussian", "poisson", "poisson_softplus", 
                            "poisson_reluappr", "binomial")){
     family_name <- match.arg(family_name)
@@ -63,8 +63,9 @@ partition <-
     return(out_list)
   }
 
-sufficient <-     # TODO: add sufficient stat
+sufficient <-     
   function(family_name){
+    # sufficient stat (identity for normal/pois/binom)
     suffunc <- function(Y) Y
     suffunc
   }

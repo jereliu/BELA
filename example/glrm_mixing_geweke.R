@@ -17,12 +17,12 @@ samplr_name <- "hmc_stan"
 snr <- 100
 
 rand_seeds <- list(data = 4200, samplr = 1300)
-pred_plot <- FALSE
-prior_dens_plot <- TRUE
+pred_plot <- TRUE
+prior_dens_plot <- FALSE
 
 for (family_name in c("gaussian", "poisson")){
   #for (snr in c(100, 10, 1, 0.5)){
-  for (k in c(1, 2, 5, 10, 15, 20)[c(2, 4, 5)]){
+  for (k in c(1, 2, 5, 10, 15, 20)[c(1)]){
     lambda = 1
     phi_sd = 1/sqrt(lambda)
     step_optim = 0.001
@@ -46,7 +46,7 @@ for (family_name in c("gaussian", "poisson")){
     
     rec <- NULL
     #rec$init <- init_hmc
-    for (samplr_name in c("hmc_stan_debug", "gibbs_debug")[1]){
+    for (samplr_name in c("hmc_stan_debug", "gibbs_debug")[c(1:2)]){
       # choose iter based on 
       if (length(grep("gibbs", samplr_name)) > 0) {
         iter_max <- c(1e5, 1e3) # 1e3)

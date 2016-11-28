@@ -51,11 +51,11 @@ glrm <-
     
     config$sampler$iter_max <- iter_max[2]
     config$sampler$step_size <- step_size[2]
+    config$sampler$rotn_freq <- rotn_freq
     
     if (length(grep("hmc", samplr_name)) > 0){
       config$sampler$frog_step <- frog_step
       config$sampler$mmtm_freq <- mmtm_freq
-      config$sampler$rotn_freq <- rotn_freq
     }
     
     #### 2. initiate ####
@@ -84,7 +84,7 @@ glrm <-
                      dimnames = list(NULL, c("U", "V")))
     
     rec$error <- array(NaN, c(iter_max[2]/record_freq))
-    rec$time <- array(NaN, c(iter_max[2]/record_freq)) 
+    rec$time <- array(NaN, c(iter_max[2]/record_freq))
     rec$obj <- array(NaN, c(iter_max[2]/record_freq)) 
     
     if (init_MAP){

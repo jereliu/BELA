@@ -47,7 +47,6 @@ model {
   */
 
   //The likelihood
-
   for(j in 1:N){
     Y[j] ~ multi_normal(Theta[j], Sig_P); 
   }
