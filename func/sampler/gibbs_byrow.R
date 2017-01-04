@@ -50,7 +50,7 @@ glrm_sampler_gibbs <-
         A_d2 <- d2(Theta_old)
         B <- T_suff - A_d1 + A_d2 * Theta_old
         lnr_coef_u <- B %*% V_old    # n x k, each row lnr coef for u_i
-
+        
         # sample for i^th row of U
         U_prop <- U_cur
         sigma <-
@@ -59,7 +59,7 @@ glrm_sampler_gibbs <-
               lambda * diag(k)
           )
         mu <-  sigma %*% lnr_coef_u[i, ]
-
+        
         # U_prop[i, ] <-
         #   rmvnorm(1,
         #           mean = mu,
@@ -68,14 +68,14 @@ glrm_sampler_gibbs <-
           rmvnorm(1,
                   mean = mu,
                   sigma = sigma)
-
+        
         # metroplis step for U
         acc_prob <-
           acc_prob_U(U_prop, U_cur, V_cur, V_old, i,
                      lambda, family, T_suff)
         # warning("no rejection for U)
         acc_U[i] <- (runif(1) < acc_prob)
-
+        
         if (acc_U[i])
           U_cur <- U_prop
       }
@@ -83,17 +83,17 @@ glrm_sampler_gibbs <-
       ####  V  #################
       acc_V <- rep(NaN, p)
       # warning("only V updated")
-      ## Loops to Sample V
+      # Loops to Sample V
       for (j in 1:p){
         V_old <- V_cur
-
+        
         # generate A', A'', B
         Theta_cur <- U_cur %*% t(V_cur)
         A_d1 <- d1(Theta_cur)
         A_d2 <- d2(Theta_cur)
         B <- T_suff - A_d1 + A_d2 * Theta_cur
         lnr_coef_v <- t(B) %*% U_cur # p x k, each row lnr coef for v_j
-
+        
         # sample for i^th row of U
         V_prop <- V_cur
         sigma <- solve(
@@ -104,19 +104,19 @@ glrm_sampler_gibbs <-
           rmvnorm(1,
                   mean = mu,
                   sigma = sigma)
-
+        
         # V_prop[j, ] <-
         #   rmvnorm(1,
         #           mean = V_cur[j, ],
         #           sigma = sigma * diag(k))
-
+        
         # metroplis step for V
         acc_prob <-
           acc_prob_V(U_cur, U_cur, V_prop, V_old, j,
                      lambda, family, T_suff)
         # warning("no rejection for V")
         acc_V[j] <- (runif(1) < acc_prob)
-
+        
         if (acc_V[j])
           V_cur <- V_prop
       }
@@ -129,8 +129,8 @@ glrm_sampler_gibbs <-
         
         rec$acc[iter/record_freq, ] <- 
           c(mean(acc_U), mean(acc_V))
-        rec$error[iter/record_freq] <- 
-          mean((U_cur %*% t(V_cur) - true_theta)^2) %>% sqrt
+        # rec$error[iter/record_freq] <- 
+        #   mean((U_cur %*% t(V_cur) - true_theta)^2) %>% sqrt
         rec$obj[iter/record_freq] <- 
           negloglik(T_suff, U_cur %*% t(V_cur)) + 
           (lambda/2) * (sum(V_cur^2) + sum(U_cur^2))

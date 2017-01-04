@@ -10,7 +10,7 @@ glrm_optimizer <-
     k <- info$k
     true_theta <- info$true_theta
     
-    family <- glmr_family(family_name)
+    family <- glrm_family(family_name)
     T_suff <- family$sufficient(Y)
     d1 <- family$partition$d
     d2 <- family$partition$d2
@@ -102,6 +102,7 @@ glrm_optimizer <-
       }
     }
     
+    plot(rec$obj, type = "l")
     # return
     cat(paste0("\n max iteration (", iter_max, ") reached with no convergence T_T"))
     rec$output <- list(U = U_cur, V = V_cur)

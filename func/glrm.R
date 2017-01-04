@@ -3,17 +3,19 @@ require(coda)
 default <- FALSE
 
 if (default){
-  lambda = 1/phi_sd
   #samplr_name = c("gibbs", "hmc", "hmc_stan", "rotation")[3]
   #family_name = c("gaussian", "poisson", "poisson_softplus", "poisson_reluaapr", "binomial")[1]
   iter_max = c(1e5, 1e3)
   record_freq = 1
   time_max = 60 
   pred_num = 100
-  step_size = c(0.001, 0.1)
+  step_size = c(0.001, 1e-3)
   frog_step = 5
   rotn_freq = 10
   mmtm_freq = iter_max[2]/10
+  samp_seed = 100
+  line_step = 100
+  n_particle = 1000
 }
 
 glrm <- 
@@ -21,7 +23,7 @@ glrm <-
     Y, X_r = NULL, X_c = NULL, lambda = 1,
     k = NULL, true_par = NULL, 
     init = NULL, init_MAP = FALSE,
-    samplr_name = c("gibbs", "gibbs_debug", "hmc_stan", "hmc_stan_debug", "vi_stan"),
+    samplr_name = c("gibbs", "slice", "hmc_stan", "vi_stan", "stein"),
     family_name = c("gaussian", "poisson", "poisson_softplus", "binomial"),
     # sampler parameters: generic
     iter_max = c(1e5, 1e4), 
@@ -29,11 +31,18 @@ glrm <-
     time_max = 60,
     pred_num = 100,
     ess_num = 100,
+    samp_seed = 100,
+    step_size = c(0.001, 1e-3), 
+    # sampler parameters: slice with tree
+    edge_max = 5,
+    line_step = 100,
     # sampler parameters: hmc
-    step_size = c(0.001, 0.001), 
     frog_step = 5,
     rotn_freq = 10,
-    mmtm_freq = iter_max[2]/10
+    mmtm_freq = iter_max[2]/10,
+    # sampler parameters: stein
+    n_particle = 1000, 
+    step_rate = 1e-5 # adaptation rate for AdaGrad
   )
   {
     # time_max: maximum sampling time, in minutes
@@ -52,26 +61,39 @@ glrm <-
     config$sampler$iter_max <- iter_max[2]
     config$sampler$step_size <- step_size[2]
     config$sampler$rotn_freq <- rotn_freq
+    config$sampler$samp_seed <- samp_seed
     
     if (length(grep("hmc", samplr_name)) > 0){
       config$sampler$frog_step <- frog_step
       config$sampler$mmtm_freq <- mmtm_freq
     }
     
+    if (length(grep("slice", samplr_name)) > 0){
+      config$sampler$edge_max <- edge_max
+      config$sampler$line_step <- line_step
+    }
+    
+    if (length(grep("stein", samplr_name)) > 0){
+      config$sampler$n_particle <- n_particle
+      config$sampler$step_size <- step_size[2]
+      config$sampler$step_rate <- step_rate
+    }
+    
     #### 2. initiate ####
     info <- NULL
-    info$n <- nrow(Y)
-    info$p <- ncol(Y)
+    n <- info$n <- nrow(Y)
+    p <- info$p <- ncol(Y)
     if (is.null(k)){
       info$k <- min(n, p)
     } else info$k <- k
     info$true_par <- true_par
     true_theta <- info$true_par$theta
     
+    set.seed(100) # fix prior sample
     if (is.null(init$U)) 
-      init$U <- matrix(rnorm(n*k, sd = 1e-2), nrow = n)
+      init$U <- matrix(rnorm(n*k, sd = 1/sqrt(lambda)), nrow = n)
     if (is.null(init$V)) 
-      init$V <- matrix(rnorm(p*k, sd = 1e-2), nrow = p) 
+      init$V <- matrix(rnorm(p*k, sd = 1/sqrt(lambda)), nrow = p) 
     
     #### 3. Output Container ####
     # for sampling
@@ -124,15 +146,14 @@ glrm <-
                    init, config, rec, info)
     
     # calculate effective sample size and prediction
-    if (length(grep("debug", samplr_name)) == 0){
-      rec$pred_error <- predMeanError(rec, data.sim$theta, pred_num)
-      rec$ess <- essMatrix(rec, ess_num)
-      rec$esdj <- ESJD(rec, config)
+    if ((!is.null(true_theta)) & 
+        (length(grep("debug", samplr_name)) == 0)){
+      rec$pred_error <- predMeanError(rec, true_theta, pred_num)
+      rec$true_theta <- true_theta
     }
     
     rec$init <- init
-    rec$true_theta <- true_theta
-    
+    rec$Y <- Y
     #### 6. Results ####
     rec
   }

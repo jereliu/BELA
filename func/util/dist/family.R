@@ -33,9 +33,9 @@ glrm_family <-
       
       # negative log likelihood
       dist_family$negloglik <- 
-        function(T, Theta, partfunc = dist_family$partition$f){
+        function(T_suff, Theta, partfunc = dist_family$partition$f){
           A <- partfunc(Theta)
-          sum(-Theta * T + A)
+          sum(-Theta * T_suff + A)
         }
     }
     # return

@@ -24,6 +24,7 @@ glrm_sampler_hmc_stan_U <-
     frog_step <- config$sampler$frog_step  
     mmtm_freq <- config$sampler$mmtm_freq 
     rotn_freq <- config$sampler$rotn_freq  
+    samp_seed <- config$sampler$samp_seed
     
     U_cur <- init$U
     V_cur <- init$V
@@ -51,7 +52,7 @@ glrm_sampler_hmc_stan_U <-
            chains = 1, data = stan_data,
            iter = iter_max, 
            init = init_func,
-           seed = 100, 
+           seed = samp_seed, 
            pars = NA, # want all parameters
            verbose = TRUE
       )

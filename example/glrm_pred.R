@@ -11,17 +11,18 @@ sourceDir("./func")
 #### 1. Data Generation ####
 n <- 10
 p <- 100
-k <- 1
-family_name <- c("gaussian", "poisson", "poisson_softplus")[1]
+k <- 2
+family_name <- c("gaussian", "poisson", "poisson_softplus")[2]
 samplr_name <- "hmc_stan"
 snr <- 100
+edge_max <- 2
 
 rand_seeds <- list(data = 4200, samplr = 1300)
-rec_plot <- FALSE
+rec_plot <- TRUE
 cond_dens_plot_d1_U <- FALSE
 cond_dens_plot_d1_V <- FALSE
 marg_dens_plot <- FALSE
-
+marg_dens_plot_slice <- TRUE
 
 # addr_targ <-
 #  paste0("../../Dropbox (Personal)/Research/Harvard/Lorenzo/1. BayesOpt/Report/Progress/2017_Nov_Week_4/plot/")
@@ -29,7 +30,7 @@ marg_dens_plot <- FALSE
 # par(mfrow = c(1, 2))
 for (family_name in c("gaussian", "poisson")[1]){
   #for (snr in c(100, 10, 1, 0.5)){
-  for (k in c(1, 2, 5, 10, 15, 20)[c(2, 4, 5)]){
+  for (k in c(1, 2, 5, 10, 15, 20)[2]){
     #for (lambda in c(0.5, 1, 3, 5, 10, 20)[1]){
     lambda = 2
     phi_sd = 1/sqrt(lambda)
@@ -51,16 +52,16 @@ for (family_name in c("gaussian", "poisson")[1]){
     true_par <- data.sim[c("U", "V", "theta")]
     true_par$sd <- lambda
     #true_par$theta <- theta_true
-    
+
     rec <- NULL
     #rec$init <- init_hmc
-    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan")[1:3]){
+    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(5)]){
       # choose iter based on 
-      if (length(grep("gibbs", samplr_name)) > 0){
-        iter_max <- c(1e5, 1e3) # 1e3)
+      if (length(grep("gibbs|slice", samplr_name)) > 0){
+        iter_max <- c(1e5, 5e3) # 1e3)
       } else {
         # if sampler name contain "hmc"...
-        iter_max <- c(1e5, 1e3) # 1e4)
+        iter_max <- c(1e5, 1e4) # 1e4)
       }
       
       if (TRUE){
@@ -85,9 +86,12 @@ for (family_name in c("gaussian", "poisson")[1]){
              samplr_name = samplr_name,
              family_name = family_name,
              iter_max = iter_max, 
-             record_freq = 1,
+             record_freq = 10,
              time_max = 60, 
              step_size = c(step_optim, step_sampl), 
+             # slice parameters
+             edge_max = edge_max,
+             # hmc parameters
              frog_step = 5,
              rotn_freq = iter_max[2],
              mmtm_freq = iter_max[2])
@@ -101,11 +105,12 @@ for (family_name in c("gaussian", "poisson")[1]){
           family_name, " ", 
           samplr_name, " k=", k, " snr = ", snr)
       
+      
       if (rec_plot){
         #plot(rec$time, rec$error, type = "l", 
         #     main = paste0("sample error ", task_title))
         time_size <- length(rec$time)
-        plot(rec$pred_error, type = "l", 
+        plot(rec$pred_error, type = "l",
              main = paste0("prediction error ", task_title))
         
         # objective function
@@ -113,9 +118,9 @@ for (family_name in c("gaussian", "poisson")[1]){
              rec$obj, 
              type = "l", xlab = "Time (min)",
              main = paste0("obj ", task_title))
-        T_y <- glmr_family(family_name)$sufficient(Y)
+        T_y <- glrm_family(family_name)$sufficient(Y)
         abline(h = 
-                 glmr_family(family_name)$negloglik(T_y, (rec$init$U) %*% t(rec$init$V)) + 
+                 glrm_family(family_name)$negloglik(T_y, (rec$init$U) %*% t(rec$init$V)) + 
                  (1/phi_sd) * (sum(rec$init$U^2) + sum(rec$init$V^2))
         )
       }
@@ -134,7 +139,7 @@ for (family_name in c("gaussian", "poisson")[1]){
               mu <- var * data.sim$V %*% data.sim$Y[i, ]
               density_out <- dnorm(u_range, mu, sd = sqrt(var))
             } else {
-              family <- glmr_family(family_name)
+              family <- glrm_family(family_name)
               T_suff <- family$sufficient(data.sim$Y)
               VT <- data.sim$V %*% data.sim$Y[i, ]
               lik_val <- 
@@ -179,7 +184,7 @@ for (family_name in c("gaussian", "poisson")[1]){
               mu <- var * data.sim$U %*% data.sim$Y[, i]
               density_out <- dnorm(v_range, mu, sd = sqrt(var))
             } else {
-              family <- glmr_family(family_name)
+              family <- glrm_family(family_name)
               T_suff <- family$sufficient(data.sim$Y)
               UT <- data.sim$U %*% T_suff[, i]
               lik_val <- 
@@ -238,6 +243,38 @@ for (family_name in c("gaussian", "poisson")[1]){
         #       col = 2)
       }
       
+      if (marg_dens_plot_slice){
+        if (samplr_name == "slice") {
+          rec_slice <- rec
+        } else if (samplr_name == "hmc_stan") {
+          rec_hmc <- rec
+          par(mfrow = c(4, 4))
+          idx_list <- 
+            # cbind(sample(1:n, 4, replace = TRUE), 
+            #       sample(1:p, 4, replace = TRUE))
+            expand.grid(1:n, 1:k)
+          
+          for (i in 1:nrow(idx_list)){
+            idx1 <- idx_list[i, 1]
+            idx2 <- idx_list[i, 2]
+            densest_slc <- 
+              density(rec_slice$U[ , idx1, idx2])
+            densest_hmc <- 
+              density(rec_hmc$U[ , idx1, idx2])
+            
+            plot(densest_slc$x, densest_slc$y, type = "l",
+                 xlab = "Theta", ylab = "density",
+                 main = paste0("Theta[", idx1, ", ", idx2, "]"))
+            lines(densest_hmc$x, densest_hmc$y, col = 2)
+            
+            # plot(rec_hmc$Theta[ , idx1, idx2], 
+            #      type = "l", col = 2, 
+            #      xlab = "Iteration",
+            #      ylab = paste0("Theta[", idx1, ", ", idx2, "]"))
+            # lines(rec_slice$Theta[ , idx1, idx2])
+          }
+        }
+      }
       # save
       var_name <- paste0(family_name,
                          "_k", k, "_snr", snr,
@@ -265,32 +302,4 @@ for (family_name in c("gaussian", "poisson")[1]){
 }
 # dev.off()
 
-
-post_diag <- FALSE
-
-if (post_diag){
-  
-  # norm 
-  norm <- sapply(1:iter_max[2], function(i) sum(rec$U[i, , ]^2) + sum(rec$V[i, , ]^2))
-  plot(norm, type = "l")
-  
-  # likelihood
-  likhd <-
-    sapply(1:iter_max[2], function(i) 
-      glmr_family(family_name)$negloglik(T_y, (rec$U[i, , ]) %*% t(rec$V[i, , ]))
-    )
-  plot(likhd, type = "l")
-  abline(
-    glmr_family(family_name)$negloglik(
-      T_y, (rec$init$U) %*% t(rec$init$V))
-  )
-  
-  # objective
-  # likelihood
-  l_2 <- 
-    sapply(1:iter_max[2], function(i) 
-      sqrt(mean((rec$true_theta - (rec$Theta[i, , ]))^2)/
-             mean(rec$true_theta^2))
-    )
-  plot(l_2, type = "l")
-}
+# source("./example/glrm_pred.R")
