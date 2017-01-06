@@ -35,7 +35,7 @@ glrm_worker <-
       list(data = data_seed, 
            samplr = trial_seed)
     
-    save_rec_target <- FALSE
+    save_rec_target <- TRUE
     
     for (family_name in FAMILY){
       for (snr in SNR){
@@ -115,7 +115,7 @@ glrm_worker <-
               
               if (save_rec_target){
               rec_target <- 
-                matrix(c(data.sim$U[1, 1], rec$U[, 1, 1]), nrow = 1) 
+                matrix(c(data.sim$theta[1, 1], rec$Theta[, 1, 1]), nrow = 1) 
               }
               
               # save file 
@@ -126,7 +126,7 @@ glrm_worker <-
                 
                 if (!file.exists(file_name)){
                   colnames(rec_target) <-
-                    c("U0", 1:(length(rec_target)-1))
+                    c("S0", 1:(length(rec_target)-1))
                 }
                 
                 write.table(
@@ -154,7 +154,7 @@ glrm_worker <-
                 rec$U <- rec2$U[rec_idx, , ]
                 rec$V <- rec2$V[rec_idx, , ]
                 rec$Y <- rec2$Y
-                
+                  
                 var_name <- 
                   paste0(family_name, "_k", k, "_snr", snr, "_", samplr_name)
                 

@@ -11,18 +11,20 @@ print(sprintf("Mr Handy: You see the job index '%d'..", job_idx))
 print("Mr Handy: and who gets to read all this mumble jumble? Me, that's who...")
 
 #### 1. Config Generation/Read In ====
-n_data <- 1
-n_rep <- 1e3
-n_run_per_worker <- 10
+n_data <- 1e3
+n_rep <- 1
+n_run_per_worker <- 5
 
 cfig_file <- "cfigList.csv"
+set.seed(100)
 if (!file.exists(cfig_file)){
   # create data list
   cfig_list <-
     expand.grid(
       data_seed = sample(n_data*1e3, n_data),
       trial_seed = sample(n_rep*1e3, n_rep),
-      K = c(2, 10, 15), SNR = 100, LAMBDA = 2,
+      K = c(2, 10, 15)[2], 
+      SNR = 100, LAMBDA = 2,
       FAMILY = c("gaussian", "poisson")[1],
       SAMPLR = c("gibbs", "hmc_stan")
     )
@@ -46,8 +48,8 @@ if (!file.exists(cfig_file)){
   #BSUB -J jobArray[", (exec_id-1) * 1e3 + 1, 
         "-", (exec_id-1) * 1e3 + n_rask_rest, 
         "]		#job array list goes 1,2,3...n
-  #BSUB -o out_%I.txt 			#lsf output file
-  #BSUB -e err_%I.txt 			#lsf error file
+  #BSUB -o './log/out_%I.txt' 			#lsf output file
+  #BSUB -e './log/err_%I.txt' 			#lsf error file
   #BSUB -R 'rusage[mem=4096]'		#use 4GB memory
   Rscript './example/glrm_mixing_eval/glrm_mixing_master.R' $LSB_JOBINDEX"
       )

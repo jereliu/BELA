@@ -88,3 +88,16 @@ grad_ksd <-
     # output 
     list(grad = grad_out, alpha = alpha)
   }
+
+# k <- 2
+# n <- 10
+# p <- 20
+# S <- matrix(1:(k*(n+p)), nrow = k)
+# T_suff <- matrix(1:(n*p), nrow = n)
+# lambda <- 2
+# 
+# grad_ksd(S = S, 
+#          alpha = 1, 
+#          T_suff = T_suff, 
+#          lambda = lambda, 
+#          glrm_family("gaussian"))
