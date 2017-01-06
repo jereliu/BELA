@@ -91,16 +91,16 @@ glrm <-
     
     set.seed(100) # fix prior sample
     if (is.null(init$U)) 
-      init$U <- matrix(rnorm(n*k, sd = 1/sqrt(lambda)), nrow = n)
+      init$U <- matrix(rnorm(n*k, sd = 1e-3), nrow = n)
     if (is.null(init$V)) 
-      init$V <- matrix(rnorm(p*k, sd = 1/sqrt(lambda)), nrow = p) 
+      init$V <- matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
     
     #### 3. Output Container ####
     # for sampling
     rec <- NULL
-    rec$U <- array(NaN, c(iter_max[2]/record_freq, n, k))
-    rec$V <- array(NaN, c(iter_max[2]/record_freq, p, k))
-    rec$Theta <- array(NaN, c(iter_max[2]/record_freq, n, p))
+    rec$U <- array(NaN, c(iter_max[2]/record_freq + 1, n, k))
+    rec$V <- array(NaN, c(iter_max[2]/record_freq + 1, p, k))
+    rec$Theta <- array(NaN, c(iter_max[2]/record_freq + 1, n, p))
     
     rec$acc <- array(NaN, c(iter_max[2]/record_freq, 2), 
                      dimnames = list(NULL, c("U", "V")))
