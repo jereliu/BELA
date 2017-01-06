@@ -80,13 +80,20 @@ glrm_sampler_hmc_stan <-
         array(dim = c(iter_max, dim_1, dim_2))
     }
     
+    record_idx <- seq(1, iter_max, record_freq)
+    
+    rec$U <- abind(init$U, rec$U[record_idx, , ], along = 1)
+    rec$V <- abind(init$V, rec$V[record_idx, , ], along = 1)
+    rec$Theta <- abind(init$U %*% t(init$V), 
+                       rec$Theta[record_idx, , ], along = 1)
+    
     #rec <- extract(model_out)
     # rec$Theta <- 
     #   lapply(1:dim(rec$U)[1], 
     #          function(i) rec$U[i, ,] %*% t(rec$V[i, , ])) %>% abind(along = 0)
     
     rec$obj <-
-      sapply(1:iter_max, 
+      sapply(1:round(iter_max/record_freq), 
              function(i){
                negloglik(T_suff, rec$Theta[i, ,]) + 
                  (lambda/2) * (sum(rec$V[i, ,]^2) + sum(rec$U[i, ,]^2))

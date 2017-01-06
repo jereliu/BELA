@@ -23,9 +23,9 @@ glrm_sampler_gibbs <-
     time_max <- config$time_max
     rotn_freq <- config$sampler$rotn_freq
     
-    U_cur <- init$U
-    V_cur <- init$V
-    Theta_cur <- U_cur %*% t(V_cur)
+    rec$U[1, , ] <- U_cur <- init$U
+    rec$V[1, , ] <- V_cur <- init$V
+    rec$Theta[1, , ] <- Theta_cur <- U_cur %*% t(V_cur)
     time0 <- proc.time()[3]
     
     # initiate sampler
@@ -125,9 +125,9 @@ glrm_sampler_gibbs <-
       
       # record
       if (iter %% record_freq == 0){
-        rec$U[iter/record_freq, , ] <- U_cur
-        rec$V[iter/record_freq, , ] <- V_cur
-        rec$Theta[iter/record_freq, , ] <- U_cur %*% t(V_cur)
+        rec$U[iter/record_freq + 1, , ] <- U_cur
+        rec$V[iter/record_freq + 1, , ] <- V_cur
+        rec$Theta[iter/record_freq + 1, , ] <- U_cur %*% t(V_cur)
         
         rec$acc[iter/record_freq, ] <- 
           c(mean(acc_U), mean(acc_V))
