@@ -11,6 +11,11 @@ find . -name "Archive" -type d -ls -exec rm -rv {} +
 # examine disk space, don't exceed 100G
 du -h ./
 
+# 
+bkill -b 0
+rm ./log/*.*
+rm ./result/mixing_stat/*.*
+
 # delete result
 find ./result/ -name "*.RData" -print0 | xargs -0 rm
 
