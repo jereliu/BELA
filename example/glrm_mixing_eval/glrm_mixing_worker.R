@@ -17,6 +17,7 @@ if (default){
   LAMBDA = cfig$LAMBDA
   FAMILY = cfig$FAMILY
   SAMPLR = cfig$SAMPLR
+  iter_max = c(1e5, 5e3)
 }
 
 glrm_worker <- 
@@ -29,7 +30,8 @@ glrm_worker <-
     LAMBDA = 2,
     FAMILY = c("gaussian", "poisson"),
     SAMPLR = c("gibbs", "hmc_stan", "vi_stan"), 
-    record_freq = 10
+    record_freq = 1,
+    iter_max = c(1e5, 5e3)
   ){
     rand_seeds <- 
       list(data = data_seed, 
@@ -64,9 +66,7 @@ glrm_worker <-
             rec <- NULL
             #rec$init <- init_hmc
             for (samplr_name in SAMPLR){
-              # choose iter based on 
-              iter_max <- c(1e5, 5e3)
-              
+
               if (TRUE){
                 # if (is.null(rec$init)){
                 init_MAP <- FALSE
@@ -114,8 +114,19 @@ glrm_worker <-
                 parse(text = .) %>% eval()
               
               if (save_rec_target){
-              rec_target <- 
-                matrix(c(data.sim$theta[1, 1], rec$Theta[, 1, 1]), nrow = 1) 
+                # save Theta 1. 1
+                # rec_target <- 
+                #   matrix(c(data.sim$theta[1, 1], 
+                #            rec$Theta[, 1, 1]), nrow = 1) 
+                
+                # save 2nd largest eigen value
+                eig0 <- svd(data.sim$theta)$d[2]
+                eig_list <- 
+                  apply(rec$Theta, 1, 
+                        function(theta) svd(theta)$d[2])
+                rec_target <- 
+                  matrix(c(eig0, eig_list), nrow = 1) 
+                
               }
               
               # save file 

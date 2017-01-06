@@ -79,7 +79,8 @@ for (config_idx in config_idx_list){
       SNR = cfig$SNR,
       LAMBDA = cfig$LAMBDA,
       FAMILY = cfig$FAMILY,
-      SAMPLR = cfig$SAMPLR
+      SAMPLR = cfig$SAMPLR,
+      iter_max = c(0, 1e2)
     )
 }
 
