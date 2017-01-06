@@ -141,7 +141,7 @@ glrm <-
       paste0("glrm_sampler_", samplr_name) %>%
       parse(text = .) %>% eval()
     
-    rec <- 
+    rec <-
       sampler_func(Y, lambda, family_name, 
                    init, config, rec, info)
     

@@ -48,6 +48,7 @@ glrm_sampler_stein <-
     pb <- txtProgressBar(min = 1, max = iter_max, style = 3)
     rec$Theta <- array(NaN, dim = c(length(iter_idx), n, p))
     grad_hist <- -rep(1, 500)
+    grad_norm <- 0
     opt_method <- "AdaGrad"
     
     for (iter in 1:iter_max) {
@@ -140,7 +141,7 @@ glrm_sampler_stein <-
         rec$grad[rec_id] <- grad_norm
         rec$time[rec_id] <- (proc.time()[3] - time0)/60
         
-        if (grad_norm <= 1e-5)
+        if (grad_norm <= 1e-3)
           break
       }
       

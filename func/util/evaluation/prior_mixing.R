@@ -156,10 +156,10 @@ mixing_stein <-
         width = width, nboot = nboot)
   }
 
-result <-
-  mixing_stein(grad_neglik_S,
-               S_cur, theta_row = sum(dim(T_suff)),
-               nboot = 1000,
-               T_suff = T_suff,
-               lambda = lambda,
-               dist_family = family)
+# result <-
+#   mixing_stein(grad_neglik_S,
+#                S_cur, theta_row = sum(dim(T_suff)),
+#                nboot = 1000,
+#                T_suff = T_suff,
+#                lambda = lambda,
+#                dist_family = family)
