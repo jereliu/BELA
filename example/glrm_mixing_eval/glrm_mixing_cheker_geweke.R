@@ -1,7 +1,5 @@
 rm(list = ls()) #WoG
 
-# to be fixed
-
 library(magrittr)
 library(dplyr)
 library(ggplot2)
@@ -10,11 +8,12 @@ library(gplots)
 library(data.table)
 library(psych)
 library(infotheo)
+library(kernlab)
 source("./func/util/source_Dir.R")
 sourceDir("./func")
 
-raw_dir <- "./result/"
-tar_dir <- "./result/mixing_stat/"
+raw_dir <- "./result/mixing_stat/"
+tar_dir <- "./result/mixing_model/"
 
 #### 0.specify model categories ####
 FAMILY <- c("gaussian", "poisson")[1]
@@ -30,9 +29,9 @@ data_id <- unique(cfig_list$data_seed)
 trial_id <- unique(cfig_list$trial_seed)
 
 for (family_name in FAMILY){
-  for (k in K){
+  for (k in K[2]){
     for (snr in SNR){
-      for (sampler in SAMPLR[2]){
+      for (sampler in SAMPLR){
         # capture relevant file index
         sett_handle <-
           paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
@@ -134,9 +133,11 @@ for (family_name in FAMILY){
         
         # 
         if (metric_stein){
-          postfix <- "_all.RData"
+          postfix <- "_stein.RData"
         } else if (metric_KL){
-          postfix <- "_uv1.RData"
+          postfix <- "_KL.RData"
+        } else {
+          postfix <- "_geweke.RData"
         }
         
         save(theta_container,
@@ -147,99 +148,160 @@ for (family_name in FAMILY){
 }
 
 #### 2. analyze array using ecdf ####
-array_list <- list.files(tar_dir)
-array_list <- array_list[grep("snr", array_list)]
-mixing_tvdist_list <- list()
+calc_metric <- TRUE
 
-# stein test p-value
-for (family_name in FAMILY){
-  lambda <- 2
-  family_obj <- glrm_family(family_name)
-  loglikfunc <- function(u, v, T_suff){
-    family_obj$negloglik(sum(u*v), T_suff) +
-      lambda/2 * (sum(u^2) + sum(v^2))
+if (calc_metric){
+  array_list <- list.files(tar_dir)
+  array_list <- array_list[grep("geweke.RData", array_list)]
+  mixing_tvdist_list <- list()
+  
+  # stein test p-value
+  for (family_name in FAMILY){
+    lambda <- 2
+    family_obj <- glrm_family(family_name)
+    loglikfunc <- function(u, v, T_suff){
+      family_obj$negloglik(sum(u*v), T_suff) +
+        lambda/2 * (sum(u^2) + sum(v^2))
+    }
+    
+    for (k in K[2]){
+      for (snr in SNR){
+        for (sampler in SAMPLR){
+          # capture relevant file index
+          file_handle <-
+            paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
+          # load theta_container, row for data, col for iteration
+          print(paste0("loading ", file_handle, ".."))
+          
+          load(paste0(tar_dir, 
+                      grep(file_handle, array_list, value = TRUE)))
+          print("Done! Calculating Test Statistic..")
+          
+          metric_stein <- FALSE 
+          metric_KL <- FALSE
+
+          if (metric_stein){
+            ksd_list <- rep(0, dim(theta_container$theta)[1])
+            p_list <- rep(0, dim(theta_container$theta)[1])
+            pb <-
+              txtProgressBar(
+                min = 1,
+                max = dim(theta_container$theta)[1],
+                style = 3)
+            
+            for (i in 1:dim(theta_container$theta)[1]){
+              setTxtProgressBar(pb, i)
+              S_cur <- theta_container$theta[i, , ]
+              T_suff <- theta_container$Y
+              
+              result <- 
+                mixing_stein(
+                  grad_neglik_S,
+                  S_cur, 
+                  theta_row = sum(dim(T_suff)),
+                  width = -1,
+                  nboot = 1000,
+                  T_suff = T_suff,
+                  lambda = lambda,
+                  dist_family = glrm_family(family_name)
+                )
+              ksd_list[i] <- result$info$ksd_V
+              p_list[i] <- result$p
+            }
+            print(p_list)
+            mixing_tvdist_list[[file_handle]] <- ksd_list
+            
+          } else if (metric_KL) {
+            # if collects whole uv_1, then check KL-divergence
+            KL_div <-
+              rep(NaN, length = dim(theta_container)[2])
+            
+            pb <-
+              txtProgressBar(
+                min = 1, max = dim(theta_container)[2],
+                style = 3)
+            
+            for (i in 1:dim(theta_container)[2]){
+              setTxtProgressBar(pb, i)
+              KL_div[i] <-
+                mixing_KL_dist(
+                  theta_container[, i, ],
+                  loglikfunc
+                )
+            }
+            
+            mixing_tvdist_list[[file_handle]] <- KL_div
+            
+          } else {
+            iter_idx <- 1:200
+              # seq(1, (ncol(theta_container)-1), 10)
+            komo_stat <-
+              matrix(NaN,
+                nrow = length(iter_idx), ncol = 3)
+            pb <-
+              txtProgressBar(
+                min = 1,
+                max = ncol(theta_container)-1,
+                style = 3)
+            
+            for (i in iter_idx){
+              setTxtProgressBar(pb, i)
+              mmdo <- 
+                kmmd(matrix(theta_container[, i+1]),
+                           matrix(theta_container[, 1]))
+              komo_stat[i, ] <- 
+                c(mmdo@mmdstats[1], mmdo@Radbound, mmdo@Asymbound)
+                
+                # prior_mixing_geweke_perm(
+                #   theta_container[, i+1],
+                #   prior = theta_container[, 1])
+            }
+            # komo_conf <-
+            #   qksone(0.95, dim(theta_container)[1])$root
+            
+            mixing_tvdist_list[[file_handle]] <- komo_stat
+          }
+          
+          #mixing_tvdist_list[[file_handle]]$uppr <- komo_conf
+          
+          print(paste0(file_handle, " Done!"))
+        }
+      }
+    }
   }
   
-  for (k in K[2]){
-    for (snr in SNR){
-      for (sampler in SAMPLR[2]){
-        # capture relevant file index
-        file_handle <-
-          paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
-        # load theta_container, row for data, col for iteration
-        print(paste0("loading ", file_handle, ".."))
-        
-        load(paste0(tar_dir, 
-                    grep(file_handle, array_list, value = TRUE)))
-        print("Done! Calculating Test Statistic..")
-        
-        metric_stein <- FALSE 
-        metric_KL <- FALSE
-        if (metric_stein){
-          ksd_list <- rep(0, dim(theta_container$theta)[1])
-          p_list <- rep(0, dim(theta_container$theta)[1])
-          pb <-
-            txtProgressBar(
-              min = 1,
-              max = dim(theta_container$theta)[1],
-              style = 3)
+  save(mixing_tvdist_list,
+       file = paste0(tar_dir, "mixing_tvdist_geweke_pval.RData")
+  )
+  
+  # ks-stat
+  array_list <- list.files(tar_dir)
+  array_list <- array_list[grep("snr", array_list)]
+  mixing_tvdist_list <- list()
+  
+  for (family_name in FAMILY){
+    for (k in K[2]){
+      for (snr in SNR){
+        for (sampler in SAMPLR){
+          # capture relevant file index
+          file_handle <-
+            paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
+          # load theta_container, row for data, col for iteration
+          print(paste0("loading ", file_handle, ".."))
           
-          for (i in 1:dim(theta_container$theta)[1]){
-            setTxtProgressBar(pb, i)
-            S_cur <- theta_container$theta[i, , ]
-            T_suff <- theta_container$Y
-            
-            result <- 
-              mixing_stein(
-                grad_neglik_S,
-                S_cur, 
-                theta_row = sum(dim(T_suff)),
-                width = -1,
-                nboot = 1000,
-                T_suff = T_suff,
-                lambda = lambda,
-                dist_family = glrm_family(family_name)
-              )
-            ksd_list[i] <- result$info$ksd_V
-            p_list[i] <- result$p
-          }
-          print(p_list)
-          mixing_tvdist_list[[file_handle]] <- ksd_list
+          load(paste0(tar_dir, file_handle, ".RData"))
+          print("Done! Calculating Test Statistic..")
           
-        } else if (metric_KL) {
-          # if collects whole uv_1, then check KL-divergence
-          KL_div <-
-            rep(NaN, length = dim(theta_container)[2])
-          
-          pb <-
-            txtProgressBar(
-              min = 1, max = dim(theta_container)[2],
-              style = 3)
-          
-          for (i in 1:dim(theta_container)[2]){
-            setTxtProgressBar(pb, i)
-            KL_div[i] <-
-              mixing_KL_dist(
-                theta_container[, i, ],
-                loglikfunc
-              )
-          }
-          
-          mixing_tvdist_list[[file_handle]] <- KL_div
-          
-        } else {
           komo_stat <-
             rep(NaN, length = ncol(theta_container)-1)
+          
           pb <-
             txtProgressBar(
-              min = 1,
-              max = ncol(theta_container)-1,
-              style = 3)
-          
+              min = 1, max = ncol(theta_container)-1, style = 3)
           for (i in 1:(ncol(theta_container)-1)){
             setTxtProgressBar(pb, i)
             komo_stat[i] <-
-              prior_mixing_geweke_perm(
+              prior_mixing_geweke_stat(
                 theta_container[, i+1],
                 prior = theta_container[, 1])
           }
@@ -247,66 +309,23 @@ for (family_name in FAMILY){
           #   qksone(0.95, dim(theta_container)[1])$root
           
           mixing_tvdist_list[[file_handle]] <- komo_stat
+          #mixing_tvdist_list[[file_handle]]$uppr <- komo_conf
+          
+          print(paste0(file_handle, " Done!"))
         }
-        
-        #mixing_tvdist_list[[file_handle]]$uppr <- komo_conf
-        
-        print(paste0(file_handle, " Done!"))
       }
     }
   }
+  
+  save(mixing_tvdist_list,
+       file = paste0(tar_dir, "mixing_tvdist_geweke_stat.RData")
+  )
 }
 
-save(mixing_tvdist_list,
-     file = paste0(tar_dir, "mixing_tvdist_geweke_pval.RData")
-)
-
-# ks-stat
-array_list <- list.files(tar_dir)
-array_list <- array_list[grep("snr", array_list)]
-mixing_tvdist_list <- list()
-
-for (family_name in FAMILY){
-  for (k in K[2]){
-    for (snr in SNR){
-      for (sampler in SAMPLR){
-        # capture relevant file index
-        file_handle <-
-          paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
-        # load theta_container, row for data, col for iteration
-        print(paste0("loading ", file_handle, ".."))
-
-        load(paste0(tar_dir, file_handle, ".RData"))
-        print("Done! Calculating Test Statistic..")
-
-        komo_stat <-
-          rep(NaN, length = ncol(theta_container)-1)
-
-        pb <-
-          txtProgressBar(
-            min = 1, max = ncol(theta_container)-1, style = 3)
-        for (i in 1:(ncol(theta_container)-1)){
-          setTxtProgressBar(pb, i)
-          komo_stat[i] <-
-            prior_mixing_geweke_stat(
-              theta_container[, i+1],
-              prior = theta_container[, 1])
-        }
-        # komo_conf <-
-        #   qksone(0.95, dim(theta_container)[1])$root
-
-        mixing_tvdist_list[[file_handle]] <- komo_stat
-        #mixing_tvdist_list[[file_handle]]$uppr <- komo_conf
-
-        print(paste0(file_handle, " Done!"))
-      }
-    }
-  }
-}
-
-save(mixing_tvdist_list,
-     file = paste0(tar_dir, "mixing_tvdist_geweke_stat.RData")
-)
+plot(mixing_tvdist_list[[1]][, 1], type = "l", 
+     ylab = "MMD Statistic for Theta[1,1]", xlab = "Iteration")
+abline(h = mixing_tvdist_list[[1]][, 2], lty = 2)
+lines(mixing_tvdist_list[[2]][, 1], col = 2)
 
 # #### 3. plot ecdf #### 
 # type <- c("pval", "stat")[2]
@@ -345,8 +364,8 @@ save(mixing_tvdist_list,
 # 
 # prior_mixing_jere(theta_container)
 
-iter_idx <- 
-  c(seq(1, round(iter_max/2), length.out = 24),
-    seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
-  round %>% unique
-plot(1:50, mixing_tvdist_list[[2]])
+# iter_idx <- 
+#   c(seq(1, round(iter_max/2), length.out = 24),
+#     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
+#   round %>% unique
+# plot(1:50, mixing_tvdist_list[[2]])
