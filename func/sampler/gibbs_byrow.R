@@ -3,7 +3,7 @@
 glrm_sampler_gibbs <- 
   function(Y, lambda, family_name, 
            init, config, rec, info){
-    
+    par_update <- c("U", "V")[1]
     set.seed(config$sampler$samp_seed)
     # unpack family properties
     n <- info$n 
@@ -43,89 +43,93 @@ glrm_sampler_gibbs <-
       
       ####  U  ################
       acc_U <- rep(NaN, n)
-      # Loops to Sample U
-      for (i in 1:n){
-        U_old <- U_cur
-        # generate A', A'', B
-        Theta_old <- U_old %*% t(V_old)
-        A_d1 <- d1(Theta_old)
-        A_d2 <- d2(Theta_old)
-        B <- T_suff - A_d1 + A_d2 * Theta_old
-        lnr_coef_u <- B %*% V_old    # n x k, each row lnr coef for u_i
-        
-        # sample for i^th row of U
-        U_prop <- U_cur
-        sigma <-
-          solve(
-            t(V_cur) %*% diag(A_d2[i, ]) %*% V_cur +
-              lambda * diag(k)
-          )
-        mu <-  sigma %*% lnr_coef_u[i, ]
-        
-        # U_prop[i, ] <-
-        #   rmvnorm(1,
-        #           mean = mu,
-        #           sigma = sigma * diag(k))
-        U_prop[i, ] <-
-          rmvnorm(1,
-                  mean = mu,
-                  sigma = sigma)
-        
-        # metroplis step for U
-        acc_prob <-
-          acc_prob_U(U_prop, U_cur, V_cur, V_old, i,
-                     lambda, family, T_suff)
-        # warning("no rejection for U)
-        acc_U[i] <- (runif(1) < acc_prob)
-        
-        if (acc_U[i])
-          U_cur <- U_prop
+      if ("U" %in% par_update){
+        # Loops to Sample U
+        for (i in 1:n){
+          U_old <- U_cur
+          # generate A', A'', B
+          Theta_old <- U_old %*% t(V_old)
+          A_d1 <- d1(Theta_old)
+          A_d2 <- d2(Theta_old)
+          B <- T_suff - A_d1 + A_d2 * Theta_old
+          lnr_coef_u <- B %*% V_old    # n x k, each row lnr coef for u_i
+          
+          # sample for i^th row of U
+          U_prop <- U_cur
+          sigma <-
+            solve(
+              t(V_cur) %*% diag(A_d2[i, ]) %*% V_cur +
+                lambda * diag(k)
+            )
+          mu <-  sigma %*% lnr_coef_u[i, ]
+          
+          # U_prop[i, ] <-
+          #   rmvnorm(1,
+          #           mean = mu,
+          #           sigma = sigma * diag(k))
+          U_prop[i, ] <-
+            rmvnorm(1,
+                    mean = mu,
+                    sigma = sigma)
+          
+          # metroplis step for U
+          acc_prob <-
+            acc_prob_U(U_prop, U_cur, V_cur, V_old, i,
+                       lambda, family, T_suff)
+          # warning("no rejection for U)
+          acc_U[i] <- (runif(1) < acc_prob)
+          
+          if (acc_U[i])
+            U_cur <- U_prop
+        }
       }
       
       ####  V  #################
       acc_V <- rep(NaN, p)
-      # warning("only V updated")
-      # Loops to Sample V
-      for (j in 1:p){
-        #cat(paste0("iter ", iter, " j=", j))
-        #if (j == 39) debugonce(acc_prob_V)
-        
-        V_old <- V_cur
-        
-        # generate A', A'', B
-        Theta_cur <- U_cur %*% t(V_cur)
-        A_d1 <- d1(Theta_cur)
-        A_d2 <- d2(Theta_cur)
-        B <- T_suff - A_d1 + A_d2 * Theta_cur
-        lnr_coef_v <- t(B) %*% U_cur # p x k, each row lnr coef for v_j
-        
-        # sample for i^th row of U
-        V_prop <- V_cur
-        sigma <- solve(
-          t(U_cur) %*% diag(A_d2[, j]) %*% U_cur +
-            lambda * diag(k))
-        mu <- sigma %*% lnr_coef_v[j, ]
-        V_prop[j, ] <-
-          rmvnorm(1,
-                  mean = mu,
-                  sigma = sigma)
-        
-        # V_prop[j, ] <-
-        #   rmvnorm(1,
-        #           mean = V_cur[j, ],
-        #           sigma = sigma * diag(k))
-        
-        # metroplis step for V
-        acc_prob <-
-          acc_prob_V(U_cur, U_cur, V_prop, V_old, j,
-                     lambda, family, T_suff)
-        
-        # warning("no rejection for V")
-        acc_V[j] <- (runif(1) < acc_prob)
-        
-        if (acc_V[j])
-          V_cur <- V_prop
-        #cat(paste0(" acc=", acc_V[j], "\n"))
+      if ("V" %in% par_update){
+        # warning("only V updated")
+        # Loops to Sample V
+        for (j in 1:p){
+          #cat(paste0("iter ", iter, " j=", j))
+          #if (j == 39) debugonce(acc_prob_V)
+          
+          V_old <- V_cur
+          
+          # generate A', A'', B
+          Theta_cur <- U_cur %*% t(V_cur)
+          A_d1 <- d1(Theta_cur)
+          A_d2 <- d2(Theta_cur)
+          B <- T_suff - A_d1 + A_d2 * Theta_cur
+          lnr_coef_v <- t(B) %*% U_cur # p x k, each row lnr coef for v_j
+          
+          # sample for i^th row of U
+          V_prop <- V_cur
+          sigma <- solve(
+            t(U_cur) %*% diag(A_d2[, j]) %*% U_cur +
+              lambda * diag(k))
+          mu <- sigma %*% lnr_coef_v[j, ]
+          V_prop[j, ] <-
+            rmvnorm(1,
+                    mean = mu,
+                    sigma = sigma)
+          
+          # V_prop[j, ] <-
+          #   rmvnorm(1,
+          #           mean = V_cur[j, ],
+          #           sigma = sigma * diag(k))
+          
+          # metroplis step for V
+          acc_prob <-
+            acc_prob_V(U_cur, U_cur, V_prop, V_old, j,
+                       lambda, family, T_suff)
+          
+          # warning("no rejection for V")
+          acc_V[j] <- (runif(1) < acc_prob)
+          
+          if (acc_V[j])
+            V_cur <- V_prop
+          #cat(paste0(" acc=", acc_V[j], "\n"))
+        }
       }
       
       # record

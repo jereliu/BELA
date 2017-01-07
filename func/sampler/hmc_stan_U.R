@@ -5,6 +5,7 @@ library(parallel)
 glrm_sampler_hmc_stan_U <- 
   function(Y, lambda, family_name, 
            init, config, rec, info){
+    par_update <- c("U", "V")
     # unpack family properties
     n <- info$n 
     p <- info$p
@@ -36,12 +37,20 @@ glrm_sampler_hmc_stan_U <-
     options(mc.cores = parallel::detectCores())    
     stan_addr <- "./func/sampler/stan/"
     model_name <- family_name
-    stan_file <- paste0(stan_addr, model_name, "_U.stan")
     
-    stan_data <- list(N = n, P = p, K = k, Y = Y, 
-                      V = init$V,
-                      lambda_u = lambda, 
-                      lambda_v = lambda)
+    stan_data <- list(N = n, P = p, K = k, Y = Y,
+                      lambda_u = lambda, lambda_v = lambda)
+    
+    if (length(par_update) > 1){
+      stan_file <- paste0(stan_addr, model_name, ".stan")
+    } else if (par_update == "U"){
+      stan_file <- paste0(stan_addr, model_name, "_U.stan")
+      stan_data$V <- init$V
+    } else if (par_update == "V") {
+      stan_file <- paste0(stan_addr, model_name, "_V.stan")
+      stan_data$U <- init$U
+    }
+    
     init_func <- function() init
     
     # execute sampler
@@ -67,7 +76,6 @@ glrm_sampler_hmc_stan_U <-
                        function(x) gsub("\\[.*", "", x)) 
     
     rec <- NULL
-
     for (name in unique(rec_name)){
       idx <- which(rec_name == name)
       if (length(idx) > 1){
@@ -83,10 +91,12 @@ glrm_sampler_hmc_stan_U <-
         array(dim = c(iter_max, dim_1, dim_2))
     }
     
-    #rec <- extract(model_out)
-    # rec$Theta <- 
-    #   lapply(1:dim(rec$U)[1], 
-    #          function(i) rec$U[i, ,] %*% t(rec$V[i, , ])) %>% abind(along = 0)
+    record_idx <- seq(1, iter_max, record_freq)
+    
+    rec$U <- abind(init$U, rec$U[record_idx, , ], along = 1)
+    rec$V <- abind(init$V, rec$V[record_idx, , ], along = 1)
+    rec$Theta <- abind(init$U %*% t(init$V), 
+                       rec$Theta[record_idx, , ], along = 1)
     
     rec$obj <-
       sapply(1:iter_max, 

@@ -9,8 +9,8 @@ source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 #### 1. Data Generation ####
-n <- 10
-p <- 100
+n <- 100
+p <- 10
 k <- 2
 family_name <- c("gaussian", "poisson", "poisson_softplus")[2]
 samplr_name <- "hmc_stan"
@@ -18,19 +18,19 @@ snr <- 100
 edge_max <- 2
 
 rand_seeds <- list(data = 4200, samplr = 1300)
-rec_plot <- TRUE
+rec_plot <- FALSE
 cond_dens_plot_d1_U <- FALSE
-cond_dens_plot_d1_V <- FALSE
+cond_dens_plot_d1_V <- TRUE
 marg_dens_plot <- FALSE
-marg_dens_plot_slice <- TRUE
+marg_dens_plot_slice <- FALSE
 
 # addr_targ <-
 #  paste0("../../Dropbox (Personal)/Research/Harvard/Lorenzo/1. BayesOpt/Report/Progress/2017_Nov_Week_4/plot/")
 # pdf(paste0(addr_targ, "debug_marginal_varV_poisson.pdf"), height= 4, width = 10)
 # par(mfrow = c(1, 2))
-for (family_name in c("gaussian", "poisson")[1]){
+for (family_name in c("gaussian", "poisson")[2]){
   #for (snr in c(100, 10, 1, 0.5)){
-  for (k in c(1, 2, 5, 10, 15, 20)[2]){
+  for (k in c(1, 2, 5, 10, 15, 20)[4]){
     #for (lambda in c(0.5, 1, 3, 5, 10, 20)[1]){
     lambda = 2
     phi_sd = 1/sqrt(lambda)
@@ -55,7 +55,7 @@ for (family_name in c("gaussian", "poisson")[1]){
 
     rec <- NULL
     #rec$init <- init_hmc
-    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(5)]){
+    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(1)]){
       # choose iter based on 
       if (length(grep("gibbs|slice", samplr_name)) > 0){
         iter_max <- c(1e5, 5e3) # 1e3)
