@@ -9,8 +9,8 @@ source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 #### 1. Data Generation ####
-n <- 100
-p <- 10
+n <- 10
+p <- 100
 k <- 2
 family_name <- c("gaussian", "poisson", "poisson_softplus")[2]
 samplr_name <- "hmc_stan"
@@ -18,9 +18,9 @@ snr <- 100
 edge_max <- 2
 
 rand_seeds <- list(data = 4200, samplr = 1300)
-rec_plot <- FALSE
+rec_plot <- TRUE
 cond_dens_plot_d1_U <- FALSE
-cond_dens_plot_d1_V <- TRUE
+cond_dens_plot_d1_V <- FALSE
 marg_dens_plot <- FALSE
 marg_dens_plot_slice <- FALSE
 
@@ -30,7 +30,7 @@ marg_dens_plot_slice <- FALSE
 # par(mfrow = c(1, 2))
 for (family_name in c("gaussian", "poisson")[2]){
   #for (snr in c(100, 10, 1, 0.5)){
-  for (k in c(1, 2, 5, 10, 15, 20)[4]){
+  for (k in c(1, 2, 5, 10, 15, 20)[6]){
     #for (lambda in c(0.5, 1, 3, 5, 10, 20)[1]){
     lambda = 2
     phi_sd = 1/sqrt(lambda)
@@ -55,13 +55,13 @@ for (family_name in c("gaussian", "poisson")[2]){
 
     rec <- NULL
     #rec$init <- init_hmc
-    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(1)]){
+    for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(1:2)]){
       # choose iter based on 
       if (length(grep("gibbs|slice", samplr_name)) > 0){
         iter_max <- c(1e5, 5e3) # 1e3)
       } else {
         # if sampler name contain "hmc"...
-        iter_max <- c(1e5, 1e4) # 1e4)
+        iter_max <- c(1e5, 5e3) # 1e4)
       }
       
       if (TRUE){
@@ -70,6 +70,7 @@ for (family_name in c("gaussian", "poisson")[2]){
         init <- NULL
         init$V <- t(data.sim$V)
         init$U <- t(data.sim$U)
+        parm_updt <- c("U", "V")
       } else {
         init_MAP <- FALSE
         init <- rec$init
@@ -94,17 +95,26 @@ for (family_name in c("gaussian", "poisson")[2]){
              # hmc parameters
              frog_step = 5,
              rotn_freq = iter_max[2],
-             mmtm_freq = iter_max[2])
+             mmtm_freq = iter_max[2],
+             parm_updt = parm_updt
+        )
       
       rec$data.sim <- data.sim
+      
+      if (samplr_name == "hmc_stan"){
+        rec_hmc <- rec
+      } else if (samplr_name == "gibbs"){
+        rec_gibbs <- rec
+      }
       
       #### 3. Evaluation ####
       # plot
       task_title <- 
         paste0(
           family_name, " ", 
-          samplr_name, " k=", k, " snr = ", snr)
-      
+          samplr_name, " k=", k, " snr = ", snr, " ",
+          paste(parm_updt, collapse = "_")
+          )
       
       if (rec_plot){
         #plot(rec$time, rec$error, type = "l", 
@@ -114,7 +124,7 @@ for (family_name in c("gaussian", "poisson")[2]){
              main = paste0("prediction error ", task_title))
         
         # objective function
-        plot(rec$time[(time_size-length(rec$obj)):time_size], 
+        plot(rec$time[(time_size-length(rec$obj)+1):time_size], 
              rec$obj, 
              type = "l", xlab = "Time (min)",
              main = paste0("obj ", task_title))

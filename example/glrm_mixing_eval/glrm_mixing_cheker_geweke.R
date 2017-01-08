@@ -16,7 +16,7 @@ raw_dir <- "./result/mixing_stat/"
 tar_dir <- "./result/mixing_model/"
 
 #### 0.specify model categories ####
-FAMILY <- c("gaussian", "poisson")[1]
+FAMILY <- c("gaussian", "poisson")[2]
 K <- c(2, 10, 15) #c(2, 10, 15)
 SNR <- 100
 SAMPLR <- c("gibbs", "hmc_stan")
