@@ -11,6 +11,7 @@ glrm_sampler_hmc_stan <-
     k <- info$k
     true_theta <- info$true_par$theta
     
+    
     family <- glrm_family(family_name)
     T_suff <- family$sufficient(Y)
     negloglik <- family$negloglik
@@ -25,6 +26,7 @@ glrm_sampler_hmc_stan <-
     mmtm_freq <- config$sampler$mmtm_freq 
     rotn_freq <- config$sampler$rotn_freq  
     samp_seed <- config$sampler$samp_seed
+    parm_updt <- config$sampler$parm_updt
     
     U_cur <- init$U
     V_cur <- init$V
@@ -36,11 +38,20 @@ glrm_sampler_hmc_stan <-
     options(mc.cores = parallel::detectCores())    
     stan_addr <- "./func/sampler/stan/"
     model_name <- family_name
-    stan_file <- paste0(stan_addr, model_name, ".stan")
     
-    stan_data <- list(N = n, P = p, K = k, Y = Y, 
-                      lambda_u = lambda, 
-                      lambda_v = lambda)
+    stan_data <- list(N = n, P = p, K = k, Y = Y,
+                      lambda_u = lambda, lambda_v = lambda)
+    
+    if (length(parm_updt) > 1){
+      stan_file <- paste0(stan_addr, model_name, ".stan")
+    } else if (parm_updt == "U"){
+      stan_file <- paste0(stan_addr, model_name, "_U.stan")
+      stan_data$V <- init$V
+    } else if (parm_updt == "V") {
+      stan_file <- paste0(stan_addr, model_name, "_V.stan")
+      stan_data$U <- init$U
+    }
+    
     init_func <- function() init
     
     # execute sampler
@@ -62,7 +73,8 @@ glrm_sampler_hmc_stan <-
     
     # return
     rec_list <- model_out@sim$samples[[1]]
-    rec_name <- sapply(names(rec_list), function(x) gsub("\\[.*", "", x)) 
+    rec_name <- sapply(names(rec_list), 
+                       function(x) gsub("\\[.*", "", x)) 
     
     rec <- NULL
     for (name in unique(rec_name)){
@@ -87,18 +99,31 @@ glrm_sampler_hmc_stan <-
     rec$Theta <- abind(init$U %*% t(init$V), 
                        rec$Theta[record_idx, , ], along = 1)
     
-    #rec <- extract(model_out)
-    # rec$Theta <- 
-    #   lapply(1:dim(rec$U)[1], 
-    #          function(i) rec$U[i, ,] %*% t(rec$V[i, , ])) %>% abind(along = 0)
-    
-    rec$obj <-
-      sapply(1:round(iter_max/record_freq), 
-             function(i){
-               negloglik(T_suff, rec$Theta[i, ,]) + 
-                 (lambda/2) * (sum(rec$V[i, ,]^2) + sum(rec$U[i, ,]^2))
-             }
-      )
+    if (length(parm_updt) > 1){
+      rec$obj <-
+        sapply(1:round(iter_max/record_freq), 
+               function(i){
+                 negloglik(T_suff, rec$Theta[i, ,]) + 
+                   (lambda/2) * (sum(rec$U[i, ,]^2) + sum(rec$V[i, ,]^2))
+               }
+        )  
+    } else if (parm_updt == "U"){
+      rec$obj <-
+        sapply(1:round(iter_max/record_freq), 
+               function(i){
+                 negloglik(T_suff, rec$Theta[i, ,]) + 
+                   (lambda/2) * (sum(init$V^2) + sum(rec$U[i, ,]^2))
+               }
+        )
+    } else if (parm_updt == "V") {
+      rec$obj <-
+        sapply(1:round(iter_max/record_freq), 
+               function(i){
+                 negloglik(T_suff, rec$Theta[i, ,]) + 
+                   (lambda/2) * (sum(init$U^2) + sum(rec$V[i, ,]^2))
+               }
+        )    
+    }
     
     rec$time <- seq(0, time_max, length.out = iter_max)
     rec$hmc_param <- get_sampler_params(model_out, inc_warmup = FALSE)

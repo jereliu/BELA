@@ -3,9 +3,9 @@ library(abind)
 predMeanError <- function(rec, true_theta, num = 100){
   # use the first half as burn in
   num <- min(dim(rec$U)[1], num)
+  iter_max <- dim(rec$Theta)[1] - 1
   iter <- 
-    seq(dim(rec$U)[1] * 0.25, 
-        dim(rec$U)[1], length.out = num) %>% round
+    seq(iter_max * 0.25, iter_max, length.out = num) %>% round
   
   # evaluate effective sample size/total sample size
   if (is.null(rec$Theta)){ # calculate Theta if not exist

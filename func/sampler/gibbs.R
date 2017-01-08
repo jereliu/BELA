@@ -3,7 +3,6 @@
 glrm_sampler_gibbs <- 
   function(Y, lambda, family_name, 
            init, config, rec, info){
-    par_update <- c("U", "V")[1]
     set.seed(config$sampler$samp_seed)
     # unpack family properties
     n <- info$n 
@@ -22,6 +21,7 @@ glrm_sampler_gibbs <-
     record_freq <- config$record_freq
     time_max <- config$time_max
     rotn_freq <- config$sampler$rotn_freq
+    parm_updt <- config$sampler$parm_updt
     
     rec$U[1, , ] <- U_cur <- init$U
     rec$V[1, , ] <- V_cur <- init$V
@@ -43,7 +43,7 @@ glrm_sampler_gibbs <-
       
       ####  U  ################
       acc_U <- rep(NaN, n)
-      if ("U" %in% par_update){
+      if ("U" %in% parm_updt){
         # Loops to Sample U
         for (i in 1:n){
           U_old <- U_cur
@@ -86,7 +86,7 @@ glrm_sampler_gibbs <-
       
       ####  V  #################
       acc_V <- rep(NaN, p)
-      if ("V" %in% par_update){
+      if ("V" %in% parm_updt){
         # warning("only V updated")
         # Loops to Sample V
         for (j in 1:p){
