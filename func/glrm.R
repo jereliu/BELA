@@ -32,11 +32,12 @@ glrm <-
     pred_num = 100,
     ess_num = 100,
     samp_seed = 100,
-    step_size = c(0.001, 1e-3), 
+    parm_updt = c("U", "V"), # parameters to be updated
     # sampler parameters: slice with tree
     edge_max = 5,
     line_step = 100,
     # sampler parameters: hmc
+    step_size = c(0.001, 1e-3), 
     frog_step = 5,
     rotn_freq = 10,
     mmtm_freq = iter_max[2]/10,
@@ -62,6 +63,7 @@ glrm <-
     config$sampler$step_size <- step_size[2]
     config$sampler$rotn_freq <- rotn_freq
     config$sampler$samp_seed <- samp_seed
+    config$sampler$parm_updt <- parm_updt
     
     if (length(grep("hmc", samplr_name)) > 0){
       config$sampler$frog_step <- frog_step
@@ -91,9 +93,9 @@ glrm <-
     
     set.seed(100) # fix prior sample
     if (is.null(init$U)) 
-      init$U <- matrix(rnorm(n*k, sd = 1e-3), nrow = n)
+      init$U <- matrix(rnorm(n*k, sd = 1e-1), nrow = n)
     if (is.null(init$V)) 
-      init$V <- matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
+      init$V <- matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
     
     #### 3. Output Container ####
     # for sampling
