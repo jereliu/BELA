@@ -25,7 +25,7 @@ if (!file.exists(cfig_file)){
       trial_seed = sample(n_rep*1e3, n_rep),
       K = c(2, 10, 15)[2], 
       SNR = 100, LAMBDA = 2,
-      FAMILY = c("gaussian", "poisson")[2],
+      FAMILY = c("gaussian", "poisson"),
       SAMPLR = c("gibbs", "hmc_stan")
     )
   
@@ -82,7 +82,7 @@ for (config_idx in config_idx_list){
       SAMPLR = cfig$SAMPLR,
       iter_max = rep(2e3, 2),
       record_freq = 1,
-      parm_updt = c("U", "V")[1]
+      parm_updt = c("U", "V")[2]
     )
 }
 

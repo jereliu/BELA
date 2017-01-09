@@ -56,8 +56,7 @@ glrm_worker <-
                 k = k, # factor dimension
                 family_name = family_name,
                 lambda = lambda,
-                noise_sd = 1/(sqrt(lambda)*snr),
-                parm_updt = parm_updt
+                noise_sd = 1/(sqrt(lambda)*snr)
               )
             
             Y <- data.sim$Y
@@ -68,7 +67,7 @@ glrm_worker <-
             rec <- NULL
             #rec$init <- init_hmc
             for (samplr_name in SAMPLR){
-
+              
               if (TRUE){
                 # if (is.null(rec$init)){
                 init_MAP <- FALSE
@@ -97,7 +96,9 @@ glrm_worker <-
                      frog_step = 5,
                      rotn_freq = iter_max[2],
                      mmtm_freq = iter_max[2], 
-                     samp_seed = rand_seeds$samplr)
+                     samp_seed = rand_seeds$samplr, 
+                     parm_updt = parm_updt
+                )
               
               rec$data.sim <- data.sim
               
@@ -127,8 +128,7 @@ glrm_worker <-
                   apply(rec$Theta, 1, 
                         function(theta) svd(theta)$d[2])
                 rec_target <- 
-                  matrix(c(eig0, eig_list), nrow = 1) 
-                
+                  matrix(c(eig0, eig_list), nrow = 1)
               }
               
               # save file 
@@ -163,11 +163,11 @@ glrm_worker <-
                 rec_idx <- 
                   seq(1, dim(rec2$U)[1], 
                       length.out = iter_max[2]/record_freq) %>% round
-                  
+                
                 rec$U <- rec2$U[rec_idx, , ]
                 rec$V <- rec2$V[rec_idx, , ]
                 rec$Y <- rec2$Y
-                  
+                
                 var_name <- 
                   paste0(family_name, "_k", k, "_snr", snr, "_", samplr_name)
                 
