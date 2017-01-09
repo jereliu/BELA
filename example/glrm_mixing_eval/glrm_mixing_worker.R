@@ -30,7 +30,7 @@ glrm_worker <-
     LAMBDA = 2,
     FAMILY = c("gaussian", "poisson"),
     SAMPLR = c("gibbs", "hmc_stan", "vi_stan"), 
-    record_freq = 1,
+    record_freq = 10,
     iter_max = c(1e5, 5e3)
   ){
     rand_seeds <- 
