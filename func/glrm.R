@@ -92,11 +92,15 @@ glrm <-
     true_theta <- info$true_par$theta
     
     set.seed(100) # fix prior sample
-    if (is.null(init$U)) 
-      init$U <- matrix(rnorm(n*k, sd = 1e-3), nrow = n)
-    if (is.null(init$V)) 
-      init$V <- matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
-    
+    # force update
+    if ("U" %in% parm_updt){
+      init$U <- 
+        t(true_par$U) + matrix(rnorm(n*k, sd = 1), nrow = n)
+    }
+    if ("V" %in% parm_updt){
+      init$V <- 
+        t(true_par$V) + matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
+    }
     #### 3. Output Container ####
     # for sampling
     rec <- NULL
