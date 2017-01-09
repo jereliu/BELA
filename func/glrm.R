@@ -93,9 +93,9 @@ glrm <-
     
     set.seed(100) # fix prior sample
     if (is.null(init$U)) 
-      init$U <- matrix(rnorm(n*k, sd = 1e-1), nrow = n)
+      init$U <- matrix(rnorm(n*k, sd = 1e-3), nrow = n)
     if (is.null(init$V)) 
-      init$V <- matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
+      init$V <- matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
     
     #### 3. Output Container ####
     # for sampling
