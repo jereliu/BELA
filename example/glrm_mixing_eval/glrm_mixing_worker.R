@@ -31,6 +31,7 @@ glrm_worker <-
     FAMILY = c("gaussian", "poisson"),
     SAMPLR = c("gibbs", "hmc_stan", "vi_stan"), 
     record_freq = 10,
+    parm_updt = c("U", "V"),
     iter_max = c(1e5, 5e3)
   ){
     rand_seeds <- 
@@ -55,7 +56,8 @@ glrm_worker <-
                 k = k, # factor dimension
                 family_name = family_name,
                 lambda = lambda,
-                noise_sd = 1/(sqrt(lambda)*snr)
+                noise_sd = 1/(sqrt(lambda)*snr),
+                parm_updt = parm_updt
               )
             
             Y <- data.sim$Y
@@ -71,8 +73,8 @@ glrm_worker <-
                 # if (is.null(rec$init)){
                 init_MAP <- FALSE
                 init <- NULL
-                # init$V <- t(data.sim$V)
-                # init$U <- t(data.sim$U)
+                init$V <- t(data.sim$V)
+                init$U <- t(data.sim$U)
               } else {
                 init_MAP <- FALSE
                 init <- rec$init
