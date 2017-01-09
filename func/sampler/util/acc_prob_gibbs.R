@@ -66,10 +66,10 @@ acc_prob_U <-
     B_new <- T_suff - A_d1_new + A_d2_new * Theta_new
     lnr_coef_u_new <- B_new %*% V_old    # n x k, each row lnr coef for u_i
     sigma_new <-
-      chol2inv(chol(
+      ginv(
         t(V_old) %*% diag(A_d2_new[i, ]) %*% V_old +
           lambda * diag(dim2)
-      ))
+      )
     mu_new <-  sigma_new %*% lnr_coef_u_new[i, ]    
     
     # old
@@ -79,10 +79,10 @@ acc_prob_U <-
     B_old <- T_suff - A_d1_old + A_d2_old * Theta_old
     lnr_coef_u_old <- B_old %*% V_old    # n x k, each row lnr coef for u_i
     sigma_old <-
-      chol2inv(chol(
+      ginv(
         t(V_old) %*% diag(A_d2_old[i, ]) %*% V_old +
           lambda * diag(dim2)
-      ))
+      )
     mu_old <- sigma_old %*% lnr_coef_u_old[i, ]
     
     #### calculate proposal distribution
@@ -123,10 +123,10 @@ acc_prob_V <-
     B_new <- T_suff - A_d1_new + A_d2_new * Theta_new
     lnr_coef_v_new <- t(B_new) %*% U_cur # p x k, each row lnr coef for v_j
     sigma_new <- 
-      chol2inv(chol(
+      ginv(
         t(U_cur) %*% diag(A_d2_new[, j]) %*% U_cur +
           lambda * diag(dim2)
-      ))
+      )
     mu_new <- sigma_new %*% lnr_coef_v_new[j, ]
     
     # old
@@ -136,10 +136,10 @@ acc_prob_V <-
     B_old <- T_suff - A_d1_old + A_d2_old * Theta_old
     lnr_coef_v_old <- t(B_old) %*% U_cur # p x k, each row lnr coef for v_j
     sigma_old <- 
-      chol2inv(chol(
+      ginv(
         t(U_cur) %*% diag(A_d2_old[, j]) %*% U_cur +
           lambda * diag(dim2)
-      ))
+      )
     mu_old <- sigma_old %*% lnr_coef_v_old[j, ]
     
     #### calculate proposal distribution
