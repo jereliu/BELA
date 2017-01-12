@@ -235,7 +235,7 @@ if (calc_metric){
               mixing_tvdist_list[[file_handle]] <- KL_div
               
             } else {
-              iter_idx <- 1:200
+              iter_idx <- 1:5000
               # seq(1, (ncol(theta_container)-1), 10)
               komo_stat <-
                 matrix(NaN,
@@ -320,7 +320,7 @@ if (calc_metric){
   )
 }
 
-family <- c("gaussian", "poisson")[2]
+family <- c("gaussian", "poisson")[1]
 k <- c(2, 10, 15)[2]
 snr <- 100
 
@@ -330,7 +330,7 @@ plot_id <-
   grep(plot_name, names(mixing_tvdist_list))
 
 plot(mixing_tvdist_list[[plot_id[1]]][, 1], type = "l", 
-     ylab = "MMD Statistic for Theta[1,1]", 
+     ylab = "MMD Statistic for eig(Theta)[2]", 
      xlab = "Iteration", 
      ylim = c(0, max(mixing_tvdist_list[[plot_id[1]]][, 1])),
      main = plot_name)

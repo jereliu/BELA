@@ -95,11 +95,11 @@ glrm <-
     # force update
     if ("U" %in% parm_updt){
       init$U <- 
-        t(true_par$U) + matrix(rnorm(n*k, sd = 1), nrow = n)
+        matrix(rnorm(n*k, sd = 1e-3), nrow = n)
     }
     if ("V" %in% parm_updt){
       init$V <- 
-        t(true_par$V) + matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
+        matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
     }
     #### 3. Output Container ####
     # for sampling

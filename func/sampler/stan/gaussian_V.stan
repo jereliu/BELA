@@ -21,7 +21,7 @@ transformed data {
 }
 
 parameters {
-  matrix[N, K] V;   // factor loading for population
+  matrix[P, K] V;   // factor loading for population
   /* 
   matrix[N, P] e;     // factor noise
   */  
