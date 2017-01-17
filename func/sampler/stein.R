@@ -1,5 +1,6 @@
-# Slice Sampler, sample by row, use rapid-exploring random tree
+library(KSD)
 
+# Slice Sampler, sample by row, use rapid-exploring random tree
 glrm_sampler_stein <-
   function(Y, lambda, family_name, 
            init, config, rec, info, 
@@ -27,13 +28,14 @@ glrm_sampler_stein <-
     
     iter_idx <- 
       c(seq(1, round(iter_max/4), length.out = 50),
-        seq(round(iter_max/4)+100, iter_max, length.out = 50)) %>%
+        seq(round(iter_max/4)+ iter_max/10, iter_max, 
+            length.out = 50)) %>%
       round %>% unique
     
     
     # initiate parameters
     S_cur <- 
-      rnorm(n_particle * (n + p) * k, sd = 1) %>% 
+      rnorm(n_particle * (n + p) * k, sd = 1) %>%
       matrix(nrow = n_particle)
     W_cur <- matrix(step_size, nrow = n_particle, ncol = (n + p) * k)
     # adaptive parameters
@@ -49,7 +51,7 @@ glrm_sampler_stein <-
     rec$Theta <- array(NaN, dim = c(length(iter_idx), n, p))
     grad_hist <- -rep(1, 500)
     grad_norm <- 0
-    opt_method <- "AdaGrad"
+    opt_method <- c("vanilla", "AdaGrad")[2]
     
     for (iter in 1:iter_max) {
       # setTxtProgressBar(pb, iter)
@@ -101,14 +103,18 @@ glrm_sampler_stein <-
           }
           T_cur <- auto_corr * T_cur + (1 - auto_corr) * (W_cur * grad_adj)^2
         }
-        if ((sum(grad_hist>0) > 20) & (grad_norm > 1e-3) & (opt_method != "vanilla")) {
-          # if stuck for a while, then switch back to vanilla
-          print(paste(opt_method, "appear to be stuck, switching to vanilla.."))
-          orig_method <- opt_method
-          opt_method <- "vanilla"
-          G_cur <- matrix(0, nrow = n_particle, ncol = (n + p) * k)
-          T_cur <- matrix(0, nrow = n_particle, ncol = (n + p) * k)
-        }
+        # if ((sum(grad_hist>0) > 99) & (grad_norm > 1e-3) & (opt_method != "vanilla")) {
+        #   # if stuck for a while, then switch back to vanilla
+        #   print(paste(opt_method, "appear to be stuck, switching to vanilla.."))
+        #   orig_method <- opt_method
+        #   opt_method <- "vanilla"
+        #   G_cur <- matrix(0, nrow = n_particle, ncol = (n + p) * k)
+        #   T_cur <- matrix(0, nrow = n_particle, ncol = (n + p) * k)
+        #   
+        #   # print(paste(opt_method, "appear to be stuck, stop"))
+        #   # break
+        # }
+        
         # if (sum(grad_hist>0)==0 & opt_method == "vanilla") {
         #   print(paste("gradient stabled, switch back to", orig_method))
         #   opt_method <- orig_method
@@ -137,11 +143,11 @@ glrm_sampler_stein <-
                        nboot = 0,
                        T_suff = T_suff,
                        lambda = lambda,
-                       dist_family = family)$ksd
+                       dist_family = family)$info$ksd_V
         rec$grad[rec_id] <- grad_norm
         rec$time[rec_id] <- (proc.time()[3] - time0)/60
         
-        if (grad_norm <= 1e-3)
+        if (abs(grad_diff) <= 1e-5)
           break
       }
       
@@ -153,5 +159,6 @@ glrm_sampler_stein <-
     }
     
     # return
+    rec$S <- S_cur
     rec
   }

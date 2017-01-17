@@ -13,7 +13,7 @@ n <- 10
 p <- 100
 k <- 2
 family_name <- c("gaussian", "poisson", "poisson_softplus")[2]
-samplr_name <- "hmc_stan"
+samplr_name <- "stein"
 snr <- 100
 edge_max <- 2
 
@@ -58,10 +58,10 @@ for (family_name in c("gaussian", "poisson")[2]){
     for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(1:2)]){
       # choose iter based on 
       if (length(grep("gibbs|slice", samplr_name)) > 0){
-        iter_max <- c(1e5, 5e3) # 1e3)
+        iter_max <- c(1e5, 1e3) # 1e3)
       } else {
         # if sampler name contain "hmc"...
-        iter_max <- c(1e5, 5e3) # 1e4)
+        iter_max <- c(1e5, 1e3) # 1e4)
       }
       
       if (TRUE){
@@ -86,7 +86,7 @@ for (family_name in c("gaussian", "poisson")[2]){
              init = init, init_MAP = init_MAP,
              samplr_name = samplr_name,
              family_name = family_name,
-             iter_max = iter_max, 
+             iter_max = rep(2e2, 2), 
              record_freq = 10,
              time_max = 60, 
              step_size = c(step_optim, step_sampl), 
@@ -96,7 +96,9 @@ for (family_name in c("gaussian", "poisson")[2]){
              frog_step = 5,
              rotn_freq = iter_max[2],
              mmtm_freq = iter_max[2],
-             parm_updt = parm_updt
+             parm_updt = parm_updt,
+             # stein parameters
+             n_particle = 1000
         )
       
       rec$data.sim <- data.sim

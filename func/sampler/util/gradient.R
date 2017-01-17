@@ -67,9 +67,9 @@ grad_ksd <-
     S2e <- repmat(S2, 1, n_sample)
     H <- (S2e + t(S2e) - 2 * SS)
     if (alpha == -1){
-      alpha <- log(n)/(median(H)^2)
+      alpha <- (median(H))/log(n_sample+1)
     }
-    K <- exp(-alpha * H/2)
+    K <- exp(-H/alpha)
     
     # calculate negative log likelihood
     neg_grad_S <- 
@@ -89,15 +89,36 @@ grad_ksd <-
     list(grad = grad_out, alpha = alpha)
   }
 
-# k <- 2
-# n <- 10
-# p <- 20
-# S <- matrix(1:(k*(n+p)), nrow = k)
-# T_suff <- matrix(1:(n*p), nrow = n)
-# lambda <- 2
+# support function for KSD
+repmat <- 
+  function (X, a = 1, b = 1){
+    rows <- dim(X)[1]
+    cols <- dim(X)[2]
+    if (is.null(cols)) 
+      cols <- 1
+    rowRep <- matrix(rep(t(X), a), ncol = cols, byrow = TRUE)
+    newX <- matrix(rep(rowRep, b), ncol = cols * b)
+    return(newX)
+  }
+
+
 # 
-# grad_ksd(S = S, 
-#          alpha = 1, 
-#          T_suff = T_suff, 
-#          lambda = lambda, 
-#          glrm_family("gaussian"))
+
+# k_x <- 2
+# n_x <- 10
+# p_x <- 20
+# 
+# S <- matrix(1:(k_x*(n_x + p_x)), nrow = n_x + p_x)
+# T_suff <- matrix(1:(n_x*p_x), nrow = n_x)
+# lambda <- 2
+# alpha <- -1 
+# 
+# n_sample <- dim(S)[1]
+# SS <- S %*% t(S)
+# S2 <- array(rowSums(S^2), dim = c(n_sample, 1))
+# S2e <- repmat(S2, 1, n_sample)
+# H <- (S2e + t(S2e) - 2 * SS)
+# if (alpha == -1){
+#   alpha <- (median(H))/log(n_sample+1)
+# }
+# K <- exp(-H/alpha)
