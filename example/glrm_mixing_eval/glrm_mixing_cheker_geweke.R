@@ -9,6 +9,7 @@ library(data.table)
 library(psych)
 library(infotheo)
 library(kernlab)
+library(data.table)
 source("./func/util/source_Dir.R")
 sourceDir("./func")
 
@@ -90,8 +91,11 @@ for (family_name in FAMILY){
                 )
             }
           } else {
+            # data_file <- 
+            #   read.csv(paste0(raw_dir, data_file_names))
             data_file <- 
-              read.csv(paste0(raw_dir, data_file_names))
+              fread(paste0(raw_dir, data_file_names), 
+                    header = FALSE, data.table = FALSE)[2, ]
             
             if (is.null(theta_container)){
               theta_container <- 

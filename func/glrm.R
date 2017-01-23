@@ -92,7 +92,6 @@ glrm <-
     true_theta <- info$true_par$theta
     
     # fix initialization
-    warning("glrm: ignore supplied initialization")
     set.seed(100) 
     if ("U" %in% parm_updt){
       if (is.null(init$U)){

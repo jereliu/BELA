@@ -117,3 +117,4 @@ The following objects are masked from ‘package:psych’:
 
     fisherz, logistic, logit
 
+User defined signal 2

@@ -35,7 +35,7 @@ glrm_sample <-
     
     if (is.null(Sig_u)){
       if (Sig_type[1] == "iid")
-        Sig_u <- diag(n) /(lambda)
+        Sig_u <- diag(n) / (lambda)
     } 
     if (is.null(Sig_v)){
       if (Sig_type[2] == "iid")

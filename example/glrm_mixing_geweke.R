@@ -1,4 +1,3 @@
-rm(list = ls()) #WoG, MTG, Commander 2013
 
 library(magrittr)
 library(dplyr)

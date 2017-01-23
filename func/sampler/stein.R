@@ -32,7 +32,6 @@ glrm_sampler_stein <-
             length.out = 50)) %>%
       round %>% unique
     
-    
     # initiate parameters
     S_cur <- 
       rnorm(n_particle * (n + p) * k, sd = 1) %>%
