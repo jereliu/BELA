@@ -23,14 +23,18 @@ glrm_sampler_gibbs <-
     rotn_freq <- config$sampler$rotn_freq
     parm_updt <- config$sampler$parm_updt
     
-    rec$U[1, , ] <- U_cur <- init$U
-    rec$V[1, , ] <- V_cur <- init$V
+    rec$U[1, , ] <- U_old <- U_cur <- init$U
+    rec$V[1, , ] <- V_old <- V_cur <- init$V
     rec$Theta[1, , ] <- Theta_cur <- U_cur %*% t(V_cur)
     time0 <- proc.time()[3]
+    
+    acc_U <- matrix(NaN, iter_max, n)
+    acc_V <- matrix(NaN, iter_max, p)
     
     # initiate sampler
     pb <- txtProgressBar(min = 1, max = iter_max, style = 3)
     
+    # TODO: find why acc so low. check on simulation
     for (iter in 1:iter_max) {
       setTxtProgressBar(pb, iter)
       # if (iter %% rotn_freq == 0) {
@@ -39,10 +43,7 @@ glrm_sampler_gibbs <-
       #   V_cur <- V_cur %*% R
       # }
       
-      U_old <- U_cur; V_old <- V_cur
-      
       ####  U  ################
-      acc_U <- rep(NaN, n)
       if ("U" %in% parm_updt){
         # Loops to Sample U
         for (i in 1:n){
@@ -56,12 +57,12 @@ glrm_sampler_gibbs <-
           
           # sample for i^th row of U
           U_prop <- U_cur
-          sigma <-
-            solve(
+          sigma_i <-
+            ginv(
               t(V_cur) %*% diag(A_d2[i, ]) %*% V_cur +
                 lambda * diag(k)
             )
-          mu <-  sigma %*% lnr_coef_u[i, ]
+          mu_i <-  sigma_i %*% lnr_coef_u[i, ]
           
           # U_prop[i, ] <-
           #   rmvnorm(1,
@@ -69,23 +70,22 @@ glrm_sampler_gibbs <-
           #           sigma = sigma * diag(k))
           U_prop[i, ] <-
             rmvnorm(1,
-                    mean = mu,
-                    sigma = sigma)
+                    mean = mu_i,
+                    sigma = sigma_i)
           
           # metroplis step for U
           acc_prob <-
             acc_prob_U(U_prop, U_cur, V_cur, V_old, i,
                        lambda, family, T_suff)
           # warning("no rejection for U)
-          acc_U[i] <- (runif(1) < acc_prob)
+          acc_U[iter, i] <- acc_prob
           
-          if (acc_U[i])
+          if (runif(1) < acc_prob)
             U_cur <- U_prop
         }
       }
       
       ####  V  #################
-      acc_V <- rep(NaN, p)
       if ("V" %in% parm_updt){
         # warning("only V updated")
         # Loops to Sample V
@@ -104,14 +104,15 @@ glrm_sampler_gibbs <-
           
           # sample for i^th row of U
           V_prop <- V_cur
-          sigma <- solve(
+          sigma_j <- ginv(
             t(U_cur) %*% diag(A_d2[, j]) %*% U_cur +
               lambda * diag(k))
-          mu <- sigma %*% lnr_coef_v[j, ]
+          mu_j <- sigma_j %*% lnr_coef_v[j, ]
+          
           V_prop[j, ] <-
             rmvnorm(1,
-                    mean = mu,
-                    sigma = sigma)
+                    mean = mu_j,
+                    sigma = sigma_j)
           
           # V_prop[j, ] <-
           #   rmvnorm(1,
@@ -124,9 +125,9 @@ glrm_sampler_gibbs <-
                        lambda, family, T_suff)
           
           # warning("no rejection for V")
-          acc_V[j] <- (runif(1) < acc_prob)
+          acc_V[iter, j] <- acc_prob
           
-          if (acc_V[j])
+          if (runif(1) < acc_prob)
             V_cur <- V_prop
           #cat(paste0(" acc=", acc_V[j], "\n"))
         }
@@ -139,7 +140,7 @@ glrm_sampler_gibbs <-
         rec$Theta[iter/record_freq + 1, , ] <- U_cur %*% t(V_cur)
         
         rec$acc[iter/record_freq, ] <- 
-          c(mean(acc_U), mean(acc_V))
+          c(acc_U[iter, ], acc_V[iter, ])
         # rec$error[iter/record_freq] <- 
         #   mean((U_cur %*% t(V_cur) - true_theta)^2) %>% sqrt
         rec$obj[iter/record_freq] <- 
