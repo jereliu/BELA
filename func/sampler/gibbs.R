@@ -5,7 +5,7 @@ glrm_sampler_gibbs <-
            init, config, rec, info){
     set.seed(config$sampler$samp_seed)
     # unpack family properties
-    n <- info$n 
+    n <- info$n
     p <- info$p
     k <- info$k
     true_theta <- info$true_par$theta

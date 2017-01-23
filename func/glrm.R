@@ -91,16 +91,31 @@ glrm <-
     info$true_par <- true_par
     true_theta <- info$true_par$theta
     
-    set.seed(100) # fix prior sample
-    # force update
+    # fix initialization
+    warning("glrm: ignore supplied initialization")
+    set.seed(100) 
     if ("U" %in% parm_updt){
-      init$U <- 
-        matrix(rnorm(n*k, sd = 1e-3), nrow = n)
+      if (is.null(init$U)){
+        init$U <- 
+          matrix(rnorm(n*k, sd = 1e-1), nrow = n)
+      } else {
+        init$U <- 
+          init$U + 
+          matrix(rnorm(n*k, sd = 1e-1), nrow = n)
+      }
     }
+    set.seed(100) 
     if ("V" %in% parm_updt){
-      init$V <- 
-        matrix(rnorm(p*k, sd = 1e-3), nrow = p) 
+      if (is.null(init$V)){
+        init$V <- 
+          matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
+      } else {
+        init$V <- 
+          init$V + 
+          matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
+      }
     }
+    
     #### 3. Output Container ####
     # for sampling
     rec <- NULL
@@ -108,8 +123,10 @@ glrm <-
     rec$V <- array(NaN, c(iter_max[2]/record_freq + 1, p, k))
     rec$Theta <- array(NaN, c(iter_max[2]/record_freq + 1, n, p))
     
-    rec$acc <- array(NaN, c(iter_max[2]/record_freq, 2), 
-                     dimnames = list(NULL, c("U", "V")))
+    rec$acc <- 
+      array(NaN, c(iter_max[2]/record_freq, n + p), 
+            dimnames = list(NULL, c(paste0("U_", 1:n), paste0("V_", 1:p)))
+      )
     
     rec$error <- array(NaN, c(iter_max[2]/record_freq))
     rec$time <- array(NaN, c(iter_max[2]/record_freq))
@@ -156,6 +173,9 @@ glrm <-
         (length(grep("debug", samplr_name)) == 0)){
       rec$pred_error <- predMeanError(rec, true_theta, pred_num)
       rec$true_theta <- true_theta
+      rec$eig_list <- 
+        apply(rec$Theta, 1, 
+              function(theta) svd(theta)$d[2])
     }
     
     rec$init <- init
