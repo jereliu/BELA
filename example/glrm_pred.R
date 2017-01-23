@@ -16,9 +16,11 @@ family_name <- c("gaussian", "poisson", "poisson_softplus")[2]
 samplr_name <- "stein"
 snr <- 100
 edge_max <- 2
+record_freq <- 10
 
 rand_seeds <- list(data = 4200, samplr = 1300)
-rec_plot <- TRUE
+rec_plot <- FALSE
+marg_eig_plot <- TRUE
 cond_dens_plot_d1_U <- FALSE
 cond_dens_plot_d1_V <- FALSE
 marg_dens_plot <- FALSE
@@ -30,9 +32,9 @@ marg_dens_plot_slice <- FALSE
 # par(mfrow = c(1, 2))
 for (family_name in c("gaussian", "poisson")[2]){
   #for (snr in c(100, 10, 1, 0.5)){
-  for (k in c(1, 2, 5, 10, 15, 20)[6]){
+  for (k in c(1, 2, 5, 10, 15, 20)[3]){
     #for (lambda in c(0.5, 1, 3, 5, 10, 20)[1]){
-    lambda = 2
+    lambda = 4
     phi_sd = 1/sqrt(lambda)
     step_optim = 0.001
     step_sampl = 0.01
@@ -58,7 +60,7 @@ for (family_name in c("gaussian", "poisson")[2]){
     for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(1:2)]){
       # choose iter based on 
       if (length(grep("gibbs|slice", samplr_name)) > 0){
-        iter_max <- c(1e5, 1e3) # 1e3)
+        iter_max <- c(1e5, 2e3) # 1e3)
       } else {
         # if sampler name contain "hmc"...
         iter_max <- c(1e5, 1e3) # 1e4)
@@ -70,7 +72,7 @@ for (family_name in c("gaussian", "poisson")[2]){
         init <- NULL
         init$V <- t(data.sim$V)
         init$U <- t(data.sim$U)
-        parm_updt <- c("U", "V")
+        parm_updt <- c("U", "V")[1]
       } else {
         init_MAP <- FALSE
         init <- rec$init
@@ -86,8 +88,8 @@ for (family_name in c("gaussian", "poisson")[2]){
              init = init, init_MAP = init_MAP,
              samplr_name = samplr_name,
              family_name = family_name,
-             iter_max = rep(2e2, 2), 
-             record_freq = 10,
+             iter_max = iter_max, 
+             record_freq = record_freq,
              time_max = 60, 
              step_size = c(step_optim, step_sampl), 
              # slice parameters
@@ -253,6 +255,18 @@ for (family_name in c("gaussian", "poisson")[2]){
              type= "l", main = task_title)
         # lines(u_range, postden_hmc/max(postden_hmc), 
         #       col = 2)
+      }
+      
+      if (marg_eig_plot){
+        if (samplr_name == "gibbs") {
+          burn_idx <- 1:round(iter_max[2]/(2*record_freq))
+          rec_gibbs <- rec
+          plot(density(rec_gibbs$eig_list[-burn_idx]), main = samplr_name)
+          abline(v = svd(data.sim$theta)$d[2])
+        } else if (samplr_name == "hmc_stan") {
+          rec_hmc <- rec
+          lines(density(rec_hmc$eig_list), col = 2)
+        }
       }
       
       if (marg_dens_plot_slice){
