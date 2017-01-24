@@ -30,123 +30,127 @@ cfig_list <- read.csv("cfigList.csv")
 data_id <- unique(cfig_list$data_seed)
 trial_id <- unique(cfig_list$trial_seed)
 
-for (family_name in FAMILY){
-  for (k in K[k_id]){
-    for (snr in SNR){
-      for (sampler in SAMPLR){
-        # capture relevant file index
-        sett_handle <-
-          paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
-        data_list <- 
-          grep(sett_handle, file_list, value = TRUE)
-        #initiate container for all quantiles 
-        theta_container <- NULL
-        
-        cat(paste0("\n ", sett_handle, " in process...\n"))
-        pb <- 
-          txtProgressBar(min = 1, max = length(data_list), style = 3)
-        for (d_id in 1:length(data_list)){
-          setTxtProgressBar(pb, d_id)
-          # for each dataset in setting, read-in all reps
-          data_file_names <- data_list[d_id]
+sum_array <- FALSE 
+
+if (sum_array){
+  for (family_name in FAMILY){
+    for (k in K[k_id]){
+      for (snr in SNR){
+        for (sampler in SAMPLR){
+          # capture relevant file index
+          sett_handle <-
+            paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
+          data_list <- 
+            grep(sett_handle, file_list, value = TRUE)
+          #initiate container for all quantiles 
+          theta_container <- NULL
           
-          #### 1.1 harvest sample to compute quantile ----
-          # read in initial file, find chain length, build file container
-          # also build quantile container for current setting if not exist
-          metric_KL <- FALSE
-          metric_stein <- FALSE
-          if (metric_stein){
-            # store Y, U_1 and V_1
-            file_name <- paste0(raw_dir, data_file_names)
-            load(file_name)
-            if (is.null(theta_container)){
-              iter_max <- dim(rec$U)[1] #obtain number of iteration
-              iter_idx <- 1:50
-              # iter_idx <- 
-              #   c(seq(1, round(iter_max/2), length.out = 24),
-              #     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
-              #   round %>% unique
-              theta_container$Y <- rec$Y
-              theta_container$iter_idx <- iter_idx
-              theta_container$theta <- 
-                array(NaN, 
-                      dim = 
-                        c(length(iter_idx), # iteration
-                          length(data_list), # repetition
-                          dim(rec$U)[3]*
-                            sum(dim(rec$U)[2] + dim(rec$V)[2])) # number of variable
-                )
-            }
-          } else if (metric_KL) {
-            # store Y, U_1 and V_1
-            file_name <- paste0(raw_dir, data_file_names)
-            load(file_name)
-            if (is.null(theta_container)){
-              theta_container <- 
-                array(NaN, 
-                      dim = 
-                        c(length(data_list), # repetition
-                          dim(rec$U)[1], # iteration
-                          dim(rec$U)[3]*2 + 1) # number of variable
-                )
-            }
-          } else {
-            # data_file <- 
-            #   read.csv(paste0(raw_dir, data_file_names))
-            data_file <- 
-              fread(paste0(raw_dir, data_file_names), 
-                    header = FALSE, data.table = FALSE)[2, ]
+          cat(paste0("\n ", sett_handle, " in process...\n"))
+          pb <- 
+            txtProgressBar(min = 1, max = length(data_list), style = 3)
+          for (d_id in 1:length(data_list)){
+            setTxtProgressBar(pb, d_id)
+            # for each dataset in setting, read-in all reps
+            data_file_names <- data_list[d_id]
             
-            if (is.null(theta_container)){
-              theta_container <- 
-                matrix(NaN, 
-                       nrow = length(data_list), 
-                       ncol = ncol(data_file))
+            #### 1.1 harvest sample to compute quantile ----
+            # read in initial file, find chain length, build file container
+            # also build quantile container for current setting if not exist
+            metric_KL <- FALSE
+            metric_stein <- FALSE
+            if (metric_stein){
+              # store Y, U_1 and V_1
+              file_name <- paste0(raw_dir, data_file_names)
+              load(file_name)
+              if (is.null(theta_container)){
+                iter_max <- dim(rec$U)[1] #obtain number of iteration
+                iter_idx <- 1:50
+                # iter_idx <- 
+                #   c(seq(1, round(iter_max/2), length.out = 24),
+                #     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
+                #   round %>% unique
+                theta_container$Y <- rec$Y
+                theta_container$iter_idx <- iter_idx
+                theta_container$theta <- 
+                  array(NaN, 
+                        dim = 
+                          c(length(iter_idx), # iteration
+                            length(data_list), # repetition
+                            dim(rec$U)[3]*
+                              sum(dim(rec$U)[2] + dim(rec$V)[2])) # number of variable
+                  )
+              }
+            } else if (metric_KL) {
+              # store Y, U_1 and V_1
+              file_name <- paste0(raw_dir, data_file_names)
+              load(file_name)
+              if (is.null(theta_container)){
+                theta_container <- 
+                  array(NaN, 
+                        dim = 
+                          c(length(data_list), # repetition
+                            dim(rec$U)[1], # iteration
+                            dim(rec$U)[3]*2 + 1) # number of variable
+                  )
+              }
+            } else {
+              # data_file <- 
+              #   read.csv(paste0(raw_dir, data_file_names))
+              data_file <- 
+                fread(paste0(raw_dir, data_file_names), 
+                      header = FALSE, data.table = FALSE)[2, ]
+              
+              if (is.null(theta_container)){
+                theta_container <- 
+                  matrix(NaN, 
+                         nrow = length(data_list), 
+                         ncol = ncol(data_file))
+              }
             }
+            #### 1.2. compute obtain quantities then store ----
+            
+            # add quantile computed from data to 
+            # container for current setting
+            if (metric_stein) {
+              theta_container$theta[, d_id, ] <- 
+                sapply(iter_idx, 
+                       function(id)
+                         as.vector(rbind(rec$U[id, , ], 
+                                         rec$V[id, , ]))
+                ) %>% t
+            } else if (metric_KL){
+              theta_container[d_id, , ] <- 
+                cbind(
+                  # sufficient statistics
+                  rep(glrm_family(family_name)$sufficient(
+                    rec$data.sim$Y[1, 1]), dim(rec$U)[1]), 
+                  rec$U[, 1, ], rec$V[, 1, ])
+            } else {
+              theta_container[d_id, ] <- 
+                as.matrix(data_file)[1, ]
+            }
+            # # visualize the chain
+            # plot(file_container[1, ], 
+            #      col = rgb(0,0,0,0.2),
+            #      type = "l")
+            # for (i in 1:nrow(file_container)){
+            #   lines(file_container[i, ], 
+            #         col = rgb(0,0,0,0.3))
+            # }
           }
-          #### 1.2. compute obtain quantities then store ----
           
-          # add quantile computed from data to 
-          # container for current setting
-          if (metric_stein) {
-            theta_container$theta[, d_id, ] <- 
-              sapply(iter_idx, 
-                     function(id)
-                       as.vector(rbind(rec$U[id, , ], 
-                                       rec$V[id, , ]))
-              ) %>% t
+          # 
+          if (metric_stein){
+            postfix <- "_stein.RData"
           } else if (metric_KL){
-            theta_container[d_id, , ] <- 
-              cbind(
-                # sufficient statistics
-                rep(glrm_family(family_name)$sufficient(
-                  rec$data.sim$Y[1, 1]), dim(rec$U)[1]), 
-                rec$U[, 1, ], rec$V[, 1, ])
+            postfix <- "_KL.RData"
           } else {
-            theta_container[d_id, ] <- 
-              as.matrix(data_file)[1, ]
+            postfix <- "_geweke.RData"
           }
-          # # visualize the chain
-          # plot(file_container[1, ], 
-          #      col = rgb(0,0,0,0.2),
-          #      type = "l")
-          # for (i in 1:nrow(file_container)){
-          #   lines(file_container[i, ], 
-          #         col = rgb(0,0,0,0.3))
-          # }
+          
+          save(theta_container,
+               file = paste0(tar_dir, sett_handle, postfix))
         }
-        
-        # 
-        if (metric_stein){
-          postfix <- "_stein.RData"
-        } else if (metric_KL){
-          postfix <- "_KL.RData"
-        } else {
-          postfix <- "_geweke.RData"
-        }
-        
-        save(theta_container,
-             file = paste0(tar_dir, sett_handle, postfix))
       }
     }
   }
@@ -240,7 +244,7 @@ if (calc_metric){
               mixing_tvdist_list[[file_handle]] <- KL_div
               
             } else {
-              iter_idx <- 1:5000
+              iter_idx <- 1:dim(theta_container)[1]
               # seq(1, (ncol(theta_container)-1), 10)
               komo_stat <-
                 matrix(NaN,
@@ -254,8 +258,8 @@ if (calc_metric){
               for (i in iter_idx){
                 setTxtProgressBar(pb, i)
                 mmdo <- 
-                  kmmd(matrix(theta_container[, i+1]),
-                       matrix(theta_container[, 1]))
+                  kmmd(matrix(as.numeric(theta_container[, i+1])),
+                       matrix(as.numeric(theta_container[, 1])))
                 komo_stat[i, ] <- 
                   c(mmdo@mmdstats[1], mmdo@Radbound, mmdo@Asymbound)
                 
