@@ -1,4 +1,8 @@
 # Gibbs Sampler, rejection by row
+# Note: Gibbs for Poisson case is sensitive to 
+#         initialization, if not properly initialized
+#         then proposals for some U[i]/V[j] that corresponds to extreme 
+#         Y observation will always be rejected 
 
 glrm_sampler_gibbs <- 
   function(Y, lambda, family_name, 
