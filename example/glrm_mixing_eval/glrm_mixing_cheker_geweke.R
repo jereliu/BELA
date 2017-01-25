@@ -18,19 +18,19 @@ tar_dir <- "./result/mixing_res/"
 
 #### 0.specify model categories ####
 FAMILY <- c("gaussian", "poisson")[2]
-K <- c(2, 10, 15) #c(2, 10, 15)
+K <- c(2, 5, 10, 15) #c(2, 10, 15)
 SNR <- 100
 SAMPLR <- c("gibbs", "hmc_stan")
 #c("gibbs", "hmc_stan", "vi_stan")
 
 #### 1. restructure raw file into array #### 
-k_id <- 1
+k_id <- 1:length(K)
 file_list <- list.files(raw_dir)
 cfig_list <- read.csv("cfigList.csv")
 data_id <- unique(cfig_list$data_seed)
 trial_id <- unique(cfig_list$trial_seed)
 
-sum_array <- FALSE 
+sum_array <- TRUE 
 
 if (sum_array){
   for (family_name in FAMILY){
@@ -333,7 +333,7 @@ family <- c("gaussian", "poisson")[2]
 k <- c(2, 10, 15)[k_id]
 snr <- 100
 
-plot_name <- 
+plot_name <-
   paste0(family, "_k", k, "_snr", snr)
 plot_id <- 
   grep(plot_name, names(mixing_tvdist_list))

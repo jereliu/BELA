@@ -23,9 +23,9 @@ if (!file.exists(cfig_file)){
     expand.grid(
       data_seed = sample(n_data*1e3, n_data),
       trial_seed = sample(n_rep*1e3, n_rep),
-      K = c(2, 5, 10, 15)[1], 
-      SNR = 100, LAMBDA = 4,
-      FAMILY = c("gaussian", "poisson"),
+      K = c(2, 5, 10, 15), 
+      SNR = 100, LAMBDA = 10,
+      FAMILY = c("gaussian", "poisson")[2],
       SAMPLR = c("gibbs", "hmc_stan")
     )
   

@@ -34,7 +34,7 @@ for (family_name in c("gaussian", "poisson")[2]){
   #for (snr in c(100, 10, 1, 0.5)){
   for (k in c(1, 2, 5, 10, 15, 20)[3]){
     #for (lambda in c(0.5, 1, 3, 5, 10, 20)[1]){
-    lambda = 4
+    lambda = 10
     phi_sd = 1/sqrt(lambda)
     step_optim = 0.001
     step_sampl = 0.01
@@ -60,7 +60,7 @@ for (family_name in c("gaussian", "poisson")[2]){
     for (samplr_name in c("gibbs", "hmc_stan", "vi_stan", "slice", "stein")[c(1:2)]){
       # choose iter based on 
       if (length(grep("gibbs|slice", samplr_name)) > 0){
-        iter_max <- c(1e5, 2e3) # 1e3)
+        iter_max <- c(1e5, 1e5) # 1e3)
       } else {
         # if sampler name contain "hmc"...
         iter_max <- c(1e5, 1e3) # 1e4)
@@ -70,8 +70,8 @@ for (family_name in c("gaussian", "poisson")[2]){
         # if (is.null(rec$init)){
         init_MAP <- FALSE
         init <- NULL
+        # init$U <- t(data.sim$U)
         init$V <- t(data.sim$V)
-        init$U <- t(data.sim$U)
         parm_updt <- c("U", "V")[1]
       } else {
         init_MAP <- FALSE
