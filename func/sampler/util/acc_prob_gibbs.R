@@ -50,7 +50,8 @@
 # acceptance probability for Gibbs sampler
 acc_prob_U <- 
   function(U_cur, U_old, V_cur, V_old, i, 
-           lambda, family, T_suff){
+           lambda, family, T_suff)
+  {
     dim1 <- nrow(U_cur)
     dim2 <- ncol(U_cur)
     

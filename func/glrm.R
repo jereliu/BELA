@@ -92,27 +92,15 @@ glrm <-
     true_theta <- info$true_par$theta
     
     # fix initialization
-    set.seed(100) 
+    set.seed(100)
     if ("U" %in% parm_updt){
-      if (is.null(init$U)){
-        init$U <- 
-          matrix(rnorm(n*k, sd = 1e-1), nrow = n)
-      } else {
-        init$U <- 
-          init$U + 
-          matrix(rnorm(n*k, sd = 1e-1), nrow = n)
-      }
+      init$U <- 
+        matrix(rnorm(n*k, sd = 1e-1), nrow = n)
     }
     set.seed(100) 
     if ("V" %in% parm_updt){
-      if (is.null(init$V)){
-        init$V <- 
-          matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
-      } else {
-        init$V <- 
-          init$V + 
-          matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
-      }
+      init$V <- 
+        matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
     }
     
     #### 3. Output Container ####

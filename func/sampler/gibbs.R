@@ -6,7 +6,8 @@
 
 glrm_sampler_gibbs <- 
   function(Y, lambda, family_name, 
-           init, config, rec, info){
+           init, config, rec, info)
+  {
     set.seed(config$sampler$samp_seed)
     # unpack family properties
     n <- info$n
