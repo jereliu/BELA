@@ -329,24 +329,26 @@ if (calc_metric){
   )
 }
 
-family <- c("gaussian", "poisson")[2]
-k <- c(2, 10, 15)[k_id]
-snr <- 100
-
-plot_name <-
-  paste0(family, "_k", k, "_snr", snr)
-plot_id <- 
-  grep(plot_name, names(mixing_tvdist_list))
-
-plot(mixing_tvdist_list[[plot_id[1]]][, 1], type = "l", 
-     ylab = "MMD Statistic for eig(Theta)[2]", 
-     xlab = "Iteration", 
-     ylim = c(0, max(mixing_tvdist_list[[plot_id[1]]][, 1])),
-     main = plot_name)
-abline(h = mixing_tvdist_list[[plot_id[1]]][, 2], 
-       lty = 2)
-lines(mixing_tvdist_list[[plot_id[2]]][, 1], col = 2)
-
+# plot 
+for (k_id in 1:4){
+  family <- c("gaussian", "poisson")[2]
+  k <- c(2, 5, 10, 15)[k_id]
+  snr <- 100
+  
+  plot_name <-
+    paste0(family, "_k", k, "_snr", snr)
+  plot_id <- 
+    grep(plot_name, names(mixing_tvdist_list))
+  
+  plot(mixing_tvdist_list[[plot_id[1]]][1:100, 1], type = "l", 
+       ylab = "MMD Statistic for eig(Theta)[2]", 
+       xlab = "Iteration", 
+       ylim = c(0, max(mixing_tvdist_list[[plot_id[1]]][, 1])),
+       main = plot_name)
+  abline(h = mixing_tvdist_list[[plot_id[1]]][, 2], 
+         lty = 2)
+  lines(mixing_tvdist_list[[plot_id[2]]][, 1], col = 2)
+}
 # #### 3. plot ecdf #### 
 # type <- c("pval", "stat")[2]
 # load(paste0(tar_dir, "mixing_tvdist_geweke_", type, ".RData"))
