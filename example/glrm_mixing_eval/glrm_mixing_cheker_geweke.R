@@ -16,21 +16,32 @@ sourceDir("./func")
 raw_dir <- "./result/mixing_stat/"
 tar_dir <- "./result/mixing_res/"
 
+# read in command and select setting
+args <- commandArgs(trailingOnly = TRUE)
+job_idx <- as.numeric(args)
+
+cfig_file <- "cfigList.csv"
+cfig_list <- read.csv(cfig_file)[
+  , c("K", "SNR", "FAMILY", "SAMPLR")] %>% unique
+
+
 #### 0.specify model categories ####
-FAMILY <- c("gaussian", "poisson")[2]
-K <- c(2, 5, 10, 15) #c(2, 10, 15)
-SNR <- 100
-SAMPLR <- c("gibbs", "hmc_stan")
-#c("gibbs", "hmc_stan", "vi_stan")
+task_list <- cfig_list[job_idx, ]
+
+FAMILY <- task_list$FAMILY
+K <- task_list$K
+SNR <- task_list$SNR
+SAMPLR <- task_list$SAMPLR
 
 #### 1. restructure raw file into array #### 
 k_id <- 1:length(K)
 file_list <- list.files(raw_dir)
-cfig_list <- read.csv("cfigList.csv")
-data_id <- unique(cfig_list$data_seed)
+data_id <- unique(cfig_list$data_seed)[1:100]
 trial_id <- unique(cfig_list$trial_seed)
 
-sum_array <- TRUE 
+iter_max_global <- 5000 # the number of iteration to consider
+
+sum_array <- FALSE 
 
 if (sum_array){
   for (family_name in FAMILY){
@@ -63,8 +74,8 @@ if (sum_array){
               file_name <- paste0(raw_dir, data_file_names)
               load(file_name)
               if (is.null(theta_container)){
-                iter_max <- dim(rec$U)[1] #obtain number of iteration
-                iter_idx <- 1:50
+                iter_max <- min(dim(rec$U)[1], iter_max_global) #obtain number of iteration
+                iter_idx <- 1:iter_max
                 # iter_idx <- 
                 #   c(seq(1, round(iter_max/2), length.out = 24),
                 #     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
@@ -100,11 +111,12 @@ if (sum_array){
                 fread(paste0(raw_dir, data_file_names), 
                       header = FALSE, data.table = FALSE)[2, ]
               
+              iter_max_local <- min(ncol(data_file), iter_max_global+2)
+              
               if (is.null(theta_container)){
                 theta_container <- 
                   matrix(NaN, 
-                         nrow = length(data_list), 
-                         ncol = ncol(data_file))
+                         nrow = length(data_list), ncol = iter_max_local)
               }
             }
             #### 1.2. compute obtain quantities then store ----
@@ -127,7 +139,7 @@ if (sum_array){
                   rec$U[, 1, ], rec$V[, 1, ])
             } else {
               theta_container[d_id, ] <- 
-                as.matrix(data_file)[1, ]
+                as.numeric(data_file[1, 1:iter_max_local])
             }
             # # visualize the chain
             # plot(file_container[1, ], 
@@ -160,6 +172,7 @@ if (sum_array){
 calc_metric <- TRUE
 mmd_stat <- TRUE
 ks_stat <- FALSE
+
 if (calc_metric){
   array_list <- list.files(tar_dir)
   array_list <- array_list[grep("geweke.RData", array_list)]
@@ -182,7 +195,7 @@ if (calc_metric){
             file_handle <-
               paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
             # load theta_container, row for data, col for iteration
-            print(paste0("loading ", file_handle, ".."))
+            print(paste0("loading mmdstat ", file_handle, ".."))
             
             load(paste0(tar_dir, 
                         grep(file_handle, array_list, value = TRUE)))
@@ -244,22 +257,26 @@ if (calc_metric){
               mixing_tvdist_list[[file_handle]] <- KL_div
               
             } else {
-              iter_idx <- 1:dim(theta_container)[1]
+              n_test <- 50
+              n_skip <- 20
+              n_sample <- 200
+              
+              iter_idx <- seq(1, iter_max_global, n_skip)
+              iter_idx <- iter_idx[iter_idx < (iter_max_global - n_test)]
               # seq(1, (ncol(theta_container)-1), 10)
               komo_stat <-
                 matrix(NaN,
                        nrow = length(iter_idx), ncol = 3)
               pb <-
                 txtProgressBar(
-                  min = 1,
-                  max = ncol(theta_container)-1,
-                  style = 3)
+                  min = 1, max = length(iter_idx), style = 3)
               
-              for (i in iter_idx){
+              for (i in 1:length(iter_idx)){
                 setTxtProgressBar(pb, i)
+                iter <- iter_idx[i]
                 mmdo <- 
-                  kmmd(matrix(as.numeric(theta_container[, i+1])),
-                       matrix(as.numeric(theta_container[, 1])))
+                  kmmd(matrix(as.numeric(theta_container[1:n_sample, (iter+1):(iter+n_test)], ncol = 1)),
+                       matrix(as.numeric(theta_container[1:n_sample, 1])))
                 komo_stat[i, ] <- 
                   c(mmdo@mmdstats[1], mmdo@Radbound, mmdo@Asymbound)
                 
@@ -271,10 +288,22 @@ if (calc_metric){
               #   qksone(0.95, dim(theta_container)[1])$root
               
               mixing_tvdist_list[[file_handle]] <- komo_stat
+              
+              save(mixing_tvdist_list,
+                   file = paste0(
+                     tar_dir, "res_mmd_", 
+                     paste0(family_name, "_k", k, "_snr", snr, "_", sampler),
+                     ".RData")
+              )
             }
             
             #mixing_tvdist_list[[file_handle]]$uppr <- komo_conf
-            
+            save(mixing_tvdist_list,
+                 file = paste0(
+                   tar_dir, "res_mmd_", 
+                   paste0(family_name, "_k", k, "_snr", snr, "_", sampler),
+                   ".RData")
+            )
             print(paste0(file_handle, " Done!"))
           }
         }
@@ -285,23 +314,23 @@ if (calc_metric){
     array_list <- list.files(tar_dir)
     array_list <- array_list[grep("snr", array_list)]
     mixing_tvdist_list <- list()
-    
+
     for (family_name in FAMILY){
-      for (k in K[2]){
+      for (k in K[k_id]){
         for (snr in SNR){
           for (sampler in SAMPLR){
             # capture relevant file index
             file_handle <-
               paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
             # load theta_container, row for data, col for iteration
-            print(paste0("loading ", file_handle, ".."))
-            
+            print(paste0("loading kstat ", file_handle, ".."))
+
             load(paste0(tar_dir, file_handle, ".RData"))
             print("Done! Calculating Test Statistic..")
-            
+
             komo_stat <-
               rep(NaN, length = ncol(theta_container)-1)
-            
+
             pb <-
               txtProgressBar(
                 min = 1, max = ncol(theta_container)-1, style = 3)
@@ -314,41 +343,49 @@ if (calc_metric){
             }
             # komo_conf <-
             #   qksone(0.95, dim(theta_container)[1])$root
-            
+
             mixing_tvdist_list[[file_handle]] <- komo_stat
             #mixing_tvdist_list[[file_handle]]$uppr <- komo_conf
-            
+
+            save(mixing_tvdist_list,
+                 file = paste0(
+                   tar_dir, "res_mmd_",
+                   paste0(family_name, "_k", k, "_snr", snr, "_", sampler),
+                   ".RData")
+            )
             print(paste0(file_handle, " Done!"))
           }
         }
       }
     }
   }
-  save(mixing_tvdist_list,
-       file = paste0(tar_dir, "mixing_tvdist_geweke_pval.RData")
-  )
 }
 
 # plot 
-for (k_id in 1:4){
+for (k_id in 1:length(K)){
   family <- c("gaussian", "poisson")[2]
   k <- c(2, 5, 10, 15)[k_id]
   snr <- 100
+  
+  load("~/GitHub/BELA/result/mixing_res/res_mmd_poisson_k15_snr100_gibbs.RData")
+  trace_gibbs <- mixing_tvdist_list[[1]]
+  load("~/GitHub/BELA/result/mixing_res/res_mmd_poisson_k15_snr100_hmc_stan.RData")
+  trace_hmc <- mixing_tvdist_list[[1]]
   
   plot_name <-
     paste0(family, "_k", k, "_snr", snr)
   plot_id <- 
     grep(plot_name, names(mixing_tvdist_list))
   
-  plot(mixing_tvdist_list[[plot_id[1]]][1:100, 1], type = "l", 
+  plot(trace_gibbs[, 1], type = "l", 
        ylab = "MMD Statistic for eig(Theta)[2]", 
        xlab = "Iteration", 
-       ylim = c(0, max(mixing_tvdist_list[[plot_id[1]]][, 1])),
+       ylim = c(0, max(trace_hmc[, 1])),
        main = plot_name)
-  abline(h = mixing_tvdist_list[[plot_id[1]]][, 2], 
-         lty = 2)
-  lines(mixing_tvdist_list[[plot_id[2]]][, 1], col = 2)
+  abline(h = trace_hmc[, 2], lty = 2)
+  lines(trace_hmc[, 1], col = 2)
 }
+
 # #### 3. plot ecdf #### 
 # type <- c("pval", "stat")[2]
 # load(paste0(tar_dir, "mixing_tvdist_geweke_", type, ".RData"))
