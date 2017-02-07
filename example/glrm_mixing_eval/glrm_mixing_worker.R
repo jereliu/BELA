@@ -136,7 +136,7 @@ glrm_worker <-
               if (save_rec_target){
                 file_name <- 
                   paste0("./result/mixing_stat/rec_", 
-                         var_name,  "_", data_seed, ".csv")
+                         var_name,  "_", data_seed, "_", trial_seed, ".csv")
                 
                 if (!file.exists(file_name)){
                   colnames(rec_target) <-

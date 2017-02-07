@@ -80,7 +80,7 @@ for (config_idx in config_idx_list){
       LAMBDA = cfig$LAMBDA,
       FAMILY = cfig$FAMILY,
       SAMPLR = cfig$SAMPLR,
-      iter_max = rep(1e4, 2),
+      iter_max = rep(5e3, 2),
       record_freq = 1,
       parm_updt = c("U", "V")[1]
     )
