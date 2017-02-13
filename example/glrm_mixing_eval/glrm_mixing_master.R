@@ -23,7 +23,7 @@ if (!file.exists(cfig_file)){
     expand.grid(
       data_seed = sample(n_data*1e3, n_data),
       trial_seed = sample(n_rep*1e3, n_rep),
-      K = c(2, 5, 10, 15), 
+      K = c(10, 15, 20), 
       SNR = 100, LAMBDA = 10,
       FAMILY = c("gaussian", "poisson")[2],
       SAMPLR = c("gibbs", "hmc_stan")
@@ -67,8 +67,8 @@ for (config_idx in config_idx_list){
   cfig <- cfig_list[config_idx, ]
   
   #### 1. run worker ####
-  N <- 10
-  P <- 50
+  N <- 20
+  P <- 100
   
   status <- 
     glrm_worker(

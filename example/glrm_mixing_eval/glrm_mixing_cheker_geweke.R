@@ -58,6 +58,9 @@ iter_max_global <- 1000 # the number of iteration to consider
 sum_array <- FALSE 
 
 if (sum_array){
+  if (REP != 1){
+    stop("possible repetitions")
+  }
   for (family_name in FAMILY){
     for (k in K[k_id]){
       for (snr in SNR){
@@ -210,7 +213,7 @@ if (calc_metric){
               file_handle <-
                 paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
               # load theta_container, row for data, col for iteration
-              print(paste0("loading mmdstat ", file_handle, ".."))
+              print(paste0("loading mmd_stat ", file_handle, ".."))
               
               load(paste0(tar_dir, 
                           grep(file_handle, array_list, value = TRUE)))
@@ -273,7 +276,7 @@ if (calc_metric){
                 
               } else {
                 n_test <- 50 #iterations to smooth over
-                n_skip <- 20
+                n_skip <- 10
                 rep_idx <- rep_idx_list[[rep]]
                 
                 iter_idx <- seq(1, iter_max_global, n_skip)
@@ -377,73 +380,43 @@ if (calc_metric){
   }
 }
 
-# plot 
-K <- c(2, 5, 10, 15)
-for (k_id in 1:length(K)){
-  family <- c("gaussian", "poisson")[2]
-  k <- K[k_id]
-  snr <- 100
+#### 3. plot ####
+trace_vis <- TRUE
+
+if (trace_vis){
+  K <- c(2, 5, 10, 15)
   
-  load(paste0("~/GitHub/BELA/result/mixing_res/res_mmd_poisson_k", 
-              k, "_snr100_gibbs.RData"))
-  trace_gibbs <- mixing_tvdist_list[[1]]
-  load(paste0("~/GitHub/BELA/result/mixing_res/res_mmd_poisson_k", 
-              k, "_snr100_hmc_stan.RData"))
-  trace_hmc <- mixing_tvdist_list[[1]]
-  
-  plot_name <-
-    paste0(family, "_k", k, "_snr", snr)
-  plot_id <- 
-    grep(plot_name, names(mixing_tvdist_list))
-  
-  plot(trace_gibbs[, 1], type = "l", 
-       ylab = "MMD Statistic for eig(Theta)[2]", 
-       xlab = "Iteration", 
-       ylim = c(0, .1),
-       main = plot_name)
-  abline(h = trace_hmc[, 2], lty = 2)
-  lines(trace_hmc[, 1], col = 2)
+  for (k_id in 1:length(K)){
+    family <- c("gaussian", "poisson")[2]
+    k <- K[k_id]
+    snr <- 100
+    
+    trace_gibbs <- NULL
+    trace_hmc <- NULL
+    
+    for (rep_id in 1:max(cfig_list$REP)){
+      load(paste0("~/GitHub/BELA/result/mixing_res/res_mmd_poisson_k",
+                  k, "_snr100_gibbs_", rep_id, ".RData"))
+      trace_gibbs <- cbind(trace_gibbs, mixing_tvdist_list[[1]][, 1])
+      load(paste0("~/GitHub/BELA/result/mixing_res/res_mmd_poisson_k",
+                  k, "_snr100_hmc_stan_", rep_id, ".RData"))
+      trace_hmc <- cbind(trace_hmc, mixing_tvdist_list[[1]][, 1])
+    }
+    
+    trace_gibbs <- rowMeans(trace_gibbs)
+    trace_hmc <- rowMeans(trace_hmc)
+    
+    plot_name <-
+      paste0(family, "_k", k, "_snr", snr)
+    plot_id <-
+      grep(plot_name, names(mixing_tvdist_list))
+    
+    plot(trace_gibbs, type = "l",
+         ylab = "MMD Statistic for eig(Theta)[2]",
+         xlab = "Iteration",
+         ylim = c(0, .15),
+         main = plot_name)
+    #abline(h = trace_hmc[, 2], lty = 2)
+    lines(trace_hmc, col = 2)
+  }
 }
-
-# #### 3. plot ecdf #### 
-# type <- c("pval", "stat")[2]
-# load(paste0(tar_dir, "mixing_tvdist_geweke_", type, ".RData"))
-# 
-# quant_crit <- qksone(0.95, 1000) 
-# 
-# par(mfrow = c(3, 1))
-# for (family_name in FAMILY){
-#   for (k in K){
-#     for (snr in SNR){
-#       for (sampler in SAMPLR){
-#         # capture relevant file index
-#         file_handle <-
-#           paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
-#         # load theta_container, row for data, col for iteration
-#         setting <- 
-#           grep(file_handle, names(mixing_tvdist_list), value = TRUE)
-#         
-#         if (sampler == "gibbs"){
-#           plot(mixing_tvdist_list[[setting]], type = "l", 
-#                main = file_handle, 
-#                xlab = "Iteration", 
-#                ylab = "Kolmogorov-Smirnov Statistic", 
-#                ylim = c(0, 0.65)
-#           )
-#           abline(h = quant_crit$root)
-#         } else {
-#           lines(mixing_tvdist_list[[setting]], col = 2)
-#         }
-#       }
-#     }
-#   }
-# }
-# 
-# 
-# prior_mixing_jere(theta_container)
-
-# iter_idx <- 
-#   c(seq(1, round(iter_max/2), length.out = 24),
-#     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
-#   round %>% unique
-# plot(1:50, mixing_tvdist_list[[2]])

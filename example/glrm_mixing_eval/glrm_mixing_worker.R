@@ -36,8 +36,7 @@ glrm_worker <-
     iter_max = c(1e5, 5e3)
   ){
     rand_seeds <- 
-      list(data = data_seed, 
-           samplr = trial_seed)
+      list(data = data_seed, samplr = trial_seed)
     
     save_rec_target <- TRUE
     
