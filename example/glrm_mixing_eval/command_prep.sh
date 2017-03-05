@@ -26,5 +26,4 @@ bkill -b 0
 
 bsub < ./command_exec.sh 
 
-bsub -q priority -W 72:00 -o out_sum.txt -e err_sum.txt 
-	 -R 'rusage[mem=4096]' -N Rscript "./example/glrm_mixing_cook/glrm_mixing_cheker.R"; 
+bsub -q priority -W 72:00 -o out_sum.txt -e err_sum.txt -R 'rusage[mem=4096]' -N Rscript "./example/glrm_pred.R"; 

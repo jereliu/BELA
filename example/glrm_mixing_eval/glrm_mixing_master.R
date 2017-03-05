@@ -25,7 +25,7 @@ if (!file.exists(cfig_file)){
       trial_seed = sample(n_rep*1e3, n_rep),
       K = c(10, 15, 20), 
       SNR = 100, LAMBDA = 10,
-      FAMILY = c("gaussian", "poisson")[2],
+      FAMILY = c("gaussian", "poisson"),
       SAMPLR = c("gibbs", "hmc_stan")
     )
   
@@ -67,7 +67,7 @@ for (config_idx in config_idx_list){
   cfig <- cfig_list[config_idx, ]
   
   #### 1. run worker ####
-  N <- 20
+  N <- 50
   P <- 100
   
   status <- 
@@ -80,9 +80,9 @@ for (config_idx in config_idx_list){
       LAMBDA = cfig$LAMBDA,
       FAMILY = cfig$FAMILY,
       SAMPLR = cfig$SAMPLR,
-      iter_max = rep(5e3, 2),
+      iter_max = rep(5e2, 2),
       record_freq = 1,
-      parm_updt = c("U", "V")[1]
+      parm_updt = c("U", "V")
     )
 }
 

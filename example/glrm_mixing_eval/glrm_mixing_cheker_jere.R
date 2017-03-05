@@ -129,3 +129,4 @@ plot(mixing_tvdist_list[[file_handle]]$stat,
      xlab = "iteration", ylab = "Kolmogorov–Smirnov Test Statistic")
 abline(h = mixing_tvdist_list[[file_handle]]$uppr, 
        lty = 2, col = 2)
+

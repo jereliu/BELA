@@ -12,14 +12,13 @@ library(reshape2)
 library(ggplot2)
 library(cluster)
 library(mclust)
+library(NMF)
 source("./func/util/source_Dir.R")
 sourceDir("./func")
 
 
 addr_targ <- 
-  paste0("../../Dropbox (Personal)/Research/Harvard/Lorenzo/",
-         "1. BayesOpt/Report/Progress/", 
-         "2017_Nov_Week_4/plot/")
+  paste0("../../Dropbox (Personal)/Research/Harvard/Lorenzo/1. MComp/Paper/plot/")
 
 #### 1. Data Import ####
 dStudy <- 
@@ -28,10 +27,12 @@ dStudy <-
 
 # extract names
 elem_name <- 
-  c("S", "K", "Ca", "Fe", "Zn", "Cu", "Ti", "Al", "Pb", "Cl", "V", "Ni")
-namList <- paste0("log", elem_name, "Ratio")
+  c("Ca","Cu", "Cl", "Fe", "Pb", "Br",
+    "K", "Na", "Mg", "Mn", "Ni", "V", 
+    "Si", "Zn", "Ti", "no2")
+namList <- paste0("log", elem_name, "Ratio_out")
 
-Y <- dStudy[, namList]
+Y <- na.omit(dStudy[grep("MAD", dStudy$SiteID), namList])
 
 diag_plot <- FALSE
 if (diag_plot){
@@ -47,11 +48,13 @@ if (diag_plot){
   
   # correlation
   Y_plot <- 
-    do.call(data.frame,lapply(Y, function(x) replace(x, is.infinite(x),NA)))
+    do.call(data.frame,lapply(Y, function(x) replace(x, is.infinite(x), NA))) %>% 
+    na.omit()
   rm_idx <- which(Y_plot[, 1] > 0)
-  
+  if (length(rm_idx) > 0) Y_plot <- Y_plot[-rm_idx, ]
+    
   png(paste0(addr_targ, "corr.png"), 960, 960)
-  pairs.panels(Y_plot[-rm_idx, ])
+  pairs.panels(Y_plot)
   dev.off()
   
   my_palette <- 
@@ -64,7 +67,7 @@ if (diag_plot){
   
   pdf(paste0(addr_targ, "heatmaps.pdf"), 
       width = 8, height = 8)
-  heatmap.2(cor(Y),
+  heatmap.2(cor(Y_plot),
             cellnote = round(cor(Y), 3),  # same data set for cell labels
             main = "Correlation", # heat map title
             notecol="black",      # change font color of cell labels to black
@@ -81,23 +84,30 @@ if (diag_plot){
   apply(dStudy[, elem_name], 2, function(x) sum(x==0)/length(x))*100
 }
 
+#### 1. Baseline Model ####
+V_est <- factanal(Y, 7)$loadings
+class(V_est) <- "matrix"
+V_est[V_est < 0] <- 0
+
 #### 2. Naive Model ####
 Y_plot <- 
-  do.call(data.frame,lapply(Y, function(x) replace(x, is.infinite(x),NA)))
-rm_idx <- which(Y_plot[, 1] > 0)
-Y <- na.omit(Y_plot[-rm_idx, ]) %>% as.matrix()
-Y_ana <- Y[sample(nrow(Y), 200), ]
+  do.call(data.frame,lapply(Y, function(x) replace(x, is.infinite(x),NA))) %>% 
+  na.omit()
+# rm_idx <- which(Y_plot[, 1] > 0)
+Y <- na.omit(Y_plot) %>% as.matrix()
+Y_ana <- Y
 
 
 rec_pollution <- 
   glrm(Y_ana, 
        lambda = 10, 
-       k = 10, 
+       k = 5, 
        true_par = NULL,
        init = NULL, 
        init_MAP = TRUE,
        samplr_name = "hmc_stan",
        family_name = "gaussian",
+       prior_name = "dirichlet",
        iter_max = c(1e3, 1e4),
        record_freq = 1
   )
@@ -139,7 +149,8 @@ plot(pred_iter[-1], pred_error[-1],
 dev.off()
 
 # 
-idx <- (dim(rec_pollution$V)[1] * 0.8):(dim(rec_pollution$V)[1])
+idx <- 
+  round((dim(rec_pollution$V)[1] * 0.9):(dim(rec_pollution$V)[1]))
 
 V_est_vm <- 
   lapply(idx, function(id){
@@ -149,54 +160,68 @@ V_est_vm <-
     t(out * (out > 0.1))
   }) %>% do.call(rbind, .)
 
-V_est_clust <- kmeans(V_est_vm, 40)
+V_est_clust <- kmeans(V_est_vm, 8)
 # clusplot(V_est_vm, 
 #          V_est_clust$cluster, color=TRUE, shade=TRUE, 
 #          labels=2, lines=0)
 
 out <- aggregate(V_est_vm, by=list(V_est_clust$cluster),FUN = mean)
-out <- t(out[1:10, -1])
-rownames(out) <- rev(elem_name)
+out <- t(out[1:8, -1])
+rownames(out) <- elem_name
 
 
 
 #### 3. Plot ====
 
 # before rotation 
-csv <- t(t(abs(V_est))/colSums(abs(V_est)))
+csv <- V_est
+# V_est_vm <- varimax(t(V_est))$loadings
+# csv <- t(t(abs(V_est_vm))/colSums(abs(V_est_vm)))
+class(csv) <- "matrix"
 rownames(csv) <- elem_name
+colnames(csv) <- 
+  c("Traffic Exhaust/Road Dust", 
+    "Metal Processing Plant", 
+    "Road Salt", 
+    "Biomass Burning", 
+    "Secondary Road Exhaust", 
+    "Fertilizer Factory",
+    "Residual Oil Combustion")
 
-csv.m <- melt(t(csv), id.vars="V1")
+csv.m <- melt(csv, id.vars="V1")
 csv.m$Var2 <- as.character(csv.m$Var2)
 
 qplot(x=Var1, y=Var2, data=csv.m, 
       fill=value, geom="tile") + 
   theme(axis.text.x = 
           element_text(angle = 90, hjust = 1)) + 
-  labs(x = "Factors") +
   scale_fill_gradient2(
     low = "blue", mid = "white", high = "red") + 
-  labs(x = "Factors", y = "Pollutant",
+  labs(x = "Source", y = "Chemicals",
        title = "Latent Pollution Source, Before Rotation")
 
-ggsave(paste0(addr_targ, "polfactor_beforot.pdf"))
+ggsave(paste0(addr_targ, "ex1_pmf.pdf"))
 
 # after rotation ====
-csv <- t(t(out)/colSums(out))
+csv <- apply(out, 2, function(x) x/sum(x)) 
 class(csv) <- "matrix"
-rownames(csv) <- rev(elem_name)
+colnames(csv) <- 
+  c("Motor Vehicles", "Residual oil combustion", 
+    "Metal Plant", "4", "5", 
+    "6", "7", "8")
+rownames(csv) <- elem_name
 
 csv.m <- melt(t(csv), id.vars="V1")
 csv.m$Var1 <- as.character(csv.m$Var1)
 
-qplot(x=Var1, y=Var2, data=csv.m, 
+qplot(y=Var1, x=Var2, data=csv.m, 
       fill=value, geom="tile") + 
   theme(axis.text.x = 
           element_text(angle = 90, hjust = 1)) + 
   scale_fill_gradient2(
     low = "blue", mid = "white", high = "red") + 
-  scale_x_discrete(labels=1:10) + 
-  labs(x = "Factors", y = "Pollutant",
-       title = "Latent Pollution Sources (V), After Rotation, Scaled")
+  ylab(10:2) + 
+  labs(y = "Pollution Source", x = "Chemical",
+       title = "Source Emission Profile, After Rotation")
 
 ggsave(paste0(addr_targ, "polfactor_afterot.pdf"))

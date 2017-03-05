@@ -25,7 +25,7 @@ glrm_worker <-
   function(
     data_seed, 
     trial_seed,
-    n = 10, p = 50, 
+    n = 50, p = 100, 
     K = c(2, 15, 20), 
     SNR = 100,
     LAMBDA = 2,
@@ -49,7 +49,7 @@ glrm_worker <-
             step_sampl = 0.01
             
             set.seed(rand_seeds$data)
-            data.sim <- 
+            data.sim <-
               glrm_sample(
                 n = n, # num of samples 
                 p = p, # num of categories
@@ -83,7 +83,7 @@ glrm_worker <-
               
               #### 2. Sampling ####
               set.seed(rand_seeds$samplr)
-              rec <- 
+              rec <-
                 glrm(Y, lambda = lambda, k = k, 
                      true_par = true_par,
                      init = init, init_MAP = init_MAP,
