@@ -13,6 +13,7 @@ library(ggplot2)
 library(cluster)
 library(mclust)
 library(NMF)
+library(Rtsne)
 source("./func/util/source_Dir.R")
 sourceDir("./func")
 
@@ -32,7 +33,7 @@ elem_name <-
     "Si", "Zn", "Ti", "no2")
 namList <- paste0("log", elem_name, "Ratio_out")
 
-Y <- na.omit(dStudy[grep("MAD", dStudy$SiteID), namList])
+Y <- na.omit(dStudy[grep("MAD-001", dStudy$SiteID), namList])
 
 diag_plot <- FALSE
 if (diag_plot){
@@ -52,7 +53,7 @@ if (diag_plot){
     na.omit()
   rm_idx <- which(Y_plot[, 1] > 0)
   if (length(rm_idx) > 0) Y_plot <- Y_plot[-rm_idx, ]
-    
+  
   png(paste0(addr_targ, "corr.png"), 960, 960)
   pairs.panels(Y_plot)
   dev.off()
@@ -95,22 +96,27 @@ Y_plot <-
   na.omit()
 # rm_idx <- which(Y_plot[, 1] > 0)
 Y <- na.omit(Y_plot) %>% as.matrix()
-Y_ana <- Y
+Y_ana <- exp(Y) %>% scale(center = FALSE)
 
-
-rec_pollution <- 
+rec_pollution <-
   glrm(Y_ana, 
-       lambda = 10, 
+       lambda = 1, 
        k = 5, 
        true_par = NULL,
        init = NULL, 
-       init_MAP = TRUE,
        samplr_name = "hmc_stan",
        family_name = "gaussian",
        prior_name = "dirichlet",
        iter_max = c(1e3, 1e4),
        record_freq = 1
   )
+
+error <- 
+  apply(rec_pollution$Theta, 1, 
+        function(Theta) 
+          mean((Y_ana - log(Theta))^2/Y_ana^2)
+  )
+
 save(rec_pollution, 
      file = "./result/pollution/rec_pollution_naive.RData")
 
@@ -169,6 +175,22 @@ out <- aggregate(V_est_vm, by=list(V_est_clust$cluster),FUN = mean)
 out <- t(out[1:8, -1])
 rownames(out) <- elem_name
 
+
+
+#### 1.2 for dirichlet ----
+idx <- 
+  round((dim(rec_pollution$V)[1] * 0.9):(dim(rec_pollution$V)[1]))
+
+V_est_all <- 
+  lapply(idx, function(i) lof(rec_pollution$V[i, , ])) %>% 
+  simplify2array %>% apply(1, rbind) %>% unique
+
+image(lof(t(V_est_all)))
+
+V_est_clust <- Rtsne(V_est_all, dims = 2)
+plot(V_est_clust$Y)
+
+rownames(out) <- elem_name
 
 
 #### 3. Plot ====
