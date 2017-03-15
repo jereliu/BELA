@@ -5,10 +5,15 @@
 #         Y observation will always be rejected 
 
 glrm_sampler_gibbs <- 
-  function(Y, lambda, family_name, 
+  function(Y, lambda, 
+           family_name = c("gaussian", "poisson"), 
+           prior_name = c("gaussian"),
            init, config, rec, info)
   {
     set.seed(config$sampler$samp_seed)
+    family_name <- match.arg(family_name)
+    prior_name <- match.arg(prior_name)
+    
     # unpack family properties
     n <- info$n
     p <- info$p

@@ -3,8 +3,14 @@ library(rstan)
 library(parallel)
 
 glrm_sampler_hmc_stan <- 
-  function(Y, lambda, family_name, 
-           init, config, rec, info){
+  function(Y, lambda, 
+           family_name = c("gaussian", "poisson"), 
+           prior_name = c("gaussian", "dirichlet"),
+           init, config, rec, info)
+  {
+    family_name <- match.arg(family_name)
+    prior_name <- match.arg(prior_name)
+    
     # unpack family properties
     n <- info$n 
     p <- info$p
@@ -28,20 +34,43 @@ glrm_sampler_hmc_stan <-
     samp_seed <- config$sampler$samp_seed
     parm_updt <- config$sampler$parm_updt
     
-    U_cur <- init$U
-    V_cur <- init$V
-    Ru_cur <- matrix(rnorm(n*k), ncol = k)
-    Rv_cur <- matrix(rnorm(p*k), ncol = k) 
-    
     # initiate sampler
     rstan_options(auto_write = TRUE)
     options(mc.cores = parallel::detectCores())    
     stan_addr <- "./func/sampler/stan/"
     model_name <- family_name
     
-    stan_data <- list(N = n, P = p, K = k, Y = Y,
-                      lambda_u = lambda, lambda_v = lambda)
+    if (prior_name == "dirichlet") {# TODO
+      model_name <- prior_name
+    }
     
+    stan_data <- list(N = n, P = p, K = k, Y = Y,
+                      lambda_u = lambda, 
+                      lambda_v = lambda)
+    
+    if (prior_name == "dirichlet") {# TODO
+      profile <- 
+        list(c(2, 5, 3, 16), 
+             c(1, 3, 7, 13), 
+             c(1, 6, 10, 16), 
+             c(1, 4, 10, 14), 
+             c(3, 4, 5, 14))
+      p_eps_val <- 1e-4
+      # p_V <- matrix(1/p, nrow = k, ncol = p)
+      p_V <- # uniform prior
+        matrix((1-(p_eps_val * (k-1)))/(p-k+1), nrow = k, ncol = p) 
+      for (j in 1:nrow(p_V)) 
+        p_V[j, profile[[j]]] <- p_eps_val
+      stan_data$p_V <- p_V
+    }
+
+    if (prior_name == "dirichlet") {# TODO
+      init$V <- 
+        apply(p_V, 1, function(p) rdiric(1, p))
+        
+      init$U <- matrix(rexp(n*k), nrow = n, ncol = k)
+    }
+
     if (length(parm_updt) > 1){
       stan_file <- paste0(stan_addr, model_name, ".stan")
     } else if (parm_updt == "U"){
@@ -80,8 +109,10 @@ glrm_sampler_hmc_stan <-
     for (name in unique(rec_name)){
       idx <- which(rec_name == name)
       if (length(idx) > 1){
-        dim_2 <- 
-          names(rec_list)[max(idx)] %>% gsub("^.*,|\\]", "", .) %>% as.numeric
+        dim_2_name <- 
+          names(rec_list)[max(idx)] %>% gsub("^.*\\[|\\]", "", .) %>% 
+          strsplit(",") %>% extract2(1)
+        dim_2 <- dim_2_name[length(dim_2_name)] %>% as.numeric
         dim_1 <- length(idx)/dim_2
       } else {
         dim_1 = dim_2 = 1

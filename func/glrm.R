@@ -24,7 +24,8 @@ glrm <-
     k = NULL, true_par = NULL, 
     init = NULL, init_MAP = FALSE,
     samplr_name = c("gibbs", "slice", "hmc_stan", "vi_stan", "stein"),
-    family_name = c("gaussian", "poisson", "poisson_softplus", "binomial"),
+    family_name = c("gaussian", "poisson", "binomial"),
+    prior_name = c("gaussian", "dirichlet"),
     # sampler parameters: generic
     iter_max = c(1e5, 1e4), 
     record_freq = 10,
@@ -49,6 +50,7 @@ glrm <-
     # time_max: maximum sampling time, in minutes
     samplr_name <- match.arg(samplr_name)
     family_name <- match.arg(family_name)
+    prior_name <-  match.arg(prior_name)
     
     #### 1. config ####
     config <- NULL
@@ -95,12 +97,12 @@ glrm <-
     set.seed(100)
     if ("U" %in% parm_updt){
       init$U <- 
-        matrix(rnorm(n*k, sd = 1e-1), nrow = n)
+        matrix(rnorm(n*k, sd = 5e-1), nrow = n)
     }
     set.seed(100) 
     if ("V" %in% parm_updt){
       init$V <- 
-        matrix(rnorm(p*k, sd = 1e-1), nrow = p) 
+        matrix(rnorm(p*k, sd = 5e-1), nrow = p) 
     }
     
     #### 3. Output Container ####
@@ -152,7 +154,8 @@ glrm <-
       parse(text = .) %>% eval()
     
     rec <-
-      sampler_func(Y, lambda, family_name, 
+      sampler_func(Y, lambda, 
+                   family_name, prior_name,
                    init, config, rec, info)
     
     # calculate effective sample size and prediction
