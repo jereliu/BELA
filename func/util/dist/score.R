@@ -1,25 +1,32 @@
-# conditional gradient for HMC
+# iter <- 1e2
+# Theta <- rec$Theta[iter, , ]
+# U <- rec$U[iter, , ]
+# V <- rec$V[iter, , ] 
 
-grad_hmc_U <- function(T_suff, U, V, lambda, d1){
-  (-T_suff + d1(U %*% t(V))) %*% V + lambda * U
-}
+score_svd <- # derivative of likelihood wrt singular valuez
+  function(Theta, U, V, T_suff, lambda, 
+           dist_family, n_eigen = NULL, 
+           log = TRUE
+  )
+  {
+    # extract svd component
+    Theta_svd <- svd(Theta)
+    if (is.null(n_eigen)) n_eigen <- sum(Theta_svd$d > 1e-5)
+    comp_svd <- # e^l * t(e^r)
+      lapply(1:n_eigen, function(i) 
+        Theta_svd$u[, i] %*% t(Theta_svd$v[, i]) )
+    
+    # compute model component
+    A_deriv <- dist_family$partition$d
+    comp_model <- 
+      -T_suff + A_deriv(Theta) + 2*lambda* (U %*% t(1/V) + (1/U) %*% t(V))
+    
+    # compute score output, by default use log
+    sapply(1:n_eigen, function(i) sum(comp_svd[[i]] * comp_model))
+  }
 
-grad_hmc_V <- function(T_suff, U, V, lambda, d1){
-  t(-T_suff + d1(U %*% t(V))) %*% U + lambda * V
-}
 
-lik_target <- function(U, V, T_suff, lambda, dist_family){
-  dist_family$negloglik(T_suff, U %*% t(V)) + 
-    (lambda/2) * (sum(U^2) + sum(V^2))
-}
 
-lik_target_S <- function(S, T_suff, lambda, dist_family){
-  U <- S[1:nrow(T_suff), ]
-  V <- S[(nrow(T_suff)+1):nrow(S), ]
-  
-  dist_family$negloglik(T_suff, U %*% t(V)) + 
-    (lambda/2) * (sum(U^2) + sum(V^2))
-}
 
 # Total gradient wrt negative log likelihood and wrt KSD, for SVGD
 grad_neglik_S <- 
@@ -83,7 +90,7 @@ grad_ksd <-
     # calculate ksd gradient
     grad_out <-
       (K %*% (-neg_grad_S - alpha * S) + 
-      alpha * rowSums(K) * S)/n_sample
+         alpha * rowSums(K) * S)/n_sample
     
     # output 
     list(grad = grad_out, alpha = alpha)
@@ -101,24 +108,3 @@ repmat <-
     return(newX)
   }
 
-
-# 
-
-# k_x <- 2
-# n_x <- 10
-# p_x <- 20
-# 
-# S <- matrix(1:(k_x*(n_x + p_x)), nrow = n_x + p_x)
-# T_suff <- matrix(1:(n_x*p_x), nrow = n_x)
-# lambda <- 2
-# alpha <- -1 
-# 
-# n_sample <- dim(S)[1]
-# SS <- S %*% t(S)
-# S2 <- array(rowSums(S^2), dim = c(n_sample, 1))
-# S2e <- repmat(S2, 1, n_sample)
-# H <- (S2e + t(S2e) - 2 * SS)
-# if (alpha == -1){
-#   alpha <- (median(H))/log(n_sample+1)
-# }
-# K <- exp(-H/alpha)

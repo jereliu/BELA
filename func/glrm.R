@@ -90,6 +90,7 @@ glrm <-
     if (is.null(k)){
       info$k <- min(n, p)
     } else info$k <- k
+    info$lambda <- lambda
     info$true_par <- true_par
     true_theta <- info$true_par$theta
     
@@ -112,6 +113,8 @@ glrm <-
     rec$V <- array(NaN, c(iter_max[2]/record_freq + 1, p, k))
     rec$Theta <- array(NaN, c(iter_max[2]/record_freq + 1, n, p))
     
+    rec$eig <- 
+      array(NaN, c(iter_max[2]/record_freq + 1, k))
     rec$acc <- 
       array(NaN, c(iter_max[2]/record_freq, n + p), 
             dimnames = list(NULL, c(paste0("U_", 1:n), paste0("V_", 1:p)))
@@ -165,11 +168,15 @@ glrm <-
       rec$true_theta <- true_theta
       rec$eig_list <- 
         apply(rec$Theta, 1, 
-              function(theta) svd(theta)$d[2])
+              function(theta) svd(theta)$d[1:k]) %>% t
     }
     
     rec$init <- init
     rec$Y <- Y
+    
+    rec$info <- info
+    rec$info$family <-  glrm_family(family_name)
+    
     #### 6. Results ####
     rec
   }

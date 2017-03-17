@@ -49,28 +49,29 @@ glrm_sampler_hmc_stan <-
                       lambda_v = lambda)
     
     if (prior_name == "dirichlet") {# TODO
-      profile <- 
-        list(c(2, 5, 3, 16), 
-             c(1, 3, 7, 13), 
-             c(1, 6, 10, 16), 
-             c(1, 4, 10, 14), 
-             c(3, 4, 5, 14))
-      p_eps_val <- 1e-4
-      # p_V <- matrix(1/p, nrow = k, ncol = p)
-      p_V <- # uniform prior
-        matrix((1-(p_eps_val * (k-1)))/(p-k+1), nrow = k, ncol = p) 
-      for (j in 1:nrow(p_V)) 
-        p_V[j, profile[[j]]] <- p_eps_val
+      # profile <- 
+      #   list(c(2, 5, 3, 16), 
+      #        c(1, 3, 7, 13), 
+      #        c(1, 6, 10, 16), 
+      #        c(1, 4, 10, 14), 
+      #        c(3, 4, 5, 14))
+      # p_eps_val <- 1e-4
+      # p_V <- # uniform prior
+      #   matrix((1-(p_eps_val * (k-1)))/(p-k+1), nrow = k, ncol = p) 
+      # for (j in 1:nrow(p_V)) 
+      #   p_V[j, profile[[j]]] <- p_eps_val
+      
+      p_V <- matrix(1/p, nrow = k, ncol = p)
       stan_data$p_V <- p_V
     }
-
+    
     if (prior_name == "dirichlet") {# TODO
       init$V <- 
         apply(p_V, 1, function(p) rdiric(1, p))
-        
+      
       init$U <- matrix(rexp(n*k), nrow = n, ncol = k)
     }
-
+    
     if (length(parm_updt) > 1){
       stan_file <- paste0(stan_addr, model_name, ".stan")
     } else if (parm_updt == "U"){
@@ -129,7 +130,7 @@ glrm_sampler_hmc_stan <-
     rec$V <- abind(init$V, rec$V[record_idx, , ], along = 1)
     rec$Theta <- abind(init$U %*% t(init$V), 
                        rec$Theta[record_idx, , ], along = 1)
-    
+
     if (length(parm_updt) > 1){
       rec$obj <-
         sapply(1:round(iter_max/record_freq), 

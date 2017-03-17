@@ -137,29 +137,3 @@ mixing_KL_dist <-
       }) %>% mean
     self_ep + cross_ep
   }
-
-#### 6. Stein ####
-mixing_stein <- 
-  function(negrad_func, theta_list, theta_row = NULL, 
-           # hyperparameter for Gaussian kernel
-           width = -1, nboot = 1000, ...
-  ){
-    # gaussian kernel with bandwidth equal to 1/alpha
-    neggrad_list <- 
-      apply(theta_list, 1, 
-            function(theta){
-              negrad_func(matrix(theta, nrow = theta_row), ...)
-            }
-      ) %>% t 
-    
-    KSD(theta_list, -neggrad_list, 
-        width = width, nboot = nboot)
-  }
-
-# result <-
-#   mixing_stein(grad_neglik_S,
-#                S_cur, theta_row = sum(dim(T_suff)),
-#                nboot = 1000,
-#                T_suff = T_suff,
-#                lambda = lambda,
-#                dist_family = family)
