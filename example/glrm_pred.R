@@ -16,11 +16,11 @@ family_name <- c("gaussian", "poisson")[2]
 samplr_name <- "stein"
 snr <- 100
 edge_max <- 2
-record_freq <- 1
+record_freq <- 10
 
 rand_seeds <- list(data = 70, samplr = 400)
 rec_plot <- FALSE
-marg_eig_plot <- TRUE
+marg_eig_plot <- FALSE
 cond_dens_plot_d1_U <- FALSE
 cond_dens_plot_d1_V <- FALSE
 marg_dens_plot <- FALSE
@@ -58,14 +58,14 @@ for (family_name in c("gaussian", "poisson")[2]){
     rec <- NULL
     #rec$init <- init_hmc
     for (samplr_name in 
-         c("gibbs", "hmc_stan", "vi_stan", 
-           "slice", "stein")[c(1:2)]){
+         c("hmc_stan", "vi_stan", 
+           "gibbs", "slice", "stein")[c(1, 2)]){
       # choose iter based on 
       if (length(grep("gibbs|slice", samplr_name)) > 0){
-        iter_max <- c(1e5, 5e2) # 1e3)
+        iter_max <- c(1e5, 1e4) # 1e3)
       } else {
         # if sampler name contain "hmc"...
-        iter_max <- c(1e5, 5e2) # 1e4)
+        iter_max <- c(1e5, 1e4) # 1e4)
       }
       
       if (TRUE){
@@ -340,4 +340,5 @@ for (family_name in c("gaussian", "poisson")[2]){
 }
 # dev.off()
 
-# source("./example/glrm_pred.R")
+# KSD
+prior_mix

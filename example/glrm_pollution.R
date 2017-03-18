@@ -92,7 +92,9 @@ V_est[V_est < 0] <- 0
 
 #### 2. Naive Model ####
 Y_plot <- 
-  do.call(data.frame,lapply(Y, function(x) replace(x, is.infinite(x),NA))) %>% 
+  do.call(data.frame,
+          lapply(Y, function(x) 
+            replace(x, is.infinite(x),NA))) %>% 
   na.omit()
 # rm_idx <- which(Y_plot[, 1] > 0)
 Y <- na.omit(Y_plot) %>% as.matrix()
@@ -116,6 +118,19 @@ error <-
         function(Theta) 
           mean((Y_ana - log(Theta))^2/Y_ana^2)
   )
+
+
+V_trace <- 
+  apply(rec_pollution$V, 1, function(X) sum(X^2))
+V_vol <- 
+  apply(rec_pollution$V, 1, function(V) determinant(t(V) %*% V)$modulus)
+
+rec_pollution$V[5e3, , ] %>% round(3)
+rec_pollution$V[1e4, , ] %>% round(3)
+
+
+V_trace <- 
+  apply(rec_pollution$V[1e3:1e4, ,], 1, function(V) sum(V[, 5]^2))
 
 save(rec_pollution, 
      file = "./result/pollution/rec_pollution_naive.RData")

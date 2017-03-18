@@ -1,19 +1,19 @@
 library(KSD)
 
-n_iter <- dim(rec$Theta)[1]
-idx_range <- round(n_iter/2):n_iter
-ty <- 
-  mixing_stein_svd(
-    eig_list = rec$eig_list[idx_range, ], 
-    # parameters to produce score function
-    Theta = rec$Theta[idx_range, , ], 
-    U = rec$U[idx_range, , ], 
-    V = rec$V[idx_range, , ], 
-    T_suff = rec$Y, 
-    lambda = rec$info$lambda, 
-    dist_family = rec$info$family,
-    n_eigen = 1
-  )
+# n_iter <- dim(rec$Theta)[1]
+# idx_range <- round(n_iter/2):n_iter
+# ty <- 
+#   mixing_stein_svd(
+#     eig_list = rec$eig_list[idx_range, ], 
+#     # parameters to produce score function
+#     Theta = rec$Theta[idx_range, , ], 
+#     U = rec$U[idx_range, , ], 
+#     V = rec$V[idx_range, , ], 
+#     T_suff = rec$Y, 
+#     lambda = rec$info$lambda, 
+#     dist_family = rec$info$family,
+#     n_eigen = 1
+#   )
 
 
 # KSD on leading ksd values of matrix
