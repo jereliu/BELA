@@ -89,7 +89,7 @@ glrm_sampler_stan <-
     # execute sampler
     cat("\n Compiling..")
     time0 <- Sys.time()
-    if (stan_algorithm == "hmc_stan"){
+    if (stan_algorithm == "hmc"){
       model_out <- 
         stan(stan_file, model_name,
              chains = 1, data = stan_data,
@@ -99,31 +99,62 @@ glrm_sampler_stan <-
              pars = NA, # want all parameters
              verbose = TRUE
         )
-    } else if (stan_algorithm == "vi_stan"){
-      model_out <- 
-        stan_model(stan_file, model_name) %>%
-        vb(data = stan_data, init = init_func,
-           seed = 100, 
-           output_samples = iter_max)
+      
+      # result
+      rec_list <- model_out@sim$samples[[1]]
+      rec$hmc_param <-
+        get_sampler_params(model_out, inc_warmup = FALSE)
+    } else if (stan_algorithm == "vi"){
+      # define outcome container
+      vi_iter_list <- 
+        seq(1, iter_max, record_freq)
+      n_param <- n*k + p*k + n*p + 2
+      rec_list <- NULL
+      
+      # define object
+      obj <- stan_model(stan_file, model_name) 
+      
+      for (i in 1:length(vi_iter_list)){
+        iter <- vi_iter_list[i]
+        model_out <- 
+          vb(obj, data = stan_data, init = init_func,
+             seed = samp_seed,
+             iter = iter,
+             adapt_iter = 10, output_samples = 1)
+        
+        # add to existing result
+        if (is.null(rec_list)){
+          rec_list <- model_out@sim$samples[[1]]
+        } else {
+          rec_list <- 
+            Map(c, rec_list, model_out@sim$samples[[1]])
+        }
+      }
     }
     
-    # time0 <- as.POSIXlt(model_out@date, format = "%c")
     time_max <- difftime(Sys.time(), time0, units = "mins")
     cat("Done")
     
-    
     # return
-    rec_list <- model_out@sim$samples[[1]]
-    rec_name <- sapply(names(rec_list), 
-                       function(x) gsub("\\[.*", "", x)) 
+    rec_name_pattern <- 
+      ifelse(stan_algorithm == "hmc", "\\[.*", "\\..*")
+    rec_dim_pattern1 <- 
+      ifelse(stan_algorithm == "hmc", "^.*\\[|\\]", "^.?\\.")
+    rec_dim_pattern2 <- 
+      ifelse(stan_algorithm == "hmc", ",", "\\.")
+    
+    rec_name <- sapply(names(model_out@sim$samples[[1]]), 
+                       function(x) 
+                         gsub(rec_name_pattern, "", x))
     
     rec <- NULL
     for (name in unique(rec_name)){
       idx <- which(rec_name == name)
       if (length(idx) > 1){
         dim_2_name <- 
-          names(rec_list)[max(idx)] %>% gsub("^.*\\[|\\]", "", .) %>% 
-          strsplit(",") %>% extract2(1)
+          names(rec_list)[max(idx)] %>% 
+          gsub(rec_dim_pattern1, "", .) %>% 
+          strsplit(rec_dim_pattern2) %>% extract2(1)
         dim_2 <- dim_2_name[length(dim_2_name)] %>% as.numeric
         dim_1 <- length(idx)/dim_2
       } else {
@@ -168,8 +199,7 @@ glrm_sampler_stan <-
         )    
     }
     
-    rec$time <- seq(0, time_max, length.out = iter_max)
-    rec$hmc_param <- get_sampler_params(model_out, inc_warmup = FALSE)
+    rec$time <- seq(0, time_max, length.out = round(iter_max/record_freq))
     
     # return
     rec

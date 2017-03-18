@@ -11,22 +11,24 @@ print(sprintf("Mr Handy: You see the job index '%d'..", job_idx))
 print("Mr Handy: and who gets to read all this mumble jumble? Me, that's who...")
 
 #### 1. Config Generation/Read In ====
-n_data <- 1e3
-n_rep <- 1
+n_data <- 1
+n_rep <- 1e3
 n_run_per_worker <- 5
 
 cfig_file <- "cfigList.csv"
-set.seed(100)
 if (!file.exists(cfig_file)){
+  set.seed(100)
+  
   # create data list
   cfig_list <-
     expand.grid(
       data_seed = sample(n_data*1e3, n_data),
       trial_seed = sample(n_rep*1e3, n_rep),
-      K = c(10, 15, 20), 
+      K_true = c(15, 25), 
+      K_model = c(5, 10, 15, 20, 25, 30),
       SNR = 100, LAMBDA = 10,
       FAMILY = c("gaussian", "poisson"),
-      SAMPLR = c("gibbs", "hmc_stan")
+      SAMPLR = c("hmc_stan", "vi_stan")
     )
   
   write.csv(cfig_list, file = cfig_file, 
@@ -70,18 +72,24 @@ for (config_idx in config_idx_list){
   N <- 50
   P <- 100
   
+  record_freq <- 
+    ifelse(cfig$SAMPLR == "vi_stan", 5, 1)
+  iter_max <- 
+    ifelse(cfig$SAMPLR == "vi_stan", 1e3, 5e2)
+  
   status <- 
     glrm_worker(
       data_seed = cfig$data_seed, 
       trial_seed = cfig$trial_seed,
       n = N, p = P, 
-      K = cfig$K,
+      K_true = cfig$K_true,
+      K_model = cfig$K_model,
       SNR = cfig$SNR,
       LAMBDA = cfig$LAMBDA,
       FAMILY = cfig$FAMILY,
       SAMPLR = cfig$SAMPLR,
-      iter_max = rep(5e2, 2),
-      record_freq = 1,
+      iter_max = rep(iter_max, 2),
+      record_freq = record_freq,
       parm_updt = c("U", "V")
     )
 }
