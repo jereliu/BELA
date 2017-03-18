@@ -164,11 +164,9 @@ glrm <-
     # calculate effective sample size and prediction
     if ((!is.null(true_theta)) & 
         (length(grep("debug", samplr_name)) == 0)){
+      # if truth is available and not in debug mode
       rec$pred_error <- predMeanError(rec, true_theta, pred_num)
       rec$true_theta <- true_theta
-      rec$eig_list <- 
-        apply(rec$Theta, 1, 
-              function(theta) svd(theta)$d[1:k]) %>% t
     }
     
     rec$init <- init
@@ -176,6 +174,10 @@ glrm <-
     
     rec$info <- info
     rec$info$family <-  glrm_family(family_name)
+    
+    # rec$eig_list <- 
+    #   apply(rec$Theta, 1, 
+    #         function(theta) svd(theta)$d[1:k]) %>% t
     
     #### 6. Results ####
     rec
