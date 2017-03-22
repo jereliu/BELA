@@ -175,7 +175,7 @@ glrm_worker <-
                     ) 
                   
                   write.table(
-                    cbind(0, t(score_list)), # add 0 in place of initial values
+                    cbind(0, t(score_list)/(n*p*k_model)), # add 0 in place of initial values
                     append = TRUE, #file.exists(file_name),
                     quote = FALSE, sep = ",",
                     qmethod = "double",
