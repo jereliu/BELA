@@ -73,9 +73,9 @@ for (config_idx in config_idx_list){
   P <- 100
   
   record_freq <- 
-    ifelse(cfig$SAMPLR == "vi_stan", 5, 1)
+    ifelse(cfig$SAMPLR == "vi_stan", 1, 1)
   iter_max <- 
-    ifelse(cfig$SAMPLR == "vi_stan", 1e3, 5e2)
+    ifelse(cfig$SAMPLR == "vi_stan", 1e3, 1e3)
   
   status <- 
     glrm_worker(

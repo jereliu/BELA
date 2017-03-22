@@ -32,7 +32,8 @@ n_rep <- 1000
 cfig_check_list <- 
   expand.grid(
     FAMILY = unique(cfig_list$FAMILY), 
-    K = unique(cfig_list$K), 
+    K_true = unique(cfig_list$K_true), 
+    K_model =  unique(cfig_list$K_model), 
     SNR = unique(cfig_list$SNR), 
     SAMPLR = unique(cfig_list$SAMPLR),
     REP = 1:n_rep)
@@ -44,78 +45,96 @@ mmd_stat <- TRUE
 ks_stat <- FALSE
 
 array_list_full <- list.files(tar_dir)
-array_list <- array_list[grep("geweke.RData", array_list_full)]
+array_list <- array_list_full[grep("geweke.RData", array_list_full)]
 
 # plot, raw trace
-sec_max <- 350
+sec_max <- 40
 plot_idx <- 2:(sec_max+2)
 FAMILY <- unique(cfig_list$FAMILY)
-K <- unique(cfig_list$K)
+K_true <- unique(cfig_list$K_true)
+K_model <- unique(cfig_list$K_model)
 trfunc <- function(x, m, v) (x - m)/v
 
 for (family_id in 1:length(FAMILY)){
   family <- c("gaussian", "poisson")[family_id]
-  for (k_id in 1:length(K)){
-    k <- K[k_id]
-    pdf(paste0(tar_addr, "trace_", family, "_k", k, ".pdf"), width = 9, height = 6)
-    snr <- 100
-    plot_name <-
-      paste0(family, "_k", k, "_snr", snr)
-    sec <- 0:sec_max
-    file_handle <-
-      paste0(family, "_k", k, "_snr", snr, "_", "hmc_stan")
-    
-    plot(sec, quant_line[1, ], 
-         type = "n", ylab = "2nd Largest eig(Theta)", 
-         ylim = c(0, 0.7),
-         main = file_handle)
-    
-    {    
-      # hmc
+  for (k_id1 in 1:length(K_true)){
+    for (k_id2 in 1:length(K_model)){
+      k_true <- K_true[k_id1]
+      k_model <- K_model[k_id2]
+      
+      pdf(paste0(plot_addr, "trace_", family, 
+                 "_ktr", k_true, "_kmd", k_model, ".pdf"), width = 9, height = 6)
+      snr <- 100
+      plot_name <-
+        paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr)
+      sec <- 0:sec_max
+      file_handle <-
+        paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr, "_", "hmc_stan")
+      
       load(paste0(tar_dir, 
                   grep(file_handle, array_list, value = TRUE)))
-      
-      plot_name <-
-        paste0(family, "_k", k, "_snr", snr)
-      
       mean_line <- colMeans(theta_container[, plot_idx]) 
       quant_line <- 
         apply(theta_container[, plot_idx], 2, 
               function(x) quantile(x, c(0.025, 0.975)))
-      m <- mean(quant_line[1, ])
-      v <- max(quant_line)
       
-      mean_line <- trfunc(mean_line, m, v)
-      quant_line <- trfunc(quant_line, m, v) 
+      plot(sec, quant_line[1, ], 
+           type = "n", ylab = "KSD for eig(Theta)", 
+           ylim = c(-1, 0.7),
+           main = file_handle)
+      abline(h = 0, lwd = 2, lty = 2)
+      
+      {    
+        # hmc
+        load(paste0(tar_dir, 
+                    grep(file_handle, array_list, value = TRUE)))
         
-      lines(mean_line, lwd = 2)
-      polygon(c(sec,rev(sec)),
-              c(quant_line[1, ],rev(quant_line[2, ])),
-              col = rgb(0,0,0,0.5), border = NA)
-      
-      # gibbs
-      file_handle <-
-        paste0(family, "_k", k, "_snr", snr, "_", "gibbs")
-      load(paste0(tar_dir, 
-                  grep(file_handle, array_list, value = TRUE)))
-      
-      # preprocessing
-      mean_line <- colMeans(theta_container[, plot_idx])
-      quant_line <- 
-        apply(theta_container[, plot_idx], 2, 
-              function(x) quantile(x, c(0.025, 0.975, 0.95)))
-      mean_line <- trfunc(mean_line, m, v)
-      quant_line <- trfunc(quant_line, m, v) 
-      
-      # plot
-      lines(mean_line, col = 2, lwd = 2)
-      polygon(c(sec,rev(sec)),
-              c(quant_line[1, ], rev(quant_line[2, ])),
-              col = rgb(1,0,0,0.5), border = NA)
+        plot_name <-
+          paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr)
+        
+        mean_line <- colMeans(theta_container[, plot_idx]) 
+        quant_line <- 
+          apply(theta_container[, plot_idx], 2, 
+                function(x) quantile(x, c(0.025, 0.975)))
+        m <- mean(theta_container[, 1]) # min(quant_line[1, ])
+        v <- max(quant_line)
+        
+        mean_line <- trfunc(mean_line, m, v)
+        quant_line <- trfunc(quant_line, m, v) 
+        
+        lines(sec, mean_line, lwd = 2)
+        polygon(c(sec,rev(sec)),
+                c(quant_line[1, ],rev(quant_line[2, ])),
+                col = rgb(0,0,0,0.5), border = NA)
+        
+        # vi_stan
+        file_handle <-
+          paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr, "_", "vi_stan")
+        load(paste0(tar_dir, 
+                    grep(file_handle, array_list, value = TRUE)))
+        
+        # preprocessing
+        mean_line <- colMeans(theta_container[, plot_idx])
+        quant_line <- 
+          apply(theta_container[, plot_idx], 2, 
+                function(x) quantile(x, c(0.025, 0.975, 0.95)))
+        
+        m <-  mean(theta_container[, 1]) #min(quant_line[1, ]) # temp measure
+        v <- max(quant_line)  # temp measure
+        
+        mean_line <- trfunc(mean_line, m, v)
+        quant_line <- trfunc(quant_line, m, v) 
+        
+        # plot
+        lines(sec, mean_line, col = 2, lwd = 2)
+        polygon(c(sec,rev(sec)),
+                c(quant_line[1, ], rev(quant_line[2, ])),
+                col = rgb(1,0,0,0.5), border = NA)
+      }
+      abline(h = mean(quant_line[3, sec_max]), lty = 2)
+      legend("topright", lty = 1, lwd = 2, col = 1:2, legend = c("HMC", "VI"))
+      dev.off()
     }
-    abline(h = mean(quant_line[3, sec_max]), lty = 2)
-    legend("topright", lty = 1, lwd = 2, col = 1:2, legend = c("HMC", "Gibbs"))
-    dev.off()
   }
 }
 
