@@ -172,10 +172,10 @@ glrm_worker <-
                       lambda, family_name,
                       rec$Theta, rec$U, rec$V, 
                       T_suff = rec$Y
-                    )
+                    ) 
                   
                   write.table(
-                    t(score_list),
+                    cbind(0, t(score_list)), # add 0 in place of initial values
                     append = TRUE, #file.exists(file_name),
                     quote = FALSE, sep = ",",
                     qmethod = "double",
