@@ -19,7 +19,8 @@ if (default){
   LAMBDA = cfig$LAMBDA
   FAMILY = cfig$FAMILY
   SAMPLR = cfig$SAMPLR
-  iter_max = c(1e5, 5e3)
+  iter_max = c(1e5, 1e2)
+  parm_updt = c("U", "V")
 }
 
 glrm_worker <- 
@@ -39,8 +40,6 @@ glrm_worker <-
   ){
     rand_seeds <- 
       list(data = data_seed, samplr = trial_seed)
-    
-    save_rec_target <- TRUE
     
     for (family_name in FAMILY){
       for (snr in SNR){
@@ -92,6 +91,7 @@ glrm_worker <-
                        init = init, init_MAP = init_MAP,
                        samplr_name = samplr_name,
                        family_name = family_name,
+                       prior_name = "gaussian",
                        iter_max = iter_max, 
                        record_freq = record_freq,
                        time_max = 60, 
@@ -114,14 +114,22 @@ glrm_worker <-
                     " snr = ", snr)
                 
                 # save (disabled for cluster)
+                save_eigen <- TRUE
+                save_score <- TRUE
+                
                 var_name <- 
                   paste0(family_name,
-                         "_ktr_", k_true, "kmd_", k_model,
+                         "_ktr", k_true, "_kmd", k_model,
                          "_snr", snr, "_", samplr_name)
                 paste0("rec_", var_name, " <- rec") %>%
                   parse(text = .) %>% eval()
                 
-                if (save_rec_target){
+                file_name <- 
+                  paste0("./result/mixing_stat/rec_", 
+                         var_name, "_", data_seed, "_", 
+                         trial_seed, ".csv")
+                
+                if (save_eigen){
                   # save Theta 1. 1
                   # rec_target <- 
                   #   matrix(c(data.sim$theta[1, 1], 
@@ -134,62 +142,53 @@ glrm_worker <-
                     apply(rec$Theta, 1, 
                           function(theta) 
                             svd(theta)$d[1:n_eigen])
-                  rec_target <- 
-                    cbind(eig0, eig_list)
-                }
-                
-                # save file 
-                if (save_rec_target){
-                  file_name <- 
-                    paste0("./result/mixing_stat/rec_", 
-                           var_name, "_", data_seed, "_", 
-                           trial_seed, "_", 
-                           k_true, "_", k_model,
-                           ".csv")
+                  rec_target <- cbind(eig0, eig_list)
+                  rec$eigen <- rec_target
                   
                   if (!file.exists(file_name)){
                     colnames(rec_target) <-
                       c("S0", 1:(ncol(rec_target)-1))
                   }
                   
+                  rec_target <- 
+                    rbind( c(0, 0, rec$time), rec_target)
+                  
                   write.table(
                     rec_target,
-                    append = file.exists(file_name),
+                    append = FALSE, #file.exists(file_name),
                     quote = FALSE, sep = ",",
                     qmethod = "double",
                     file = file_name,
                     row.names = FALSE,
-                    col.names = !file.exists(file_name))
+                    col.names = !file.exists(file_name)
+                    )
+                } 
+                if (save_score) {
+                  # compute likelihood score information for ksd
+                  # add to existing file
+                  score_list <-
+                    score_svd_batch(
+                      n_eigen = 5, 
+                      lambda, family_name,
+                      rec$Theta, rec$U, rec$V, 
+                      T_suff = rec$Y
+                    )
                   
-                  
-                  # save(rec_target, 
+                  write.table(
+                    t(score_list),
+                    append = TRUE, #file.exists(file_name),
+                    quote = FALSE, sep = ",",
+                    qmethod = "double",
+                    file = file_name,
+                    row.names = FALSE,
+                    col.names = !file.exists(file_name)
+                  )
+                  # save(rec, 
                   #      file = 
                   #        paste0("./result/mixing_stat/rec_", 
-                  #               var_name,  "_", data_seed, "_", 
-                  #               trial_seed, ".RData"))
-                } else {
-                  rec2 <- rec
-                  rec <- NULL
-                  rec_idx <- 
-                    seq(1, dim(rec2$U)[1], 
-                        length.out = iter_max[2]/record_freq) %>% round
-                  
-                  rec$U <- rec2$U[rec_idx, , ]
-                  rec$V <- rec2$V[rec_idx, , ]
-                  rec$Y <- rec2$Y
-                  
-                  var_name <- 
-                    paste0(family_name, 
-                           "_ktr", k_true, "_kmd", k_model, 
-                           "_snr", snr, "_", samplr_name)
-                  
-                  save(rec, 
-                       file = 
-                         paste0("./result/mixing_stat/rec_", 
-                                var_name, "_", data_seed, "_", 
-                                trial_seed, "_", 
-                                k_true, "_", k_model, ".RData")
-                  )
+                  #               var_name, "_", data_seed, "_", 
+                  #               trial_seed, ".RData")
+                  # )
                 }
               }
             }
