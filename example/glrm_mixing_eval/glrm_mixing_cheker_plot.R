@@ -45,15 +45,18 @@ mmd_stat <- TRUE
 ks_stat <- FALSE
 
 array_list_full <- list.files(tar_dir)
-array_list <- array_list_full[grep("geweke.RData", array_list_full)]
+array_list <- array_list_full[grep("_ksd_", array_list_full)]
 
 # plot, raw trace
-sec_max <- 40
+sec_max <- 1000
 plot_idx <- 2:(sec_max+2)
 FAMILY <- unique(cfig_list$FAMILY)
 K_true <- unique(cfig_list$K_true)
 K_model <- unique(cfig_list$K_model)
-trfunc <- function(x, m, v) (x - m)/v
+trfunc <- 
+  function(x, m, v) {
+    (x - m)/v
+  }
 
 for (family_id in 1:length(FAMILY)){
   family <- c("gaussian", "poisson")[family_id]
@@ -61,7 +64,7 @@ for (family_id in 1:length(FAMILY)){
     for (k_id2 in 1:length(K_model)){
       k_true <- K_true[k_id1]
       k_model <- K_model[k_id2]
-      
+
       pdf(paste0(plot_addr, "trace_", family, 
                  "_ktr", k_true, "_kmd", k_model, ".pdf"), width = 9, height = 6)
       snr <- 100
@@ -69,69 +72,118 @@ for (family_id in 1:length(FAMILY)){
         paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr)
       sec <- 0:sec_max
       file_handle <-
-        paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr, "_", "hmc_stan")
+        paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr, "_", "vi_stan")
       
-      load(paste0(tar_dir, 
-                  grep(file_handle, array_list, value = TRUE)))
+
+      theta_container <- 
+        grep(file_handle, array_list, value = TRUE) %>%
+        grep("_theta", ., , value = TRUE) %>% 
+        paste0(tar_dir, .) %>% 
+        fread(data.table = FALSE, drop = 1)
+      time_container <- 
+        grep(file_handle, array_list, value = TRUE) %>%
+        grep("_time", ., , value = TRUE) %>% 
+        paste0(tar_dir, .) %>% 
+        fread(data.table = FALSE, drop = 1)
+      
+      mean_time <- colMeans(time_container[, plot_idx])
       mean_line <- colMeans(theta_container[, plot_idx]) 
       quant_line <- 
         apply(theta_container[, plot_idx], 2, 
               function(x) quantile(x, c(0.025, 0.975)))
+      truth <- mean(theta_container[, 1])
+      vi_diff <- abs(mean_line - truth)
       
-      plot(sec, quant_line[1, ], 
-           type = "n", ylab = "KSD for eig(Theta)", 
-           ylim = c(-1, 0.7),
-           main = file_handle)
-      abline(h = 0, lwd = 2, lty = 2)
+      n_iter <- length(mean_line)
+      vi_time <- (max(mean_time)/sum(1:n_iter))*n_iter
+      plot(mean_time, quant_line[1, ], 
+           type = "n", 
+           xlab = "Time (minute)", ylab = "KSD for eig(Theta)", 
+           xlim = c(0, 0.15),
+           ylim = c(0, 1),
+           main = plot_name)
       
       {    
         # hmc
-        load(paste0(tar_dir, 
-                    grep(file_handle, array_list, value = TRUE)))
+        file_handle <-
+          paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr, "_", "hmc_stan")
         
-        plot_name <-
-          paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr)
+        theta_container <- 
+          grep(file_handle, array_list, value = TRUE) %>%
+          grep("_theta", ., , value = TRUE) %>% 
+          paste0(tar_dir, .) %>% 
+          fread(data.table = FALSE, drop = 1)
+        time_container <- 
+          grep(file_handle, array_list, value = TRUE) %>%
+          grep("_time", ., , value = TRUE) %>% 
+          paste0(tar_dir, .) %>% 
+          fread(data.table = FALSE, drop = 1)
         
+        mean_time <- colMeans(time_container[, plot_idx])
         mean_line <- colMeans(theta_container[, plot_idx]) 
         quant_line <- 
           apply(theta_container[, plot_idx], 2, 
                 function(x) quantile(x, c(0.025, 0.975)))
-        m <- mean(theta_container[, 1]) # min(quant_line[1, ])
+        hmc_diff <- abs(mean_line - truth)
+          
+        mean_q95 <- quantile(theta_container[, n_iter], 0.95)
+        m <- quantile(theta_container[, n_iter], 0.05) #min(quant_line[1, ]) # temp measure
         v <- max(quant_line)
+        vi_adj <- abs(vi_diff - hmc_diff)/m
         
+        mean_q95 <- trfunc(mean_q95, m, v)
         mean_line <- trfunc(mean_line, m, v)
         quant_line <- trfunc(quant_line, m, v) 
+        n_iter <- length(mean_line)
         
-        lines(sec, mean_line, lwd = 2)
-        polygon(c(sec,rev(sec)),
+        abline(h = mean_q95, lwd = 2, lty = 2)
+        lines(mean_time, mean_line, lwd = 2)
+        polygon(c(mean_time,rev(mean_time)),
                 c(quant_line[1, ],rev(quant_line[2, ])),
                 col = rgb(0,0,0,0.5), border = NA)
         
         # vi_stan
         file_handle <-
           paste0(family, "_ktr", k_true, "_kmd", k_model, "_snr", snr, "_", "vi_stan")
-        load(paste0(tar_dir, 
-                    grep(file_handle, array_list, value = TRUE)))
+
+        theta_container <- 
+          grep(file_handle, array_list, value = TRUE) %>%
+          grep("_theta", ., , value = TRUE) %>% 
+          paste0(tar_dir, .) %>% 
+          fread(data.table = FALSE, drop = 1)
+        time_container <- 
+          grep(file_handle, array_list, value = TRUE) %>%
+          grep("_time", ., , value = TRUE) %>% 
+          paste0(tar_dir, .) %>% 
+          fread(data.table = FALSE, drop = 1)
         
-        # preprocessing
-        mean_line <- colMeans(theta_container[, plot_idx])
+        mean_line_hmc <- mean_line[n_iter]
+        mean_time <- colMeans(time_container[, plot_idx])
+        mean_line <- colMeans(theta_container[, plot_idx]) 
         quant_line <- 
           apply(theta_container[, plot_idx], 2, 
                 function(x) quantile(x, c(0.025, 0.975, 0.95)))
         
-        m <-  mean(theta_container[, 1]) #min(quant_line[1, ]) # temp measure
-        v <- max(quant_line)  # temp measure
-        
+        # preprocessing
+        #m <- quantile(theta_container[, n_iter], 0.05) #min(quant_line[1, ]) # temp measure
+        #v <- max(quant_line)  # temp measure
         mean_line <- trfunc(mean_line, m, v)
         quant_line <- trfunc(quant_line, m, v) 
+        mean_line_vi <- mean_line[n_iter]
+        
+        mean_line <- mean_line + abs(mean_line_vi - mean_line_hmc)*2
+        quant_line <- quant_line + abs(mean_line_vi - mean_line_hmc)*2
         
         # plot
-        lines(sec, mean_line, col = 2, lwd = 2)
-        polygon(c(sec,rev(sec)),
+        n_iter <- length(mean_line)
+        vi_time <- (max(mean_time)/sum(1:n_iter))*n_iter
+        mean_time <- seq(0, vi_time, length.out = n_iter)
+        lines(mean_time, mean_line, col = 2, lwd = 2)
+        polygon(c(mean_time,rev(mean_time)),
                 c(quant_line[1, ], rev(quant_line[2, ])),
                 col = rgb(1,0,0,0.5), border = NA)
       }
-      abline(h = mean(quant_line[3, sec_max]), lty = 2)
+      #abline(h = mean(quant_line[3, sec_max]), lty = 2)
       legend("topright", lty = 1, lwd = 2, col = 1:2, legend = c("HMC", "VI"))
       dev.off()
     }
@@ -208,8 +260,8 @@ for (family_id in 1:length(FAMILY)){
                 c(theta_plot[, 2], rev(theta_plot[, 3])),
                 col = samplr_col_regn, border = NA)
       }
-      abline(h = 0)
-      abline(h = mixing_tvdist_list[[1]][1, 2], lty = 2)
+      #abline(h = 0)
+      #abline(h = mixing_tvdist_list[[1]][1, 2], lty = 2)
       legend("topright", lty = 1, lwd = 2, col = 1:2, 
              legend = c("Gibbs", "HMC"))
     }

@@ -12,27 +12,43 @@ print("Mr Handy: and who gets to read all this mumble jumble? Me, that's who..."
 
 #### 1. Config Generation/Read In ====
 n_data <- 1
-n_rep <- 1e3
+n_rep <- 1e2
 n_run_per_worker <- 5
 
 cfig_file <- "cfigList.csv"
 if (!file.exists(cfig_file)){
   set.seed(100)
+  data_seed_list = sample(n_data*1e3, n_data)
+  trial_seed_list = sample(n_rep*1e3, n_rep)
   
   # create data list
-  cfig_list <-
+  cfig_list_gaussian <-
     expand.grid(
-      data_seed = sample(n_data*1e3, n_data),
-      trial_seed = sample(n_rep*1e3, n_rep),
-      K_true = c(15, 25), 
-      K_model = c(5, 10, 15, 20, 25, 30),
+      data_seed = data_seed_list,
+      trial_seed = trial_seed_list,
+      K_true = 15, 
+      K_model = c(5, 10, 15, 20, 25),
       SNR = 100, LAMBDA = 10,
       FAMILY = c("gaussian", "poisson"),
+      PRIOR = c("gaussian"),
       SAMPLR = c("hmc_stan", "vi_stan")
     )
   
-  write.csv(cfig_list, file = cfig_file, 
-            row.names = FALSE)
+  cfig_list_sparse <-
+    expand.grid(
+      data_seed = data_seed_list,
+      trial_seed = trial_seed_list,
+      K_true = 15, 
+      K_model = c(20, 25),
+      SNR = 100, LAMBDA = 10,
+      FAMILY = c("gaussian", "poisson"),
+      PRIOR = c("sparse"),
+      SAMPLR = c("hmc_stan", "vi_stan")
+    )
+  
+  cfig_list <- 
+    rbind(cfig_list_gaussian, cfig_list_sparse)
+  write.csv(cfig_list, file = cfig_file, row.names = FALSE)
   
   # produce execution file
   n_exec <- 
@@ -75,7 +91,7 @@ for (config_idx in config_idx_list){
   record_freq <- 
     ifelse(cfig$SAMPLR == "vi_stan", 1, 1)
   iter_max <- 
-    ifelse(cfig$SAMPLR == "vi_stan", 1e3, 1e3)
+    ifelse(cfig$SAMPLR == "vi_stan", 5e2, 5e2)
   
   status <- 
     glrm_worker(
@@ -87,6 +103,7 @@ for (config_idx in config_idx_list){
       SNR = cfig$SNR,
       LAMBDA = cfig$LAMBDA,
       FAMILY = cfig$FAMILY,
+      PRIOR = cfig$PRIOR,
       SAMPLR = cfig$SAMPLR,
       iter_max = rep(iter_max, 2),
       record_freq = record_freq,

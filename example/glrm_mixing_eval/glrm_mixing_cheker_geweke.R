@@ -26,8 +26,8 @@ cfig_list <- read.csv(cfig_file)
 data_id <- unique(cfig_list$data_seed)
 trial_id <- unique(cfig_list$trial_seed)
 n_sample <- max(length(data_id), length(trial_id))
-n_sample_per_rep <- 100
-n_rep <- 1000
+# n_sample_per_rep <- 100
+n_rep <- 1 #500
 
 n_run_per_worker <- 100
 
@@ -46,7 +46,8 @@ cfig_check_list <-
 task_idx <- 
   ((job_idx - 1) * n_run_per_worker + 1):
   (job_idx * n_run_per_worker)  
-task_list <- cfig_check_list[task_idx, ]
+
+task_list <- na.omit(cfig_check_list[task_idx, ])
 
 n_exec <- 
   ceiling(nrow(cfig_check_list) / (n_run_per_worker))
@@ -66,9 +67,10 @@ rep_idx_list <-
 #### 1. restructure raw file into array #### 
 file_list <- list.files(raw_dir)
 
-iter_max_global <- 150 # the number of iteration to consider
+iter_max_global <- 1000 # the number of iteration to consider
 
 sum_array <- FALSE 
+empty_task_id <- numeric(0)
 
 for (task_id in 1:nrow(task_list)){
   # task specs
@@ -89,17 +91,23 @@ for (task_id in 1:nrow(task_list)){
   
   # capture relevant file index
   sett_handle <-
-    paste0(family_name, "_ktr_", k_true, "kmd_", k_model,
+    paste0(family_name, "_ktr", k_true, "_kmd", k_model,
            "_snr", snr, "_", sampler)
   data_list <- 
     grep(sett_handle, file_list, value = TRUE)
+  
+  if (length(data_list) < 10){
+    empty_task_id <- c(empty_task_id, task_id)
+    cat("\n Not enough data (<10) for id", task_id, ":", sett_handle, " \n")
+    next
+  }
   #initiate container for all quantiles 
   theta_container <- NULL
   
   cat(paste0("\n ", sett_handle, " in process...\n"))
   pb <- 
     txtProgressBar(min = 1, max = length(data_list), style = 3)
-  for (d_id in 1:length(data_list)){
+  for (d_id in 32:length(data_list)){
     setTxtProgressBar(pb, d_id)
     # for each dataset in setting, read-in all reps
     data_file_names <- data_list[d_id]
@@ -107,30 +115,53 @@ for (task_id in 1:nrow(task_list)){
     #### 1.1 harvest sample to compute quantile ----
     # read in initial file, find chain length, build file container
     # also build quantile container for current setting if not exist
+    metric_ksd <- TRUE # Use KSD
     metric_KL <- FALSE
-    metric_stein <- FALSE # Use KSD
     
-    if (metric_stein){
-      # store Y, U_1 and V_1
+    if (metric_ksd){
+      n_eigen <- 5
+      # file loading by name
       file_name <- paste0(raw_dir, data_file_names)
-      read.csv(file_name)
-      if (is.null(theta_container)){
-        iter_max <- min(dim(rec$U)[1], iter_max_global) #obtain number of iteration
-        iter_idx <- 1:iter_max
-        # iter_idx <- 
+      data_file <- 
+        tryCatch(read.csv(file_name), 
+                 error = function(e) e)
+      if ("error" %in% class(data_file)){
+        next
+      }
+      
+      #obtain number of iteration
+      iter_max_local <- 
+        min(ncol(data_file), iter_max_global+2)
+      
+      iter_idx <- (1:iter_max_local) + 2
+      
+      # compute 
+      if (is.null(theta_container_theta)){
+        theta_container_theta <- 
+          matrix(NaN, 
+                 nrow = length(data_list), 
+                 ncol = iter_max_local)
+        theta_container_score <- 
+          theta_container_theta
+        theta_container_time <- 
+          matrix(NaN, 
+                 nrow = length(data_list),  
+                 ncol = iter_max_local)
+        
+        # iter_idx <-
         #   c(seq(1, round(iter_max/2), length.out = 24),
         #     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
         #   round %>% unique
-        theta_container$Y <- rec$Y
-        theta_container$iter_idx <- iter_idx
-        theta_container$theta <- 
-          array(NaN, 
-                dim = 
-                  c(length(iter_idx), # iteration
-                    length(data_list), # repetition
-                    dim(rec$U)[3]*
-                      sum(dim(rec$U)[2] + dim(rec$V)[2])) # number of variable
-          )
+        # theta_container$Y <- rec$Y
+        # theta_container$iter_idx <- iter_idx
+        # theta_container$theta <- 
+        #   array(NaN, 
+        #         dim = 
+        #           c(length(iter_idx), # iteration
+        #             length(data_list), # repetition
+        #             dim(rec$U)[3]*
+        #               sum(dim(rec$U)[2] + dim(rec$V)[2])) # number of variable
+        #   )
       }
     } else if (metric_KL) {
       # store Y, U_1 and V_1
@@ -145,7 +176,7 @@ for (task_id in 1:nrow(task_list)){
                     dim(rec$U)[3]*2 + 1) # number of variable
           )
       }
-    } else {
+    } else { #MMD
       # data_file <- 
       #   read.csv(paste0(raw_dir, data_file_names))
       data_file <- 
@@ -168,13 +199,13 @@ for (task_id in 1:nrow(task_list)){
     
     # add quantile computed from data to 
     # container for current setting
-    if (metric_stein) {
-      theta_container$theta[, d_id, ] <- 
-        sapply(iter_idx, 
-               function(id)
-                 as.vector(rbind(rec$U[id, , ], 
-                                 rec$V[id, , ]))
-        ) %>% t
+    if (metric_ksd) {
+      theta_container_theta[d_id, ] <- 
+        as.numeric(data_file[2, 1:iter_max_local])
+      theta_container_score[d_id, ] <- 
+        as.numeric(data_file[2+n_eigen, 1:iter_max_local])
+      theta_container_time[d_id, ] <- 
+        as.numeric(data_file[1, 1:iter_max_local])
     } else if (metric_KL){
       theta_container[d_id, , ] <- 
         cbind(
@@ -197,98 +228,138 @@ for (task_id in 1:nrow(task_list)){
   }
   
   # 
-  if (metric_stein){
-    postfix <- "_stein.RData"
-  } else if (metric_KL){
-    postfix <- "_KL.RData"
-  } else {
-    postfix <- "_geweke.RData"
-  }
-  
   sett_handle <- 
     paste0(family_name, "_ktr", k_true, "_kmd", k_model,
            "_snr", snr, "_", sampler)
-  save(theta_container,
-       file = paste0(tar_dir, sett_handle, postfix))
   
+  if (metric_ksd){
+    postfix <- "_ksd_"
+    write.csv(
+      theta_container_theta,
+      file = paste0(tar_dir, sett_handle, postfix, "theta.csv"))
+    write.csv(
+      theta_container_score,
+      file = paste0(tar_dir, sett_handle, postfix, "score.csv"))
+    write.csv(
+      theta_container_time,
+      file = paste0(tar_dir, sett_handle, postfix, "time.csv"))
+  } else if (metric_KL){
+    postfix <- "_KL.csv"
+    write.csv(theta_container,
+              file = paste0(tar_dir, sett_handle, postfix))
+  } else {
+    postfix <- "_geweke.csv"
+    write.csv(theta_container,
+              file = paste0(tar_dir, sett_handle, postfix))
+  }
 }
 
-#### 2. analyze array using ecdf ####
-calc_metric <- FALSE
+#### 2. compute array statistic ####
+calc_metric <- TRUE
 
 # calc metric options
-mmd_stat <- TRUE
-ks_stat <- FALSE
+kern_stat <- TRUE
+kolm_stat <- FALSE
 
 if (calc_metric){
   array_list <- list.files(tar_dir)
-  array_list <- array_list[grep("geweke.RData", array_list)]
   
-  if (mmd_stat){
+  if (kern_stat){
+    array_list <- 
+      array_list[grep(".csv", array_list)]
+    
     # stein test p-value
     for (run_id in 1:n_run_per_worker) {
       # refresh container
       mixing_tvdist_list <- list()
       
       family_name <- as.character(FAMILY[run_id])
-      k <- K[run_id]
+      k_true <- K[run_id, 1]
+      k_model <- K[run_id, 2]
       snr <- SNR[run_id]
       sampler <- SAMPLR[run_id]
       rep <- REP[run_id]
       
-      # specify parameter
-      lambda <- 2
-      family_obj <- glrm_family(family_name)
-      loglikfunc <- function(u, v, T_suff){
-        family_obj$negloglik(sum(u*v), T_suff) +
-          lambda/2 * (sum(u^2) + sum(v^2))
-      }
+      # # specify parameter
+      # lambda <- 2
+      # family_obj <- glrm_family(family_name)
+      # loglikfunc <- function(u, v, T_suff){
+      #   family_obj$negloglik(sum(u*v), T_suff) +
+      #     lambda/2 * (sum(u^2) + sum(v^2))
+      # }
       
       # capture relevant file index
       file_handle <-
-        paste0(family_name, "_k", k, "_snr", snr, "_", sampler)
+        paste0(family_name, 
+               "_ktr", k_true, "_kmd", k_model, 
+               "_snr", snr, "_", sampler)
       # load theta_container, row for data, col for iteration
-      print(paste0("loading mmd_stat ", file_handle, ".."))
+      print(paste0("loading data ", file_handle, ".."))
       
-      load(paste0(tar_dir, 
-                  grep(file_handle, array_list, value = TRUE)))
-      theta_container <- na.omit(theta_container)
+      theta_ksd <- 
+        paste0(file_handle, "_ksd_theta") %>% 
+        grep(array_list, value = TRUE) %>% 
+        paste0(tar_dir, .) %>% fread(data.table = FALSE)
+      theta_ksd <- theta_ksd[, -1] # drop col name
+      theta_mean <- theta_ksd[, -1] %>% as.matrix %>% colMeans
+        
+      score_ksd <- 
+        paste0(file_handle, "_ksd_score") %>% 
+        grep(array_list, value = TRUE) %>% 
+        paste0(tar_dir, .) %>% fread(data.table = FALSE)
+      score_ksd <- score_ksd[, -1] * k_model # drop col name
+      
+      time_ksd <- 
+        paste0(file_handle, "_ksd_time") %>% 
+        grep(array_list, value = TRUE) %>% 
+        paste0(tar_dir, .) %>% fread(data.table = FALSE)
+      time_mean <- time_ksd[, -1] %>% as.matrix %>% colMeans
+      
       print("Done! Calculating Test Statistic..")
       
-      metric_stein <- FALSE 
+      metric_ksd <- TRUE 
       metric_KL <- FALSE
       
-      if (metric_stein){
-        ksd_list <- rep(0, dim(theta_container$theta)[1])
-        p_list <- rep(0, dim(theta_container$theta)[1])
+      if (metric_ksd){
+        n_iter <- ncol(theta_ksd)
+        n_iter_local <- round(n_iter/2)
+        
+        idx_list <- seq(3, n_iter_local, 2)
+          
+        ksd_list <- numeric(0)
+        pval_list <- numeric(0)
+        theta_list <- numeric(0)
+        time_list <- numeric(0)
+        
         pb <-
           txtProgressBar(
-            min = 1,
-            max = dim(theta_container$theta)[1],
-            style = 3)
+            min = 1, max = n_iter_local, style = 3)
         
-        for (i in 1:dim(theta_container$theta)[1]){
+        for (i in idx_list){
           setTxtProgressBar(pb, i)
-          S_cur <- theta_container$theta[i, , ]
-          T_suff <- theta_container$Y
+          h <- 
+            sqrt(0.5 * KSD:::find_median_distance(theta_ksd[, i]))
           
           result <- 
-            mixing_stein(
-              grad_neglik_S,
-              S_cur, 
-              theta_row = sum(dim(T_suff)),
-              width = -1,
-              nboot = 1000,
-              T_suff = T_suff,
-              lambda = lambda,
-              dist_family = glrm_family(family_name)
+            mixing_stein_svd(
+              theta_ksd[, i], score_ksd[, i], 
+              width = h
             )
-          ksd_list[i] <- result$info$ksd_V
-          p_list[i] <- result$p
+          
+          ksd_list <- c(ksd_list, result$info$ksd_V)
+          pval_list <- c(pval_list, result$p)
+          theta_list <- c(theta_list, theta_mean[i])
+          time_list <- c(time_list, time_mean[i])
         }
-        print(p_list)
-        mixing_tvdist_list[[file_handle]] <- ksd_list
+        out_file <- 
+          data.frame(
+            theta = theta_list,
+            ksd = ksd_list, 
+            p = pval_list, time = time_list)
         
+        write.csv(out_file, 
+                  file = paste0(tar_dir, file_handle, "_ksd_sumry.csv"),
+                  row.names = FALSE)
       } else if (metric_KL) {
         # if collects whole uv_1, then check KL-divergence
         KL_div <-
@@ -367,10 +438,11 @@ if (calc_metric){
       
     }
   }
-  else if (ks_stat){
+  else if (kolm_stat){
+    array_list <- 
+      array_list[grep("_ks_", array_list)]
+    
     # ks-stat
-    array_list <- list.files(tar_dir)
-    array_list <- array_list[grep("snr", array_list)]
     mixing_tvdist_list <- list()
     
     for (family_name in FAMILY){
