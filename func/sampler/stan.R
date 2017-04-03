@@ -5,7 +5,7 @@ library(parallel)
 glrm_sampler_stan <- 
   function(Y, lambda, 
            family_name = c("gaussian", "poisson"), 
-           prior_name = c("gaussian", "dirichlet"),
+           prior_name = c("gaussian", "sparse", "dirichlet"),
            init, config, rec, info, 
            stan_algorithm = c("hmc", "vi"))
   {
@@ -18,7 +18,6 @@ glrm_sampler_stan <-
     p <- info$p
     k <- info$k
     true_theta <- info$true_par$theta
-    
     
     family <- glrm_family(family_name)
     T_suff <- family$sufficient(Y)
@@ -42,13 +41,14 @@ glrm_sampler_stan <-
     stan_addr <- "./func/sampler/stan/"
     model_name <- family_name
     
-    if (prior_name == "dirichlet") {# TODO
-      model_name <- prior_name
-    }
+    model_name <- 
+      paste0(family_name, "_", prior_name)
+    
     
     stan_data <- list(N = n, P = p, K = k, Y = Y,
                       lambda_u = lambda, 
-                      lambda_v = lambda)
+                      lambda_v = lambda, 
+                      v_p = 1, v_k = 2.5)
     
     if (prior_name == "dirichlet") {# TODO
       # profile <- 
@@ -65,12 +65,9 @@ glrm_sampler_stan <-
       
       p_V <- matrix(1/p, nrow = k, ncol = p)
       stan_data$p_V <- p_V
-    }
-    
-    if (prior_name == "dirichlet") {# TODO
+      
       init$V <- 
         apply(p_V, 1, function(p) rdiric(1, p))
-      
       init$U <- matrix(rexp(n*k), nrow = n, ncol = k)
     }
     
@@ -88,22 +85,39 @@ glrm_sampler_stan <-
     
     # execute sampler
     cat("\n Compiling..")
-    time0 <- Sys.time()
     if (stan_algorithm == "hmc"){
-      model_out <- 
-        stan(stan_file, model_name,
-             chains = 1, data = stan_data,
-             iter = iter_max, 
-             init = init_func,
-             seed = samp_seed, 
-             pars = NA, # want all parameters
-             verbose = TRUE
+      time0 <- Sys.time()
+      
+      model_text <- 
+        capture.output(
+          model_out <- 
+            stan(stan_file, model_name,
+                 chains = 1, data = stan_data,
+                 iter = iter_max, 
+                 init = init_func,
+                 seed = samp_seed, 
+                 algorithm = "NUTS",
+                 pars = NA, # want all parameters
+                 #control = list(adapt_engaged = FALSE),
+                 verbose = TRUE
+            )
         )
       
+      # grep time:
+      time_info_id <-
+        which(sapply(model_text,
+                     function(s) grep("(Total)", s))>0)
+      time_max <- gsub("[a-zA-Z\\(\\)]", "",
+                        model_text[time_info_id]) %>% as.numeric()
+
       # result
       rec_list <- model_out@sim$samples[[1]]
       rec$hmc_param <-
         get_sampler_params(model_out, inc_warmup = FALSE)
+      
+      time_list <- 
+        seq(0, time_max, 
+            length.out = round(iter_max/record_freq))
     } else if (stan_algorithm == "vi"){
       # define outcome container
       vi_iter_list <- 
@@ -114,13 +128,27 @@ glrm_sampler_stan <-
       # define object
       obj <- stan_model(stan_file, model_name) 
       
+      time_list <- rep(NaN, length(vi_iter_list))
       for (i in 1:length(vi_iter_list)){
+        
         iter <- vi_iter_list[i]
-        model_out <- 
-          vb(obj, data = stan_data, init = init_func,
-             seed = samp_seed,
-             iter = iter,
-             adapt_iter = 10, output_samples = 1)
+        model_text <- 
+          capture.output(
+            model_out <- 
+              vb(obj, data = stan_data, init = init_func,
+                 seed = samp_seed,
+                 iter = iter,
+                 adapt_iter = 1, output_samples = 1)
+          )
+        
+        # grep time:
+        time_info_id <- 
+          which(sapply(model_text, 
+                       function(s) grep("Gradient evaluation", s))>0)
+        time_info <- gsub("Gradient evaluation took | seconds", "", 
+                          model_text[time_info_id]) %>% as.numeric()
+        
+        time_list[i] <- time_info
         
         # add to existing result
         if (is.null(rec_list)){
@@ -130,9 +158,9 @@ glrm_sampler_stan <-
             Map(c, rec_list, model_out@sim$samples[[1]])
         }
       }
+      time_list <- cumsum(time_list)
     }
     
-    time_max <- difftime(Sys.time(), time0, units = "mins")
     cat("Done")
     
     # return
@@ -148,6 +176,7 @@ glrm_sampler_stan <-
                          gsub(rec_name_pattern, "", x))
     
     rec <- NULL
+    rec$time <- time_list
     for (name in unique(rec_name)){
       idx <- which(rec_name == name)
       if (length(idx) > 1){
@@ -198,8 +227,6 @@ glrm_sampler_stan <-
                }
         )    
     }
-    
-    rec$time <- seq(0, time_max, length.out = round(iter_max/record_freq))
     
     # return
     rec

@@ -25,7 +25,7 @@ glrm <-
     init = NULL, init_MAP = FALSE,
     samplr_name = c("gibbs", "slice", "hmc_stan", "vi_stan", "stein"),
     family_name = c("gaussian", "poisson", "binomial"),
-    prior_name = c("gaussian", "dirichlet"),
+    prior_name = c("gaussian", "sparse", "dirichlet"),
     # sampler parameters: generic
     iter_max = c(1e5, 1e4), 
     record_freq = 10,
@@ -165,8 +165,8 @@ glrm <-
     if ((!is.null(true_theta)) & 
         (length(grep("debug", samplr_name)) == 0)){
       # if truth is available and not in debug mode
-      rec$pred_error <- predMeanError(rec, true_theta, pred_num)
       rec$true_theta <- true_theta
+      rec$pred_error <- predError(rec)
     }
     
     rec$init <- init
@@ -174,7 +174,6 @@ glrm <-
     
     rec$info <- info
     rec$info$family <-  glrm_family(family_name)
-    
     # rec$eig_list <- 
     #   apply(rec$Theta, 1, 
     #         function(theta) svd(theta)$d[1:k]) %>% t
