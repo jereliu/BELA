@@ -3,12 +3,12 @@
 # U <- rec$U[iter, , ]
 # V <- rec$V[iter, , ] 
 
+# TODO: find derivative with respect to Theta
 score_svd <- # derivative of likelihood wrt singular valuez
   function(Theta, U, V, T_suff, lambda, 
            dist_family, n_eigen = NULL, 
            log = TRUE
-  )
-  {
+  ){
     # extract svd component
     Theta_svd <- svd(Theta)
     if (is.null(n_eigen)) n_eigen <- sum(Theta_svd$d > 1e-5)
@@ -19,14 +19,12 @@ score_svd <- # derivative of likelihood wrt singular valuez
     # compute model component
     A_deriv <- dist_family$partition$d
     comp_model <- 
-      -T_suff + A_deriv(Theta) + 2*lambda* (U %*% t(1/V) + (1/U) %*% t(V))
+      -T_suff + A_deriv(Theta) #+ 
+      #2*lambda* (U %*% t(1/V) + (1/U) %*% t(V))
     
     # compute score output, by default use log
     sapply(1:n_eigen, function(i) sum(comp_svd[[i]] * comp_model))
   }
-
-
-
 
 # Total gradient wrt negative log likelihood and wrt KSD, for SVGD
 grad_neglik_S <- 

@@ -29,6 +29,17 @@ predSimilarity <- function(rec, true_theta, num = 100){
 }
 
 
+predError <- function(rec){
+  Theta <- rec$Theta
+  true_theta <- rec$true_theta
+  
+  Error <- 
+    apply(Theta, 1, function(Mat) sd(Mat - true_theta))
+  
+  Error 
+}
+
+
 predMeanError <- function(rec, true_theta, num = 100){
   # use the first half as burn in
   num <- min(dim(rec$U)[1], num)
@@ -48,11 +59,10 @@ predMeanError <- function(rec, true_theta, num = 100){
   mean_Pred <- 
     sapply(2:length(iter), function(i)
       sqrt(mean((apply(Theta[iter[1]:iter[i], , ], 2:3, mean) - true_theta)^2)/
-        var(as.vector(true_theta))
-        )
+             var(as.vector(true_theta))
+      )
     )
   
   time_Pred <- rec$time[iter[-1]]
-
   cbind(time_Pred - min(time_Pred), mean_Pred)
 }

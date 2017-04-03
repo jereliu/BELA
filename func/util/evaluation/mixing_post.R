@@ -23,14 +23,19 @@ mixing_stein_svd <-
   function(
     eig_list, score_list = NULL, n_eigen = NULL, 
     # parameters to produce score function
-    Theta, U, V, T_suff, lambda, family_name,
+    Theta = NULL, U = NULL, V = NULL, 
+    T_suff = NULL, lambda = NULL, family_name = NULL,
     # hyperparameter for Gaussian kernel
     width = -1, nboot = 1000, ...){
-    # define global variable
-    n_sample <- dim(Theta)[1]
-    if (is.null(n_eigen)) 
-      # if no input then examine all singular values
-      n_eigen <- ncol(eig_list)
+    # define global variable based on data type
+    if (is.null(nrow(score_ksd[, i]))){
+      n_sample <- length(score_list)
+      n_eigen <- 1
+    } else {
+      n_sample <- nrow(score_list)
+      if (is.null(n_eigen)) 
+        n_eigen <- ncol(eig_list)
+    }
     
     if (is.null(score_list)){
       # produce score value evaluated at singular values
@@ -41,13 +46,15 @@ mixing_stein_svd <-
         )
     }
     
-    if (length(score_list) == n_sample)
-      score_list <- t(score_list)
-    
-    # produce singular value for KSD()
-    eig_list <- eig_list[, 1:n_eigen]
-    score_list <- score_list[, 1:n_eigen]
-    
+    # prepare data for KSD (organize into matrix)
+    if (length(score_list) == n_sample){
+      score_list <- matrix(score_list, ncol = 1)
+      eig_list <- matrix(eig_list, ncol = 1)
+    } else {
+      # produce singular value for KSD()
+      eig_list <- eig_list[, 1:n_eigen]
+      score_list <- score_list[, 1:n_eigen]
+    }
     # evaluate KSD
     KSD(eig_list, score_list, 
         width = width, nboot = nboot)
