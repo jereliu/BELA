@@ -25,7 +25,7 @@ glrm <-
     init = NULL, init_MAP = FALSE,
     samplr_name = c("gibbs", "slice", "hmc_stan", "vi_stan", "stein"),
     family_name = c("gaussian", "poisson", "binomial"),
-    prior_name = c("gaussian", "sparse", "dirichlet"),
+    prior_name = c("gaussian", "sparse", "sparse_plus", "dirichlet"),
     # sampler parameters: generic
     iter_max = c(1e5, 1e4), 
     record_freq = 10,

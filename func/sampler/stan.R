@@ -5,7 +5,7 @@ library(parallel)
 glrm_sampler_stan <- 
   function(Y, lambda, 
            family_name = c("gaussian", "poisson"), 
-           prior_name = c("gaussian", "sparse", "dirichlet"),
+           prior_name = c("gaussian", "sparse", "sparse_plus", "dirichlet"),
            init, config, rec, info, 
            stan_algorithm = c("hmc", "vi"))
   {
@@ -48,7 +48,7 @@ glrm_sampler_stan <-
     stan_data <- list(N = n, P = p, K = k, Y = Y,
                       lambda_u = lambda, 
                       lambda_v = lambda, 
-                      v_p = 1, v_k = 2.5)
+                      v_p = 3, v_k = 2.5)
     
     if (prior_name == "dirichlet") {# TODO
       # profile <- 
@@ -116,7 +116,7 @@ glrm_sampler_stan <-
         get_sampler_params(model_out, inc_warmup = FALSE)
       
       time_list <- 
-        seq(0, time_max, 
+        seq(0, time_max/60, 
             length.out = round(iter_max/record_freq))
     } else if (stan_algorithm == "vi"){
       # define outcome container
