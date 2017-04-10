@@ -18,8 +18,10 @@ score_svd <- # derivative of likelihood wrt singular valuez
     
     # compute model component
     A_deriv <- dist_family$partition$d
+    # we in fact used Frobenius norm derivative here
     comp_model <- 
-      -T_suff + A_deriv(Theta) #+ 
+      -T_suff + A_deriv(Theta) + 
+      2 * lambda * Theta
       #2*lambda* (U %*% t(1/V) + (1/U) %*% t(V))
     
     # compute score output, by default use log
