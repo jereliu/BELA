@@ -5,6 +5,7 @@ default <- FALSE
 if (default){
   #samplr_name = c("gibbs", "hmc", "hmc_stan", "rotation")[3]
   #family_name = c("gaussian", "poisson", "poisson_softplus", "poisson_reluaapr", "binomial")[1]
+  k = 5
   iter_max = c(1e5, 1e3)
   record_freq = 1
   time_max = 60 
@@ -21,11 +22,13 @@ if (default){
 glrm <- 
   function(
     Y, X_r = NULL, X_c = NULL, lambda = 1,
-    k = NULL, true_par = NULL, 
+    k = NULL, true_par = NULL,
     init = NULL, init_MAP = FALSE,
     samplr_name = c("gibbs", "slice", "hmc_stan", "vi_stan", "stein"),
     family_name = c("gaussian", "poisson", "binomial"),
-    prior_name = c("gaussian", "sparse", "sparse_plus", "dirichlet"),
+    prior_name = 
+      c("gaussian", "sparse", "sparse_plus", 
+        "dirichlet", "dirichlet_sparse", "gam_dirichlet_sparse"),
     # sampler parameters: generic
     iter_max = c(1e5, 1e4), 
     record_freq = 10,
@@ -83,6 +86,10 @@ glrm <-
       config$sampler$step_rate <- step_rate
     }
     
+    if (length(grep("gam", prior_name)) > 0){
+      config$prior$ns_df <- 20
+    }
+    
     #### 2. initiate ####
     info <- NULL
     n <- info$n <- nrow(Y)
@@ -96,12 +103,12 @@ glrm <-
     
     # fix initialization
     set.seed(100)
-    if ("U" %in% parm_updt){
+    if (("U" %in% parm_updt) & is.null(init$U)){
       init$U <- 
         matrix(rnorm(n*k, sd = 5e-1), nrow = n)
     }
     set.seed(100) 
-    if ("V" %in% parm_updt){
+    if (("V" %in% parm_updt) & is.null(init$V)){
       init$V <- 
         matrix(rnorm(p*k, sd = 5e-1), nrow = p) 
     }
@@ -169,11 +176,12 @@ glrm <-
       rec$pred_error <- predError(rec)
     }
     
-    rec$init <- init
     rec$Y <- Y
     
     rec$info <- info
     rec$info$family <-  glrm_family(family_name)
+    if (is.null(rec$init)) rec$init <- init
+    
     # rec$eig_list <- 
     #   apply(rec$Theta, 1, 
     #         function(theta) svd(theta)$d[1:k]) %>% t
