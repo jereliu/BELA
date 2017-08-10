@@ -26,7 +26,7 @@ cfig_list <- read.csv(cfig_file)
 data_id <- unique(cfig_list$data_seed)
 trial_id <- unique(cfig_list$trial_seed)
 n_sample <- max(length(data_id), length(trial_id))
-# n_sample_per_rep <- 100
+n_sample_per_rep <- n_sample/10
 n_rep <- 1 #500
 
 n_run_per_worker <- 100
@@ -34,18 +34,18 @@ n_run_per_worker <- 100
 cfig_list <- unique(cfig_list)
 
 cfig_check_list <- 
-  expand.grid(
-    FAMILY = unique(cfig_list$FAMILY), 
-    K_true = unique(cfig_list$K_true), 
-    K_model =  unique(cfig_list$K_model), 
-    SNR = unique(cfig_list$SNR), 
-    SAMPLR = unique(cfig_list$SAMPLR),
-    REP = 1:n_rep)
+  cfig_list %>% 
+  (function(df) df[, -grep("_seed", names(df))]) %>% 
+  unique
 
 #### 0.specify model categories ####'
-task_idx <- 
-  ((job_idx - 1) * n_run_per_worker + 1):
-  (job_idx * n_run_per_worker)  
+if (length(job_idx) == 0){
+  task_idx <- 1:nrow(cfig_check_list)
+} else {
+  task_idx <- 
+    ((job_idx - 1) * n_run_per_worker + 1):
+    (job_idx * n_run_per_worker)  
+}
 
 task_list <- na.omit(cfig_check_list[task_idx, ])
 
@@ -53,6 +53,7 @@ n_exec <-
   ceiling(nrow(cfig_check_list) / (n_run_per_worker))
 
 FAMILY <- task_list$FAMILY
+PRIOR <- task_list$PRIOR
 K <- task_list[, c("K_true", "K_model")]
 SNR <- task_list$SNR
 SAMPLR <- task_list$SAMPLR
@@ -67,7 +68,7 @@ rep_idx_list <-
 #### 1. restructure raw file into array #### 
 file_list <- list.files(raw_dir)
 
-iter_max_global <- 1000 # the number of iteration to consider
+ITER_MAX_GLOBAL <- 1000 # global variable indicate no. of iteration to consider
 
 sum_array <- FALSE 
 empty_task_id <- numeric(0)
@@ -78,6 +79,7 @@ for (task_id in 1:nrow(task_list)){
   
   snr <- task_item$SNR
   sampler <- task_item$SAMPLR
+  prior_name <- task_item$PRIOR
   family_name <-  task_item$FAMILY
   k_true <- task_item$K_true
   k_model <- task_item$K_model
@@ -91,9 +93,10 @@ for (task_id in 1:nrow(task_list)){
   
   # capture relevant file index
   sett_handle <-
-    paste0(family_name, "_ktr", k_true, "_kmd", k_model,
+    paste0(family_name, "_", prior_name,
+           "_ktr", k_true, "_kmd", k_model,
            "_snr", snr, "_", sampler)
-  data_list <- 
+  data_list <-
     grep(sett_handle, file_list, value = TRUE)
   
   if (length(data_list) < 10){
@@ -102,12 +105,12 @@ for (task_id in 1:nrow(task_list)){
     next
   }
   #initiate container for all quantiles 
-  theta_container <- NULL
+  theta_container_theta <- NULL
   
   cat(paste0("\n ", sett_handle, " in process...\n"))
   pb <- 
     txtProgressBar(min = 1, max = length(data_list), style = 3)
-  for (d_id in 32:length(data_list)){
+  for (d_id in 1:length(data_list)){
     setTxtProgressBar(pb, d_id)
     # for each dataset in setting, read-in all reps
     data_file_names <- data_list[d_id]
@@ -131,7 +134,7 @@ for (task_id in 1:nrow(task_list)){
       
       #obtain number of iteration
       iter_max_local <- 
-        min(ncol(data_file), iter_max_global+2)
+        min(ncol(data_file), ITER_MAX_GLOBAL+2)
       
       iter_idx <- (1:iter_max_local) + 2
       
@@ -147,7 +150,10 @@ for (task_id in 1:nrow(task_list)){
           matrix(NaN, 
                  nrow = length(data_list),  
                  ncol = iter_max_local)
-        
+        theta_container_error <- 
+          matrix(NaN, 
+                 nrow = length(data_list),  
+                 ncol = iter_max_local)
         # iter_idx <-
         #   c(seq(1, round(iter_max/2), length.out = 24),
         #     seq(round(iter_max/2)+100, iter_max, length.out = 16)) %>%
@@ -186,7 +192,7 @@ for (task_id in 1:nrow(task_list)){
       # read last row
       data_file <- data_file[nrow(data_file), ]
       iter_max_local <- 
-        min(ncol(data_file), iter_max_global+2)
+        min(ncol(data_file), ITER_MAX_GLOBAL+2)
       
       if (is.null(theta_container)){
         theta_container <- 
@@ -206,6 +212,8 @@ for (task_id in 1:nrow(task_list)){
         as.numeric(data_file[2+n_eigen, 1:iter_max_local])
       theta_container_time[d_id, ] <- 
         as.numeric(data_file[1, 1:iter_max_local])
+      theta_container_error[d_id, ] <- 
+        as.numeric(data_file[n_eigen * 2 + 2, 1:iter_max_local])
     } else if (metric_KL){
       theta_container[d_id, , ] <- 
         cbind(
@@ -229,7 +237,8 @@ for (task_id in 1:nrow(task_list)){
   
   # 
   sett_handle <- 
-    paste0(family_name, "_ktr", k_true, "_kmd", k_model,
+    paste0(family_name, "_", prior_name,
+           "_ktr", k_true, "_kmd", k_model,
            "_snr", snr, "_", sampler)
   
   if (metric_ksd){
@@ -243,6 +252,9 @@ for (task_id in 1:nrow(task_list)){
     write.csv(
       theta_container_time,
       file = paste0(tar_dir, sett_handle, postfix, "time.csv"))
+    write.csv(
+      theta_container_error,
+      file = paste0(tar_dir, sett_handle, postfix, "error.csv"))
   } else if (metric_KL){
     postfix <- "_KL.csv"
     write.csv(theta_container,
@@ -269,11 +281,12 @@ if (calc_metric){
       array_list[grep(".csv", array_list)]
     
     # stein test p-value
-    for (run_id in 1:n_run_per_worker) {
+    for (run_id in 1:nrow(task_list)) {
       # refresh container
       mixing_tvdist_list <- list()
       
       family_name <- as.character(FAMILY[run_id])
+      prior_name <- as.character(PRIOR[run_id])
       k_true <- K[run_id, 1]
       k_model <- K[run_id, 2]
       snr <- SNR[run_id]
@@ -290,7 +303,7 @@ if (calc_metric){
       
       # capture relevant file index
       file_handle <-
-        paste0(family_name, 
+        paste0(family_name, "_", prior_name,
                "_ktr", k_true, "_kmd", k_model, 
                "_snr", snr, "_", sampler)
       # load theta_container, row for data, col for iteration
@@ -302,7 +315,7 @@ if (calc_metric){
         paste0(tar_dir, .) %>% fread(data.table = FALSE)
       theta_ksd <- theta_ksd[, -1] # drop col name
       theta_mean <- theta_ksd[, -1] %>% as.matrix %>% colMeans
-        
+
       score_ksd <- 
         paste0(file_handle, "_ksd_score") %>% 
         grep(array_list, value = TRUE) %>% 
@@ -314,6 +327,14 @@ if (calc_metric){
         grep(array_list, value = TRUE) %>% 
         paste0(tar_dir, .) %>% fread(data.table = FALSE)
       time_mean <- time_ksd[, -1] %>% as.matrix %>% colMeans
+      
+      error_ksd <- 
+        paste0(file_handle, "_ksd_error") %>% 
+        grep(array_list, value = TRUE) %>% 
+        paste0(tar_dir, .) %>% fread(data.table = FALSE)
+      error_mean <- error_ksd[, -1] %>% as.matrix %>% 
+        colMeans(na.rm = TRUE)
+      
       
       print("Done! Calculating Test Statistic..")
       
@@ -330,6 +351,7 @@ if (calc_metric){
         pval_list <- numeric(0)
         theta_list <- numeric(0)
         time_list <- numeric(0)
+        error_list <- numeric(0)
         
         pb <-
           txtProgressBar(
@@ -350,12 +372,13 @@ if (calc_metric){
           pval_list <- c(pval_list, result$p)
           theta_list <- c(theta_list, theta_mean[i])
           time_list <- c(time_list, time_mean[i])
+          error_list <- c(error_list, error_mean[i])
         }
         out_file <- 
           data.frame(
             theta = theta_list,
-            ksd = ksd_list, 
-            p = pval_list, time = time_list)
+            ksd = ksd_list, p = pval_list, 
+            time = time_list, error = error_list)
         
         write.csv(out_file, 
                   file = paste0(tar_dir, file_handle, "_ksd_sumry.csv"),
@@ -388,8 +411,8 @@ if (calc_metric){
         rep_idx <- rep_idx[rep_idx <= nrow(theta_container)]
         
         if (length(rep_idx) > 0){
-          iter_idx <- seq(1, iter_max_global, n_skip)
-          iter_idx <- iter_idx[iter_idx < (iter_max_global - n_test)]
+          iter_idx <- seq(1, ITER_MAX_GLOBAL, n_skip)
+          iter_idx <- iter_idx[iter_idx < (ITER_MAX_GLOBAL - n_test)]
           # seq(1, (ncol(theta_container)-1), 10)
           komo_stat <-
             matrix(NaN,

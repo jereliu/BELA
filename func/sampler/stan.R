@@ -7,7 +7,9 @@ glrm_sampler_stan <-
            family_name = c("gaussian", "poisson"), 
            prior_name = 
              c("gaussian", "sparse", "sparse_plus", 
-               "dirichlet", "dirichlet_sparse", "gam_dirichlet_sparse"),
+               "dirichlet", "dirichlet_sparse", 
+               "dirichlet_sparse_gam_full",
+               "dirichlet_sparse_gam_sample"),
            init, config, rec, info, 
            stan_algorithm = c("hmc", "vi"))
   {
@@ -49,7 +51,7 @@ glrm_sampler_stan <-
     stan_data <- list(N = n, P = p, K = k, Y = Y,
                       lambda_u = lambda, 
                       lambda_v = lambda, 
-                      v_p = 3, v_k = 4)
+                      v_p = 3, v_k = 2.5)
     
     
     if (grepl("dirichlet", prior_name)) {# TODO
@@ -141,7 +143,8 @@ glrm_sampler_stan <-
                  pars = NA, # want all parameters
                  #control = list(adapt_engaged = FALSE),
                  verbose = TRUE,
-                 control = list(adapt_delta = 0.99)
+                 control = list(adapt_delta = 0.99, 
+                                max_treedepth = 50)
             )
         )
       
@@ -150,8 +153,8 @@ glrm_sampler_stan <-
         which(sapply(model_text,
                      function(s) grep("(Total)", s))>0)
       time_max <- gsub("[a-zA-Z\\(\\)]", "",
-                        model_text[time_info_id]) %>% as.numeric()
-
+                       model_text[time_info_id]) %>% as.numeric()
+      
       # result
       rec_list <- model_out@sim$samples[[1]]
       rec$hmc_param <-

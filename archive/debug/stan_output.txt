@@ -1,0 +1,4891 @@
+  |                                                                                                         |                                                                                                 |   0%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.617703 seconds (Warm-up)
+               0.008468 seconds (Sampling)
+               0.626171 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.639099 seconds (Warm-up)
+               0.00979 seconds (Sampling)
+               0.648889 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.650633 seconds (Warm-up)
+               0.007794 seconds (Sampling)
+               0.658427 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.611053 seconds (Warm-up)
+               0.006668 seconds (Sampling)
+               0.617721 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.538736 seconds (Warm-up)
+               0.005783 seconds (Sampling)
+               0.544519 seconds (Total)
+
+  |                                                                                                         |                                                                                                 |   1%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.489866 seconds (Warm-up)
+               0.00548 seconds (Sampling)
+               0.495346 seconds (Total)
+
+  |                                                                                                         |=                                                                                                |   1%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.492543 seconds (Warm-up)
+               0.005946 seconds (Sampling)
+               0.498489 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.491377 seconds (Warm-up)
+               0.007338 seconds (Sampling)
+               0.498715 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488147 seconds (Warm-up)
+               0.005145 seconds (Sampling)
+               0.493292 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.493416 seconds (Warm-up)
+               0.005168 seconds (Sampling)
+               0.498584 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.49903 seconds (Warm-up)
+               0.005278 seconds (Sampling)
+               0.504308 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.514472 seconds (Warm-up)
+               0.005418 seconds (Sampling)
+               0.51989 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.473762 seconds (Warm-up)
+               0.00541 seconds (Sampling)
+               0.479172 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.475403 seconds (Warm-up)
+               0.005338 seconds (Sampling)
+               0.480741 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.479787 seconds (Warm-up)
+               0.005537 seconds (Sampling)
+               0.485324 seconds (Total)
+
+  |                                                                                                         |=                                                                                                |   2%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48201 seconds (Warm-up)
+               0.005782 seconds (Sampling)
+               0.487792 seconds (Total)
+
+  |                                                                                                         |==                                                                                               |   2%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.558072 seconds (Warm-up)
+               0.006321 seconds (Sampling)
+               0.564393 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.009651 seconds (Warm-up)
+               0.006611 seconds (Sampling)
+               0.016262 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008525 seconds (Warm-up)
+               0.006736 seconds (Sampling)
+               0.015261 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.589062 seconds (Warm-up)
+               0.006644 seconds (Sampling)
+               0.595706 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.614413 seconds (Warm-up)
+               0.00731 seconds (Sampling)
+               0.621723 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.676803 seconds (Warm-up)
+               0.007449 seconds (Sampling)
+               0.684252 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.676678 seconds (Warm-up)
+               0.007705 seconds (Sampling)
+               0.684383 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.010775 seconds (Warm-up)
+               0.008035 seconds (Sampling)
+               0.01881 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.659406 seconds (Warm-up)
+               0.008634 seconds (Sampling)
+               0.66804 seconds (Total)
+
+  |                                                                                                         |==                                                                                               |   3%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.720423 seconds (Warm-up)
+               0.007956 seconds (Sampling)
+               0.728379 seconds (Total)
+
+  |                                                                                                         |===                                                                                              |   3%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.685018 seconds (Warm-up)
+               0.007884 seconds (Sampling)
+               0.692902 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.665444 seconds (Warm-up)
+               0.007814 seconds (Sampling)
+               0.673258 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.662613 seconds (Warm-up)
+               0.00813 seconds (Sampling)
+               0.670743 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.010108 seconds (Warm-up)
+               0.00749 seconds (Sampling)
+               0.017598 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.691284 seconds (Warm-up)
+               0.007648 seconds (Sampling)
+               0.698932 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.717098 seconds (Warm-up)
+               0.009035 seconds (Sampling)
+               0.726133 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.719611 seconds (Warm-up)
+               0.009221 seconds (Sampling)
+               0.728832 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.745838 seconds (Warm-up)
+               0.007136 seconds (Sampling)
+               0.752974 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.674197 seconds (Warm-up)
+               0.007082 seconds (Sampling)
+               0.681279 seconds (Total)
+
+  |                                                                                                         |===                                                                                              |   4%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.610319 seconds (Warm-up)
+               0.007192 seconds (Sampling)
+               0.617511 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.617578 seconds (Warm-up)
+               0.007175 seconds (Sampling)
+               0.624753 seconds (Total)
+
+  |                                                                                                         |====                                                                                             |   4%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.669595 seconds (Warm-up)
+               0.006964 seconds (Sampling)
+               0.676559 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.606933 seconds (Warm-up)
+               0.007171 seconds (Sampling)
+               0.614104 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.626272 seconds (Warm-up)
+               0.007258 seconds (Sampling)
+               0.63353 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.655992 seconds (Warm-up)
+               0.007231 seconds (Sampling)
+               0.663223 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.628216 seconds (Warm-up)
+               0.007065 seconds (Sampling)
+               0.635281 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.611858 seconds (Warm-up)
+               0.007087 seconds (Sampling)
+               0.618945 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.61955 seconds (Warm-up)
+               0.007594 seconds (Sampling)
+               0.627144 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.651096 seconds (Warm-up)
+               0.008235 seconds (Sampling)
+               0.659331 seconds (Total)
+
+  |                                                                                                         |====                                                                                             |   5%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640399 seconds (Warm-up)
+               0.007598 seconds (Sampling)
+               0.647997 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.687322 seconds (Warm-up)
+               0.007464 seconds (Sampling)
+               0.694786 seconds (Total)
+
+  |                                                                                                         |=====                                                                                            |   5%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.656056 seconds (Warm-up)
+               0.007519 seconds (Sampling)
+               0.663575 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.010471 seconds (Warm-up)
+               0.007953 seconds (Sampling)
+               0.018424 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.646244 seconds (Warm-up)
+               0.007379 seconds (Sampling)
+               0.653623 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.649683 seconds (Warm-up)
+               0.007478 seconds (Sampling)
+               0.657161 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.673552 seconds (Warm-up)
+               0.007205 seconds (Sampling)
+               0.680757 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.632006 seconds (Warm-up)
+               0.007393 seconds (Sampling)
+               0.639399 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.634409 seconds (Warm-up)
+               0.009243 seconds (Sampling)
+               0.643652 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.668256 seconds (Warm-up)
+               0.007208 seconds (Sampling)
+               0.675464 seconds (Total)
+
+  |                                                                                                         |=====                                                                                            |   6%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.664582 seconds (Warm-up)
+               0.007 seconds (Sampling)
+               0.671582 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640513 seconds (Warm-up)
+               0.007399 seconds (Sampling)
+               0.647912 seconds (Total)
+
+  |                                                                                                         |======                                                                                           |   6%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.6324 seconds (Warm-up)
+               0.007504 seconds (Sampling)
+               0.639904 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.633743 seconds (Warm-up)
+               0.007449 seconds (Sampling)
+               0.641192 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.659425 seconds (Warm-up)
+               0.007625 seconds (Sampling)
+               0.66705 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.683468 seconds (Warm-up)
+               0.007425 seconds (Sampling)
+               0.690893 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.68348 seconds (Warm-up)
+               0.0076 seconds (Sampling)
+               0.69108 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.660253 seconds (Warm-up)
+               0.007436 seconds (Sampling)
+               0.667689 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.643188 seconds (Warm-up)
+               0.007638 seconds (Sampling)
+               0.650826 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.681793 seconds (Warm-up)
+               0.007968 seconds (Sampling)
+               0.689761 seconds (Total)
+
+  |                                                                                                         |======                                                                                           |   7%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.698227 seconds (Warm-up)
+               0.007901 seconds (Sampling)
+               0.706128 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.689063 seconds (Warm-up)
+               0.007915 seconds (Sampling)
+               0.696978 seconds (Total)
+
+  |                                                                                                         |=======                                                                                          |   7%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.695714 seconds (Warm-up)
+               0.00777 seconds (Sampling)
+               0.703484 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.727482 seconds (Warm-up)
+               0.007962 seconds (Sampling)
+               0.735444 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.693602 seconds (Warm-up)
+               0.007792 seconds (Sampling)
+               0.701394 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.680389 seconds (Warm-up)
+               0.008151 seconds (Sampling)
+               0.68854 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.673573 seconds (Warm-up)
+               0.011201 seconds (Sampling)
+               0.684774 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.678372 seconds (Warm-up)
+               0.007785 seconds (Sampling)
+               0.686157 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.707895 seconds (Warm-up)
+               0.008589 seconds (Sampling)
+               0.716484 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.698455 seconds (Warm-up)
+               0.00921 seconds (Sampling)
+               0.707665 seconds (Total)
+
+  |                                                                                                         |=======                                                                                          |   8%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.755668 seconds (Warm-up)
+               0.008821 seconds (Sampling)
+               0.764489 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.71693 seconds (Warm-up)
+               0.008303 seconds (Sampling)
+               0.725233 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.759535 seconds (Warm-up)
+               0.008119 seconds (Sampling)
+               0.767654 seconds (Total)
+
+  |                                                                                                         |========                                                                                         |   8%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.795173 seconds (Warm-up)
+               0.0083 seconds (Sampling)
+               0.803473 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.704957 seconds (Warm-up)
+               0.008439 seconds (Sampling)
+               0.713396 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.011668 seconds (Warm-up)
+               0.011532 seconds (Sampling)
+               0.0232 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.820872 seconds (Warm-up)
+               0.008441 seconds (Sampling)
+               0.829313 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.701257 seconds (Warm-up)
+               0.007913 seconds (Sampling)
+               0.70917 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.680542 seconds (Warm-up)
+               0.010858 seconds (Sampling)
+               0.6914 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.734318 seconds (Warm-up)
+               0.013231 seconds (Sampling)
+               0.747549 seconds (Total)
+
+  |                                                                                                         |========                                                                                         |   9%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.678015 seconds (Warm-up)
+               0.007846 seconds (Sampling)
+               0.685861 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.012069 seconds (Warm-up)
+               0.013877 seconds (Sampling)
+               0.025946 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.710539 seconds (Warm-up)
+               0.008282 seconds (Sampling)
+               0.718821 seconds (Total)
+
+  |                                                                                                         |=========                                                                                        |   9%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.681116 seconds (Warm-up)
+               0.010495 seconds (Sampling)
+               0.691611 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.66246 seconds (Warm-up)
+               0.007526 seconds (Sampling)
+               0.669986 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.659941 seconds (Warm-up)
+               0.009309 seconds (Sampling)
+               0.66925 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.70545 seconds (Warm-up)
+               0.00829 seconds (Sampling)
+               0.71374 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.723371 seconds (Warm-up)
+               0.007946 seconds (Sampling)
+               0.731317 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.722568 seconds (Warm-up)
+               0.007978 seconds (Sampling)
+               0.730546 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.740454 seconds (Warm-up)
+               0.007774 seconds (Sampling)
+               0.748228 seconds (Total)
+
+  |                                                                                                         |=========                                                                                        |  10%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.703412 seconds (Warm-up)
+               0.007509 seconds (Sampling)
+               0.710921 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.644951 seconds (Warm-up)
+               0.007319 seconds (Sampling)
+               0.65227 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.642771 seconds (Warm-up)
+               0.007631 seconds (Sampling)
+               0.650402 seconds (Total)
+
+  |                                                                                                         |==========                                                                                       |  10%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.703993 seconds (Warm-up)
+               0.007539 seconds (Sampling)
+               0.711532 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640237 seconds (Warm-up)
+               0.007464 seconds (Sampling)
+               0.647701 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.657928 seconds (Warm-up)
+               0.007518 seconds (Sampling)
+               0.665446 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640025 seconds (Warm-up)
+               0.007586 seconds (Sampling)
+               0.647611 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.637471 seconds (Warm-up)
+               0.008522 seconds (Sampling)
+               0.645993 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640497 seconds (Warm-up)
+               0.007642 seconds (Sampling)
+               0.648139 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.704965 seconds (Warm-up)
+               0.010026 seconds (Sampling)
+               0.714991 seconds (Total)
+
+  |                                                                                                         |==========                                                                                       |  11%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.676398 seconds (Warm-up)
+               0.009024 seconds (Sampling)
+               0.685422 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.689695 seconds (Warm-up)
+               0.007204 seconds (Sampling)
+               0.696899 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.645047 seconds (Warm-up)
+               0.007109 seconds (Sampling)
+               0.652156 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.643862 seconds (Warm-up)
+               0.0071 seconds (Sampling)
+               0.650962 seconds (Total)
+
+  |                                                                                                         |===========                                                                                      |  11%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.63649 seconds (Warm-up)
+               0.007359 seconds (Sampling)
+               0.643849 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.01045 seconds (Warm-up)
+               0.007315 seconds (Sampling)
+               0.017765 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.653115 seconds (Warm-up)
+               0.007457 seconds (Sampling)
+               0.660572 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.643993 seconds (Warm-up)
+               0.007205 seconds (Sampling)
+               0.651198 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.632633 seconds (Warm-up)
+               0.007614 seconds (Sampling)
+               0.640247 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.71924 seconds (Warm-up)
+               0.007728 seconds (Sampling)
+               0.726968 seconds (Total)
+
+  |                                                                                                         |===========                                                                                      |  12%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.644112 seconds (Warm-up)
+               0.008026 seconds (Sampling)
+               0.652138 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.647705 seconds (Warm-up)
+               0.007303 seconds (Sampling)
+               0.655008 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.664898 seconds (Warm-up)
+               0.007197 seconds (Sampling)
+               0.672095 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.623487 seconds (Warm-up)
+               0.00774 seconds (Sampling)
+               0.631227 seconds (Total)
+
+  |                                                                                                         |============                                                                                     |  12%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.627914 seconds (Warm-up)
+               0.007306 seconds (Sampling)
+               0.63522 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.618521 seconds (Warm-up)
+               0.007051 seconds (Sampling)
+               0.625572 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.017601 seconds (Warm-up)
+               0.012358 seconds (Sampling)
+               0.029959 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.010835 seconds (Warm-up)
+               0.007443 seconds (Sampling)
+               0.018278 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.608985 seconds (Warm-up)
+               0.007258 seconds (Sampling)
+               0.616243 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.590056 seconds (Warm-up)
+               0.006899 seconds (Sampling)
+               0.596955 seconds (Total)
+
+  |                                                                                                         |============                                                                                     |  13%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.642182 seconds (Warm-up)
+               0.006912 seconds (Sampling)
+               0.649094 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.60285 seconds (Warm-up)
+               0.007917 seconds (Sampling)
+               0.610767 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.598338 seconds (Warm-up)
+               0.006981 seconds (Sampling)
+               0.605319 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.596172 seconds (Warm-up)
+               0.007145 seconds (Sampling)
+               0.603317 seconds (Total)
+
+  |                                                                                                         |=============                                                                                    |  13%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.628801 seconds (Warm-up)
+               0.006907 seconds (Sampling)
+               0.635708 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.588668 seconds (Warm-up)
+               0.007715 seconds (Sampling)
+               0.596383 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.628431 seconds (Warm-up)
+               0.006933 seconds (Sampling)
+               0.635364 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.591567 seconds (Warm-up)
+               0.011977 seconds (Sampling)
+               0.603544 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008695 seconds (Warm-up)
+               0.006946 seconds (Sampling)
+               0.015641 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.583826 seconds (Warm-up)
+               0.006986 seconds (Sampling)
+               0.590812 seconds (Total)
+
+  |                                                                                                         |=============                                                                                    |  14%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.598461 seconds (Warm-up)
+               0.007086 seconds (Sampling)
+               0.605547 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.603484 seconds (Warm-up)
+               0.007031 seconds (Sampling)
+               0.610515 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.553 seconds (Warm-up)
+               0.006134 seconds (Sampling)
+               0.559134 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.527643 seconds (Warm-up)
+               0.006013 seconds (Sampling)
+               0.533656 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.57425 seconds (Warm-up)
+               0.006568 seconds (Sampling)
+               0.580818 seconds (Total)
+
+  |                                                                                                         |==============                                                                                   |  14%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.580129 seconds (Warm-up)
+               0.007332 seconds (Sampling)
+               0.587461 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.585491 seconds (Warm-up)
+               0.006654 seconds (Sampling)
+               0.592145 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.597918 seconds (Warm-up)
+               0.006885 seconds (Sampling)
+               0.604803 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.659883 seconds (Warm-up)
+               0.007322 seconds (Sampling)
+               0.667205 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.606194 seconds (Warm-up)
+               0.007337 seconds (Sampling)
+               0.613531 seconds (Total)
+
+  |                                                                                                         |==============                                                                                   |  15%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.62858 seconds (Warm-up)
+               0.007242 seconds (Sampling)
+               0.635822 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.655935 seconds (Warm-up)
+               0.007211 seconds (Sampling)
+               0.663146 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.630762 seconds (Warm-up)
+               0.007164 seconds (Sampling)
+               0.637926 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.606609 seconds (Warm-up)
+               0.007099 seconds (Sampling)
+               0.613708 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.668893 seconds (Warm-up)
+               0.011562 seconds (Sampling)
+               0.680455 seconds (Total)
+
+  |                                                                                                         |===============                                                                                  |  15%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.648938 seconds (Warm-up)
+               0.00787 seconds (Sampling)
+               0.656808 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.00948 seconds (Warm-up)
+               0.007556 seconds (Sampling)
+               0.017036 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.635063 seconds (Warm-up)
+               0.007742 seconds (Sampling)
+               0.642805 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.653573 seconds (Warm-up)
+               0.011213 seconds (Sampling)
+               0.664786 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.620673 seconds (Warm-up)
+               0.007245 seconds (Sampling)
+               0.627918 seconds (Total)
+
+  |                                                                                                         |===============                                                                                  |  16%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.603194 seconds (Warm-up)
+               0.006821 seconds (Sampling)
+               0.610015 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.652744 seconds (Warm-up)
+               0.006817 seconds (Sampling)
+               0.659561 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.607326 seconds (Warm-up)
+               0.00674 seconds (Sampling)
+               0.614066 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.544276 seconds (Warm-up)
+               0.006195 seconds (Sampling)
+               0.550471 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.601363 seconds (Warm-up)
+               0.0065 seconds (Sampling)
+               0.607863 seconds (Total)
+
+  |                                                                                                         |================                                                                                 |  16%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.579062 seconds (Warm-up)
+               0.006707 seconds (Sampling)
+               0.585769 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.58117 seconds (Warm-up)
+               0.006692 seconds (Sampling)
+               0.587862 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.571166 seconds (Warm-up)
+               0.006403 seconds (Sampling)
+               0.577569 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.526038 seconds (Warm-up)
+               0.005763 seconds (Sampling)
+               0.531801 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.509978 seconds (Warm-up)
+               0.005568 seconds (Sampling)
+               0.515546 seconds (Total)
+
+  |                                                                                                         |================                                                                                 |  17%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.507818 seconds (Warm-up)
+               0.006181 seconds (Sampling)
+               0.513999 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.529452 seconds (Warm-up)
+               0.005725 seconds (Sampling)
+               0.535177 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.537731 seconds (Warm-up)
+               0.006185 seconds (Sampling)
+               0.543916 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.545882 seconds (Warm-up)
+               0.006887 seconds (Sampling)
+               0.552769 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.565114 seconds (Warm-up)
+               0.006666 seconds (Sampling)
+               0.57178 seconds (Total)
+
+  |                                                                                                         |=================                                                                                |  17%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.654239 seconds (Warm-up)
+               0.006894 seconds (Sampling)
+               0.661133 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.585902 seconds (Warm-up)
+               0.006811 seconds (Sampling)
+               0.592713 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.604085 seconds (Warm-up)
+               0.007004 seconds (Sampling)
+               0.611089 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.63206 seconds (Warm-up)
+               0.008852 seconds (Sampling)
+               0.640912 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.62619 seconds (Warm-up)
+               0.007325 seconds (Sampling)
+               0.633515 seconds (Total)
+
+  |                                                                                                         |=================                                                                                |  18%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.01079 seconds (Warm-up)
+               0.007992 seconds (Sampling)
+               0.018782 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.611417 seconds (Warm-up)
+               0.007173 seconds (Sampling)
+               0.61859 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.661788 seconds (Warm-up)
+               0.007118 seconds (Sampling)
+               0.668906 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.628454 seconds (Warm-up)
+               0.007276 seconds (Sampling)
+               0.63573 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.621763 seconds (Warm-up)
+               0.007847 seconds (Sampling)
+               0.62961 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.627479 seconds (Warm-up)
+               0.007223 seconds (Sampling)
+               0.634702 seconds (Total)
+
+  |                                                                                                         |==================                                                                               |  18%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.689078 seconds (Warm-up)
+               0.007137 seconds (Sampling)
+               0.696215 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.606782 seconds (Warm-up)
+               0.007217 seconds (Sampling)
+               0.613999 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.624698 seconds (Warm-up)
+               0.007947 seconds (Sampling)
+               0.632645 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.606308 seconds (Warm-up)
+               0.006866 seconds (Sampling)
+               0.613174 seconds (Total)
+
+  |                                                                                                         |==================                                                                               |  19%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.592908 seconds (Warm-up)
+               0.006789 seconds (Sampling)
+               0.599697 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.590921 seconds (Warm-up)
+               0.009335 seconds (Sampling)
+               0.600256 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008077 seconds (Warm-up)
+               0.006975 seconds (Sampling)
+               0.015052 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.663767 seconds (Warm-up)
+               0.006988 seconds (Sampling)
+               0.670755 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.591278 seconds (Warm-up)
+               0.006801 seconds (Sampling)
+               0.598079 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.590922 seconds (Warm-up)
+               0.006938 seconds (Sampling)
+               0.59786 seconds (Total)
+
+  |                                                                                                         |===================                                                                              |  19%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.675826 seconds (Warm-up)
+               0.007067 seconds (Sampling)
+               0.682893 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.611662 seconds (Warm-up)
+               0.007187 seconds (Sampling)
+               0.618849 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.622782 seconds (Warm-up)
+               0.009103 seconds (Sampling)
+               0.631885 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.621048 seconds (Warm-up)
+               0.007216 seconds (Sampling)
+               0.628264 seconds (Total)
+
+  |                                                                                                         |===================                                                                              |  20%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.010638 seconds (Warm-up)
+               0.007324 seconds (Sampling)
+               0.017962 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.610772 seconds (Warm-up)
+               0.007149 seconds (Sampling)
+               0.617921 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.011303 seconds (Warm-up)
+               0.00767 seconds (Sampling)
+               0.018973 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.619137 seconds (Warm-up)
+               0.007166 seconds (Sampling)
+               0.626303 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.674596 seconds (Warm-up)
+               0.00721 seconds (Sampling)
+               0.681806 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.616994 seconds (Warm-up)
+               0.007176 seconds (Sampling)
+               0.62417 seconds (Total)
+
+  |                                                                                                         |====================                                                                             |  20%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.666061 seconds (Warm-up)
+               0.007244 seconds (Sampling)
+               0.673305 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.67199 seconds (Warm-up)
+               0.006756 seconds (Sampling)
+               0.678746 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.600563 seconds (Warm-up)
+               0.00697 seconds (Sampling)
+               0.607533 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.590914 seconds (Warm-up)
+               0.006948 seconds (Sampling)
+               0.597862 seconds (Total)
+
+  |                                                                                                         |====================                                                                             |  21%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.64401 seconds (Warm-up)
+               0.006982 seconds (Sampling)
+               0.650992 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.011683 seconds (Warm-up)
+               0.00789 seconds (Sampling)
+               0.019573 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.595319 seconds (Warm-up)
+               0.006953 seconds (Sampling)
+               0.602272 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.636122 seconds (Warm-up)
+               0.006906 seconds (Sampling)
+               0.643028 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.009956 seconds (Warm-up)
+               0.006845 seconds (Sampling)
+               0.016801 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.602679 seconds (Warm-up)
+               0.007094 seconds (Sampling)
+               0.609773 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.623643 seconds (Warm-up)
+               0.007583 seconds (Sampling)
+               0.631226 seconds (Total)
+
+  |                                                                                                         |=====================                                                                            |  21%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.647724 seconds (Warm-up)
+               0.010889 seconds (Sampling)
+               0.658613 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.634525 seconds (Warm-up)
+               0.007292 seconds (Sampling)
+               0.641817 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.618564 seconds (Warm-up)
+               0.00742 seconds (Sampling)
+               0.625984 seconds (Total)
+
+  |                                                                                                         |=====================                                                                            |  22%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.67584 seconds (Warm-up)
+               0.00722 seconds (Sampling)
+               0.68306 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.644351 seconds (Warm-up)
+               0.007108 seconds (Sampling)
+               0.651459 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.612647 seconds (Warm-up)
+               0.007493 seconds (Sampling)
+               0.62014 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.697022 seconds (Warm-up)
+               0.009458 seconds (Sampling)
+               0.70648 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.651143 seconds (Warm-up)
+               0.007915 seconds (Sampling)
+               0.659058 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.654229 seconds (Warm-up)
+               0.009353 seconds (Sampling)
+               0.663582 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.696364 seconds (Warm-up)
+               0.007544 seconds (Sampling)
+               0.703908 seconds (Total)
+
+  |                                                                                                         |======================                                                                           |  22%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.69827 seconds (Warm-up)
+               0.007886 seconds (Sampling)
+               0.706156 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.682476 seconds (Warm-up)
+               0.008594 seconds (Sampling)
+               0.69107 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.744368 seconds (Warm-up)
+               0.007915 seconds (Sampling)
+               0.752283 seconds (Total)
+
+  |                                                                                                         |======================                                                                           |  23%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.68266 seconds (Warm-up)
+               0.007842 seconds (Sampling)
+               0.690502 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.674136 seconds (Warm-up)
+               0.0079 seconds (Sampling)
+               0.682036 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.693257 seconds (Warm-up)
+               0.008032 seconds (Sampling)
+               0.701289 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.673595 seconds (Warm-up)
+               0.007881 seconds (Sampling)
+               0.681476 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.644693 seconds (Warm-up)
+               0.007705 seconds (Sampling)
+               0.652398 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.702491 seconds (Warm-up)
+               0.007996 seconds (Sampling)
+               0.710487 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.655841 seconds (Warm-up)
+               0.007854 seconds (Sampling)
+               0.663695 seconds (Total)
+
+  |                                                                                                         |=======================                                                                          |  23%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.010262 seconds (Warm-up)
+               0.007992 seconds (Sampling)
+               0.018254 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.69942 seconds (Warm-up)
+               0.007795 seconds (Sampling)
+               0.707215 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.680776 seconds (Warm-up)
+               0.007478 seconds (Sampling)
+               0.688254 seconds (Total)
+
+  |                                                                                                         |=======================                                                                          |  24%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.656064 seconds (Warm-up)
+               0.007656 seconds (Sampling)
+               0.66372 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.012788 seconds (Warm-up)
+               0.008398 seconds (Sampling)
+               0.021186 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.715518 seconds (Warm-up)
+               0.007741 seconds (Sampling)
+               0.723259 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.653163 seconds (Warm-up)
+               0.007439 seconds (Sampling)
+               0.660602 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.659582 seconds (Warm-up)
+               0.011264 seconds (Sampling)
+               0.670846 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.674188 seconds (Warm-up)
+               0.008213 seconds (Sampling)
+               0.682401 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.737126 seconds (Warm-up)
+               0.009227 seconds (Sampling)
+               0.746353 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.685929 seconds (Warm-up)
+               0.008594 seconds (Sampling)
+               0.694523 seconds (Total)
+
+  |                                                                                                         |========================                                                                         |  24%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.722321 seconds (Warm-up)
+               0.008006 seconds (Sampling)
+               0.730327 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.82005 seconds (Warm-up)
+               0.009002 seconds (Sampling)
+               0.829052 seconds (Total)
+
+  |                                                                                                         |========================                                                                         |  25%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.718851 seconds (Warm-up)
+               0.008649 seconds (Sampling)
+               0.7275 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.73345 seconds (Warm-up)
+               0.00865 seconds (Sampling)
+               0.7421 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.688779 seconds (Warm-up)
+               0.010876 seconds (Sampling)
+               0.699655 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.731547 seconds (Warm-up)
+               0.007874 seconds (Sampling)
+               0.739421 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.745763 seconds (Warm-up)
+               0.008777 seconds (Sampling)
+               0.75454 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.711967 seconds (Warm-up)
+               0.00759 seconds (Sampling)
+               0.719557 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.671258 seconds (Warm-up)
+               0.007769 seconds (Sampling)
+               0.679027 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.653446 seconds (Warm-up)
+               0.007549 seconds (Sampling)
+               0.660995 seconds (Total)
+
+  |                                                                                                         |=========================                                                                        |  25%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.699192 seconds (Warm-up)
+               0.007668 seconds (Sampling)
+               0.70686 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.650431 seconds (Warm-up)
+               0.007692 seconds (Sampling)
+               0.658123 seconds (Total)
+
+  |                                                                                                         |=========================                                                                        |  26%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.655103 seconds (Warm-up)
+               0.007609 seconds (Sampling)
+               0.662712 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.658873 seconds (Warm-up)
+               0.007331 seconds (Sampling)
+               0.666204 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.669385 seconds (Warm-up)
+               0.007486 seconds (Sampling)
+               0.676871 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.645478 seconds (Warm-up)
+               0.007413 seconds (Sampling)
+               0.652891 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.625986 seconds (Warm-up)
+               0.007304 seconds (Sampling)
+               0.63329 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.633978 seconds (Warm-up)
+               0.011129 seconds (Sampling)
+               0.645107 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640782 seconds (Warm-up)
+               0.007486 seconds (Sampling)
+               0.648268 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.630188 seconds (Warm-up)
+               0.007358 seconds (Sampling)
+               0.637546 seconds (Total)
+
+  |                                                                                                         |==========================                                                                       |  26%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.682489 seconds (Warm-up)
+               0.008442 seconds (Sampling)
+               0.690931 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.641479 seconds (Warm-up)
+               0.007136 seconds (Sampling)
+               0.648615 seconds (Total)
+
+  |                                                                                                         |==========================                                                                       |  27%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.63686 seconds (Warm-up)
+               0.007376 seconds (Sampling)
+               0.644236 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.628027 seconds (Warm-up)
+               0.008085 seconds (Sampling)
+               0.636112 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.631369 seconds (Warm-up)
+               0.007356 seconds (Sampling)
+               0.638725 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.633509 seconds (Warm-up)
+               0.007266 seconds (Sampling)
+               0.640775 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.660634 seconds (Warm-up)
+               0.007225 seconds (Sampling)
+               0.667859 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.614024 seconds (Warm-up)
+               0.007356 seconds (Sampling)
+               0.62138 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.598255 seconds (Warm-up)
+               0.006938 seconds (Sampling)
+               0.605193 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.595061 seconds (Warm-up)
+               0.007066 seconds (Sampling)
+               0.602127 seconds (Total)
+
+  |                                                                                                         |===========================                                                                      |  27%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.638671 seconds (Warm-up)
+               0.008104 seconds (Sampling)
+               0.646775 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.613704 seconds (Warm-up)
+               0.007199 seconds (Sampling)
+               0.620903 seconds (Total)
+
+  |                                                                                                         |===========================                                                                      |  28%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.649461 seconds (Warm-up)
+               0.007015 seconds (Sampling)
+               0.656476 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.60006 seconds (Warm-up)
+               0.007766 seconds (Sampling)
+               0.607826 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.556868 seconds (Warm-up)
+               0.006251 seconds (Sampling)
+               0.563119 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.514398 seconds (Warm-up)
+               0.005988 seconds (Sampling)
+               0.520386 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.567991 seconds (Warm-up)
+               0.006296 seconds (Sampling)
+               0.574287 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.542023 seconds (Warm-up)
+               0.006005 seconds (Sampling)
+               0.548028 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.548543 seconds (Warm-up)
+               0.006537 seconds (Sampling)
+               0.55508 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.57623 seconds (Warm-up)
+               0.006376 seconds (Sampling)
+               0.582606 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.566418 seconds (Warm-up)
+               0.00652 seconds (Sampling)
+               0.572938 seconds (Total)
+
+  |                                                                                                         |============================                                                                     |  28%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.573186 seconds (Warm-up)
+               0.006605 seconds (Sampling)
+               0.579791 seconds (Total)
+
+  |                                                                                                         |============================                                                                     |  29%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008985 seconds (Warm-up)
+               0.006728 seconds (Sampling)
+               0.015713 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.569403 seconds (Warm-up)
+               0.006683 seconds (Sampling)
+               0.576086 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.612717 seconds (Warm-up)
+               0.006637 seconds (Sampling)
+               0.619354 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008275 seconds (Warm-up)
+               0.006583 seconds (Sampling)
+               0.014858 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.585946 seconds (Warm-up)
+               0.00762 seconds (Sampling)
+               0.593566 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.613723 seconds (Warm-up)
+               0.006864 seconds (Sampling)
+               0.620587 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.586833 seconds (Warm-up)
+               0.00667 seconds (Sampling)
+               0.593503 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.57139 seconds (Warm-up)
+               0.006549 seconds (Sampling)
+               0.577939 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.576178 seconds (Warm-up)
+               0.006788 seconds (Sampling)
+               0.582966 seconds (Total)
+
+  |                                                                                                         |=============================                                                                    |  29%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.615395 seconds (Warm-up)
+               0.006563 seconds (Sampling)
+               0.621958 seconds (Total)
+
+  |                                                                                                         |=============================                                                                    |  30%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.009652 seconds (Warm-up)
+               0.0066 seconds (Sampling)
+               0.016252 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.569908 seconds (Warm-up)
+               0.006563 seconds (Sampling)
+               0.576471 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.609521 seconds (Warm-up)
+               0.007491 seconds (Sampling)
+               0.617012 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.011236 seconds (Warm-up)
+               0.010441 seconds (Sampling)
+               0.021677 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.59796 seconds (Warm-up)
+               0.007359 seconds (Sampling)
+               0.605319 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.624763 seconds (Warm-up)
+               0.008505 seconds (Sampling)
+               0.633268 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.59803 seconds (Warm-up)
+               0.00751 seconds (Sampling)
+               0.60554 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.55473 seconds (Warm-up)
+               0.005985 seconds (Sampling)
+               0.560715 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.544018 seconds (Warm-up)
+               0.005808 seconds (Sampling)
+               0.549826 seconds (Total)
+
+  |                                                                                                         |==============================                                                                   |  30%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.532222 seconds (Warm-up)
+               0.005962 seconds (Sampling)
+               0.538184 seconds (Total)
+
+  |                                                                                                         |==============================                                                                   |  31%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.522968 seconds (Warm-up)
+               0.005726 seconds (Sampling)
+               0.528694 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.506969 seconds (Warm-up)
+               0.006152 seconds (Sampling)
+               0.513121 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.503671 seconds (Warm-up)
+               0.005626 seconds (Sampling)
+               0.509297 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.510125 seconds (Warm-up)
+               0.006468 seconds (Sampling)
+               0.516593 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.522305 seconds (Warm-up)
+               0.00585 seconds (Sampling)
+               0.528155 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.556781 seconds (Warm-up)
+               0.006189 seconds (Sampling)
+               0.56297 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.007167 seconds (Warm-up)
+               0.006076 seconds (Sampling)
+               0.013243 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.554289 seconds (Warm-up)
+               0.006387 seconds (Sampling)
+               0.560676 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.59191 seconds (Warm-up)
+               0.007468 seconds (Sampling)
+               0.599378 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.570671 seconds (Warm-up)
+               0.006434 seconds (Sampling)
+               0.577105 seconds (Total)
+
+  |                                                                                                         |===============================                                                                  |  32%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.592968 seconds (Warm-up)
+               0.006968 seconds (Sampling)
+               0.599936 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.593553 seconds (Warm-up)
+               0.006822 seconds (Sampling)
+               0.600375 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.01061 seconds (Warm-up)
+               0.006878 seconds (Sampling)
+               0.017488 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.664545 seconds (Warm-up)
+               0.007043 seconds (Sampling)
+               0.671588 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008105 seconds (Warm-up)
+               0.007209 seconds (Sampling)
+               0.015314 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.606977 seconds (Warm-up)
+               0.006933 seconds (Sampling)
+               0.61391 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.578097 seconds (Warm-up)
+               0.006805 seconds (Sampling)
+               0.584902 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.550266 seconds (Warm-up)
+               0.006316 seconds (Sampling)
+               0.556582 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.518633 seconds (Warm-up)
+               0.005797 seconds (Sampling)
+               0.52443 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488741 seconds (Warm-up)
+               0.005357 seconds (Sampling)
+               0.494098 seconds (Total)
+
+  |                                                                                                         |================================                                                                 |  33%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.478779 seconds (Warm-up)
+               0.005425 seconds (Sampling)
+               0.484204 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.478416 seconds (Warm-up)
+               0.005154 seconds (Sampling)
+               0.48357 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48783 seconds (Warm-up)
+               0.005175 seconds (Sampling)
+               0.493005 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.482512 seconds (Warm-up)
+               0.005377 seconds (Sampling)
+               0.487889 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.502184 seconds (Warm-up)
+               0.005248 seconds (Sampling)
+               0.507432 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.486192 seconds (Warm-up)
+               0.005473 seconds (Sampling)
+               0.491665 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480512 seconds (Warm-up)
+               0.005723 seconds (Sampling)
+               0.486235 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488277 seconds (Warm-up)
+               0.005549 seconds (Sampling)
+               0.493826 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.006807 seconds (Warm-up)
+               0.00543 seconds (Sampling)
+               0.012237 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497633 seconds (Warm-up)
+               0.005692 seconds (Sampling)
+               0.503325 seconds (Total)
+
+  |                                                                                                         |=================================                                                                |  34%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497614 seconds (Warm-up)
+               0.005651 seconds (Sampling)
+               0.503265 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.498629 seconds (Warm-up)
+               0.005585 seconds (Sampling)
+               0.504214 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.504468 seconds (Warm-up)
+               0.005723 seconds (Sampling)
+               0.510191 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.506557 seconds (Warm-up)
+               0.005635 seconds (Sampling)
+               0.512192 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.526107 seconds (Warm-up)
+               0.005835 seconds (Sampling)
+               0.531942 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.505895 seconds (Warm-up)
+               0.005589 seconds (Sampling)
+               0.511484 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.51051 seconds (Warm-up)
+               0.005796 seconds (Sampling)
+               0.516306 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.0076 seconds (Warm-up)
+               0.006853 seconds (Sampling)
+               0.014453 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.517222 seconds (Warm-up)
+               0.005668 seconds (Sampling)
+               0.52289 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.52371 seconds (Warm-up)
+               0.005645 seconds (Sampling)
+               0.529355 seconds (Total)
+
+  |                                                                                                         |=================================                                                                |  35%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.511966 seconds (Warm-up)
+               0.006589 seconds (Sampling)
+               0.518555 seconds (Total)
+
+  |                                                                                                         |==================================                                                               |  35%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.522697 seconds (Warm-up)
+               0.007026 seconds (Sampling)
+               0.529723 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.529757 seconds (Warm-up)
+               0.006044 seconds (Sampling)
+               0.535801 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.528527 seconds (Warm-up)
+               0.005641 seconds (Sampling)
+               0.534168 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.522528 seconds (Warm-up)
+               0.006546 seconds (Sampling)
+               0.529074 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.53126 seconds (Warm-up)
+               0.00612 seconds (Sampling)
+               0.53738 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.512446 seconds (Warm-up)
+               0.005539 seconds (Sampling)
+               0.517985 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.513069 seconds (Warm-up)
+               0.006589 seconds (Sampling)
+               0.519658 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.499138 seconds (Warm-up)
+               0.006101 seconds (Sampling)
+               0.505239 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.580001 seconds (Warm-up)
+               0.006361 seconds (Sampling)
+               0.586362 seconds (Total)
+
+  |                                                                                                         |==================================                                                               |  36%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008061 seconds (Warm-up)
+               0.006367 seconds (Sampling)
+               0.014428 seconds (Total)
+
+  |                                                                                                         |===================================                                                              |  36%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.570019 seconds (Warm-up)
+               0.006376 seconds (Sampling)
+               0.576395 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.572662 seconds (Warm-up)
+               0.006809 seconds (Sampling)
+               0.579471 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.582455 seconds (Warm-up)
+               0.007131 seconds (Sampling)
+               0.589586 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.574831 seconds (Warm-up)
+               0.00818 seconds (Sampling)
+               0.583011 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.559622 seconds (Warm-up)
+               0.0064 seconds (Sampling)
+               0.566022 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.567709 seconds (Warm-up)
+               0.006686 seconds (Sampling)
+               0.574395 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.553168 seconds (Warm-up)
+               0.006164 seconds (Sampling)
+               0.559332 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.526925 seconds (Warm-up)
+               0.005607 seconds (Sampling)
+               0.532532 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.521447 seconds (Warm-up)
+               0.007985 seconds (Sampling)
+               0.529432 seconds (Total)
+
+  |                                                                                                         |===================================                                                              |  37%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.478591 seconds (Warm-up)
+               0.005325 seconds (Sampling)
+               0.483916 seconds (Total)
+
+  |                                                                                                         |====================================                                                             |  37%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488817 seconds (Warm-up)
+               0.005397 seconds (Sampling)
+               0.494214 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.491254 seconds (Warm-up)
+               0.005543 seconds (Sampling)
+               0.496797 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.482568 seconds (Warm-up)
+               0.006384 seconds (Sampling)
+               0.488952 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.486884 seconds (Warm-up)
+               0.005239 seconds (Sampling)
+               0.492123 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.481652 seconds (Warm-up)
+               0.006505 seconds (Sampling)
+               0.488157 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.496056 seconds (Warm-up)
+               0.00738 seconds (Sampling)
+               0.503436 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488019 seconds (Warm-up)
+               0.006526 seconds (Sampling)
+               0.494545 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494103 seconds (Warm-up)
+               0.006222 seconds (Sampling)
+               0.500325 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.485412 seconds (Warm-up)
+               0.00542 seconds (Sampling)
+               0.490832 seconds (Total)
+
+  |                                                                                                         |====================================                                                             |  38%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.485732 seconds (Warm-up)
+               0.006383 seconds (Sampling)
+               0.492115 seconds (Total)
+
+  |                                                                                                         |=====================================                                                            |  38%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488408 seconds (Warm-up)
+               0.005992 seconds (Sampling)
+               0.4944 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497566 seconds (Warm-up)
+               0.006097 seconds (Sampling)
+               0.503663 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.481052 seconds (Warm-up)
+               0.00608 seconds (Sampling)
+               0.487132 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48018 seconds (Warm-up)
+               0.006516 seconds (Sampling)
+               0.486696 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484885 seconds (Warm-up)
+               0.00751 seconds (Sampling)
+               0.492395 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480972 seconds (Warm-up)
+               0.005564 seconds (Sampling)
+               0.486536 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.468296 seconds (Warm-up)
+               0.005473 seconds (Sampling)
+               0.473769 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.485214 seconds (Warm-up)
+               0.005391 seconds (Sampling)
+               0.490605 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.479909 seconds (Warm-up)
+               0.005298 seconds (Sampling)
+               0.485207 seconds (Total)
+
+  |                                                                                                         |=====================================                                                            |  39%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.491899 seconds (Warm-up)
+               0.007003 seconds (Sampling)
+               0.498902 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.007975 seconds (Warm-up)
+               0.005407 seconds (Sampling)
+               0.013382 seconds (Total)
+
+  |                                                                                                         |======================================                                                           |  39%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.00705 seconds (Warm-up)
+               0.005553 seconds (Sampling)
+               0.012603 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.475589 seconds (Warm-up)
+               0.006507 seconds (Sampling)
+               0.482096 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.478603 seconds (Warm-up)
+               0.005544 seconds (Sampling)
+               0.484147 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.498557 seconds (Warm-up)
+               0.005464 seconds (Sampling)
+               0.504021 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.483633 seconds (Warm-up)
+               0.005328 seconds (Sampling)
+               0.488961 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.477677 seconds (Warm-up)
+               0.00543 seconds (Sampling)
+               0.483107 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484681 seconds (Warm-up)
+               0.006827 seconds (Sampling)
+               0.491508 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.629773 seconds (Warm-up)
+               0.006515 seconds (Sampling)
+               0.636288 seconds (Total)
+
+  |                                                                                                         |======================================                                                           |  40%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.578704 seconds (Warm-up)
+               0.006811 seconds (Sampling)
+               0.585515 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.585655 seconds (Warm-up)
+               0.006414 seconds (Sampling)
+               0.592069 seconds (Total)
+
+  |                                                                                                         |=======================================                                                          |  40%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.540257 seconds (Warm-up)
+               0.006185 seconds (Sampling)
+               0.546442 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008862 seconds (Warm-up)
+               0.006534 seconds (Sampling)
+               0.015396 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.512723 seconds (Warm-up)
+               0.005943 seconds (Sampling)
+               0.518666 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.518914 seconds (Warm-up)
+               0.005679 seconds (Sampling)
+               0.524593 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.514381 seconds (Warm-up)
+               0.006228 seconds (Sampling)
+               0.520609 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.528557 seconds (Warm-up)
+               0.009472 seconds (Sampling)
+               0.538029 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.549102 seconds (Warm-up)
+               0.007399 seconds (Sampling)
+               0.556501 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.563214 seconds (Warm-up)
+               0.0066 seconds (Sampling)
+               0.569814 seconds (Total)
+
+  |                                                                                                         |=======================================                                                          |  41%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.00707 seconds (Warm-up)
+               0.005693 seconds (Sampling)
+               0.012763 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.490962 seconds (Warm-up)
+               0.006116 seconds (Sampling)
+               0.497078 seconds (Total)
+
+  |                                                                                                         |========================================                                                         |  41%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.482584 seconds (Warm-up)
+               0.0056 seconds (Sampling)
+               0.488184 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484767 seconds (Warm-up)
+               0.005733 seconds (Sampling)
+               0.4905 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484236 seconds (Warm-up)
+               0.005648 seconds (Sampling)
+               0.489884 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.006857 seconds (Warm-up)
+               0.007049 seconds (Sampling)
+               0.013906 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.481941 seconds (Warm-up)
+               0.006297 seconds (Sampling)
+               0.488238 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.485157 seconds (Warm-up)
+               0.005715 seconds (Sampling)
+               0.490872 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494274 seconds (Warm-up)
+               0.005125 seconds (Sampling)
+               0.499399 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494439 seconds (Warm-up)
+               0.005533 seconds (Sampling)
+               0.499972 seconds (Total)
+
+  |                                                                                                         |========================================                                                         |  42%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.49673 seconds (Warm-up)
+               0.005371 seconds (Sampling)
+               0.502101 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.495457 seconds (Warm-up)
+               0.007601 seconds (Sampling)
+               0.503058 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.50229 seconds (Warm-up)
+               0.007728 seconds (Sampling)
+               0.510018 seconds (Total)
+
+  |                                                                                                         |=========================================                                                        |  42%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.479269 seconds (Warm-up)
+               0.00521 seconds (Sampling)
+               0.484479 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.47943 seconds (Warm-up)
+               0.005252 seconds (Sampling)
+               0.484682 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.489049 seconds (Warm-up)
+               0.005541 seconds (Sampling)
+               0.49459 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.475981 seconds (Warm-up)
+               0.005472 seconds (Sampling)
+               0.481453 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480646 seconds (Warm-up)
+               0.005502 seconds (Sampling)
+               0.486148 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.477283 seconds (Warm-up)
+               0.005154 seconds (Sampling)
+               0.482437 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.006529 seconds (Warm-up)
+               0.005493 seconds (Sampling)
+               0.012022 seconds (Total)
+
+  |                                                                                                         |=========================================                                                        |  43%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.481818 seconds (Warm-up)
+               0.005471 seconds (Sampling)
+               0.487289 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.479081 seconds (Warm-up)
+               0.007317 seconds (Sampling)
+               0.486398 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497596 seconds (Warm-up)
+               0.005133 seconds (Sampling)
+               0.502729 seconds (Total)
+
+  |                                                                                                         |==========================================                                                       |  43%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494998 seconds (Warm-up)
+               0.00518 seconds (Sampling)
+               0.500178 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.472491 seconds (Warm-up)
+               0.006997 seconds (Sampling)
+               0.479488 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.496239 seconds (Warm-up)
+               0.005222 seconds (Sampling)
+               0.501461 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480805 seconds (Warm-up)
+               0.005627 seconds (Sampling)
+               0.486432 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.487704 seconds (Warm-up)
+               0.005674 seconds (Sampling)
+               0.493378 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484577 seconds (Warm-up)
+               0.005179 seconds (Sampling)
+               0.489756 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.482553 seconds (Warm-up)
+               0.005684 seconds (Sampling)
+               0.488237 seconds (Total)
+
+  |                                                                                                         |==========================================                                                       |  44%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48688 seconds (Warm-up)
+               0.005103 seconds (Sampling)
+               0.491983 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.483828 seconds (Warm-up)
+               0.005185 seconds (Sampling)
+               0.489013 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.487333 seconds (Warm-up)
+               0.00656 seconds (Sampling)
+               0.493893 seconds (Total)
+
+  |                                                                                                         |===========================================                                                      |  44%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494472 seconds (Warm-up)
+               0.005403 seconds (Sampling)
+               0.499875 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.463225 seconds (Warm-up)
+               0.005164 seconds (Sampling)
+               0.468389 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.481854 seconds (Warm-up)
+               0.005362 seconds (Sampling)
+               0.487216 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.489431 seconds (Warm-up)
+               0.005556 seconds (Sampling)
+               0.494987 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.490196 seconds (Warm-up)
+               0.005536 seconds (Sampling)
+               0.495732 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480153 seconds (Warm-up)
+               0.005632 seconds (Sampling)
+               0.485785 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.500506 seconds (Warm-up)
+               0.005591 seconds (Sampling)
+               0.506097 seconds (Total)
+
+  |                                                                                                         |===========================================                                                      |  45%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.495979 seconds (Warm-up)
+               0.007454 seconds (Sampling)
+               0.503433 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480567 seconds (Warm-up)
+               0.007504 seconds (Sampling)
+               0.488071 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.486874 seconds (Warm-up)
+               0.006997 seconds (Sampling)
+               0.493871 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488681 seconds (Warm-up)
+               0.005213 seconds (Sampling)
+               0.493894 seconds (Total)
+
+  |                                                                                                         |============================================                                                     |  45%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.490207 seconds (Warm-up)
+               0.005243 seconds (Sampling)
+               0.49545 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488209 seconds (Warm-up)
+               0.00673 seconds (Sampling)
+               0.494939 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.486947 seconds (Warm-up)
+               0.006281 seconds (Sampling)
+               0.493228 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.489577 seconds (Warm-up)
+               0.005723 seconds (Sampling)
+               0.4953 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.006444 seconds (Warm-up)
+               0.005699 seconds (Sampling)
+               0.012143 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494046 seconds (Warm-up)
+               0.006803 seconds (Sampling)
+               0.500849 seconds (Total)
+
+  |                                                                                                         |============================================                                                     |  46%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.520392 seconds (Warm-up)
+               0.006736 seconds (Sampling)
+               0.527128 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.502643 seconds (Warm-up)
+               0.005475 seconds (Sampling)
+               0.508118 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.535941 seconds (Warm-up)
+               0.00683 seconds (Sampling)
+               0.542771 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.546148 seconds (Warm-up)
+               0.006743 seconds (Sampling)
+               0.552891 seconds (Total)
+
+  |                                                                                                         |=============================================                                                    |  46%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.573218 seconds (Warm-up)
+               0.006503 seconds (Sampling)
+               0.579721 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.641331 seconds (Warm-up)
+               0.006395 seconds (Sampling)
+               0.647726 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.475236 seconds (Warm-up)
+               0.005618 seconds (Sampling)
+               0.480854 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.553669 seconds (Warm-up)
+               0.006245 seconds (Sampling)
+               0.559914 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.55193 seconds (Warm-up)
+               0.006376 seconds (Sampling)
+               0.558306 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.595713 seconds (Warm-up)
+               0.010878 seconds (Sampling)
+               0.606591 seconds (Total)
+
+  |                                                                                                         |=============================================                                                    |  47%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.560477 seconds (Warm-up)
+               0.006483 seconds (Sampling)
+               0.56696 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.640008 seconds (Warm-up)
+               0.006417 seconds (Sampling)
+               0.646425 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.585207 seconds (Warm-up)
+               0.007742 seconds (Sampling)
+               0.592949 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.630181 seconds (Warm-up)
+               0.00743 seconds (Sampling)
+               0.637611 seconds (Total)
+
+  |                                                                                                         |==============================================                                                   |  47%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.560437 seconds (Warm-up)
+               0.006495 seconds (Sampling)
+               0.566932 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.598232 seconds (Warm-up)
+               0.006266 seconds (Sampling)
+               0.604498 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.584284 seconds (Warm-up)
+               0.007582 seconds (Sampling)
+               0.591866 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.545819 seconds (Warm-up)
+               0.005909 seconds (Sampling)
+               0.551728 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.542846 seconds (Warm-up)
+               0.005462 seconds (Sampling)
+               0.548308 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.533126 seconds (Warm-up)
+               0.006767 seconds (Sampling)
+               0.539893 seconds (Total)
+
+  |                                                                                                         |==============================================                                                   |  48%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.64731 seconds (Warm-up)
+               0.007844 seconds (Sampling)
+               0.655154 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.612962 seconds (Warm-up)
+               0.006833 seconds (Sampling)
+               0.619795 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.610239 seconds (Warm-up)
+               0.006965 seconds (Sampling)
+               0.617204 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.60057 seconds (Warm-up)
+               0.006604 seconds (Sampling)
+               0.607174 seconds (Total)
+
+  |                                                                                                         |===============================================                                                  |  48%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.579298 seconds (Warm-up)
+               0.007645 seconds (Sampling)
+               0.586943 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.575971 seconds (Warm-up)
+               0.006568 seconds (Sampling)
+               0.582539 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008547 seconds (Warm-up)
+               0.006921 seconds (Sampling)
+               0.015468 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.599608 seconds (Warm-up)
+               0.007191 seconds (Sampling)
+               0.606799 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.590521 seconds (Warm-up)
+               0.006498 seconds (Sampling)
+               0.597019 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.530914 seconds (Warm-up)
+               0.007243 seconds (Sampling)
+               0.538157 seconds (Total)
+
+  |                                                                                                         |===============================================                                                  |  49%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.516091 seconds (Warm-up)
+               0.005697 seconds (Sampling)
+               0.521788 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.515315 seconds (Warm-up)
+               0.005775 seconds (Sampling)
+               0.52109 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.495399 seconds (Warm-up)
+               0.0065 seconds (Sampling)
+               0.501899 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.512464 seconds (Warm-up)
+               0.00572 seconds (Sampling)
+               0.518184 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.503843 seconds (Warm-up)
+               0.005994 seconds (Sampling)
+               0.509837 seconds (Total)
+
+  |                                                                                                         |================================================                                                 |  49%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.501306 seconds (Warm-up)
+               0.006323 seconds (Sampling)
+               0.507629 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.520949 seconds (Warm-up)
+               0.006794 seconds (Sampling)
+               0.527743 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.534192 seconds (Warm-up)
+               0.0079 seconds (Sampling)
+               0.542092 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.540633 seconds (Warm-up)
+               0.005912 seconds (Sampling)
+               0.546545 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.007299 seconds (Warm-up)
+               0.005456 seconds (Sampling)
+               0.012755 seconds (Total)
+
+  |                                                                                                         |================================================                                                 |  50%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.496452 seconds (Warm-up)
+               0.005579 seconds (Sampling)
+               0.502031 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.533381 seconds (Warm-up)
+               0.006405 seconds (Sampling)
+               0.539786 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.581227 seconds (Warm-up)
+               0.006379 seconds (Sampling)
+               0.587606 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.602851 seconds (Warm-up)
+               0.00744 seconds (Sampling)
+               0.610291 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.574151 seconds (Warm-up)
+               0.006706 seconds (Sampling)
+               0.580857 seconds (Total)
+
+  |                                                                                                         |=================================================                                                |  50%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.575988 seconds (Warm-up)
+               0.00663 seconds (Sampling)
+               0.582618 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.660365 seconds (Warm-up)
+               0.006642 seconds (Sampling)
+               0.667007 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.60519 seconds (Warm-up)
+               0.008173 seconds (Sampling)
+               0.613363 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.654051 seconds (Warm-up)
+               0.009703 seconds (Sampling)
+               0.663754 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.745563 seconds (Warm-up)
+               0.009775 seconds (Sampling)
+               0.755338 seconds (Total)
+
+  |                                                                                                         |=================================================                                                |  51%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.645944 seconds (Warm-up)
+               0.007699 seconds (Sampling)
+               0.653643 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.711816 seconds (Warm-up)
+               0.007761 seconds (Sampling)
+               0.719577 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.696863 seconds (Warm-up)
+               0.007322 seconds (Sampling)
+               0.704185 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.722115 seconds (Warm-up)
+               0.007477 seconds (Sampling)
+               0.729592 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.765084 seconds (Warm-up)
+               0.007443 seconds (Sampling)
+               0.772527 seconds (Total)
+
+  |                                                                                                         |==================================================                                               |  51%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.663705 seconds (Warm-up)
+               0.007716 seconds (Sampling)
+               0.671421 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.730891 seconds (Warm-up)
+               0.008322 seconds (Sampling)
+               0.739213 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.703028 seconds (Warm-up)
+               0.008056 seconds (Sampling)
+               0.711084 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.677512 seconds (Warm-up)
+               0.008557 seconds (Sampling)
+               0.686069 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.835632 seconds (Warm-up)
+               0.00794 seconds (Sampling)
+               0.843572 seconds (Total)
+
+  |                                                                                                         |==================================================                                               |  52%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.762043 seconds (Warm-up)
+               0.012727 seconds (Sampling)
+               0.77477 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.721392 seconds (Warm-up)
+               0.010463 seconds (Sampling)
+               0.731855 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.789681 seconds (Warm-up)
+               0.00808 seconds (Sampling)
+               0.797761 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.75364 seconds (Warm-up)
+               0.009308 seconds (Sampling)
+               0.762948 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.755675 seconds (Warm-up)
+               0.007714 seconds (Sampling)
+               0.763389 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.712708 seconds (Warm-up)
+               0.007638 seconds (Sampling)
+               0.720346 seconds (Total)
+
+  |                                                                                                         |===================================================                                              |  52%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.009141 seconds (Warm-up)
+               0.009713 seconds (Sampling)
+               0.018854 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.795751 seconds (Warm-up)
+               0.007433 seconds (Sampling)
+               0.803184 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.604914 seconds (Warm-up)
+               0.007227 seconds (Sampling)
+               0.612141 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.007488 seconds (Warm-up)
+               0.005356 seconds (Sampling)
+               0.012844 seconds (Total)
+
+  |                                                                                                         |===================================================                                              |  53%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.523024 seconds (Warm-up)
+               0.005744 seconds (Sampling)
+               0.528768 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494325 seconds (Warm-up)
+               0.005211 seconds (Sampling)
+               0.499536 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48731 seconds (Warm-up)
+               0.007614 seconds (Sampling)
+               0.494924 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.006393 seconds (Warm-up)
+               0.006868 seconds (Sampling)
+               0.013261 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480708 seconds (Warm-up)
+               0.00512 seconds (Sampling)
+               0.485828 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.489513 seconds (Warm-up)
+               0.005258 seconds (Sampling)
+               0.494771 seconds (Total)
+
+  |                                                                                                         |====================================================                                             |  53%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48716 seconds (Warm-up)
+               0.005187 seconds (Sampling)
+               0.492347 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.489362 seconds (Warm-up)
+               0.006292 seconds (Sampling)
+               0.495654 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484076 seconds (Warm-up)
+               0.007024 seconds (Sampling)
+               0.4911 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.485421 seconds (Warm-up)
+               0.00558 seconds (Sampling)
+               0.491001 seconds (Total)
+
+  |                                                                                                         |====================================================                                             |  54%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.52218 seconds (Warm-up)
+               0.007407 seconds (Sampling)
+               0.529587 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.485063 seconds (Warm-up)
+               0.005743 seconds (Sampling)
+               0.490806 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.472804 seconds (Warm-up)
+               0.007206 seconds (Sampling)
+               0.48001 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480812 seconds (Warm-up)
+               0.005595 seconds (Sampling)
+               0.486407 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.00801 seconds (Warm-up)
+               0.005672 seconds (Sampling)
+               0.013682 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484571 seconds (Warm-up)
+               0.00554 seconds (Sampling)
+               0.490111 seconds (Total)
+
+  |                                                                                                         |=====================================================                                            |  54%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.520084 seconds (Warm-up)
+               0.005598 seconds (Sampling)
+               0.525682 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48077 seconds (Warm-up)
+               0.005573 seconds (Sampling)
+               0.486343 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.521238 seconds (Warm-up)
+               0.006415 seconds (Sampling)
+               0.527653 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.502188 seconds (Warm-up)
+               0.006069 seconds (Sampling)
+               0.508257 seconds (Total)
+
+  |                                                                                                         |=====================================================                                            |  55%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.525721 seconds (Warm-up)
+               0.005916 seconds (Sampling)
+               0.531637 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.00786 seconds (Warm-up)
+               0.007201 seconds (Sampling)
+               0.015061 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.533237 seconds (Warm-up)
+               0.006363 seconds (Sampling)
+               0.5396 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.630479 seconds (Warm-up)
+               0.006908 seconds (Sampling)
+               0.637387 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008169 seconds (Warm-up)
+               0.007056 seconds (Sampling)
+               0.015225 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.611911 seconds (Warm-up)
+               0.007353 seconds (Sampling)
+               0.619264 seconds (Total)
+
+  |                                                                                                         |======================================================                                           |  55%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.592969 seconds (Warm-up)
+               0.00741 seconds (Sampling)
+               0.600379 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.568155 seconds (Warm-up)
+               0.006659 seconds (Sampling)
+               0.574814 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.544519 seconds (Warm-up)
+               0.005535 seconds (Sampling)
+               0.550054 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.547312 seconds (Warm-up)
+               0.005923 seconds (Sampling)
+               0.553235 seconds (Total)
+
+  |                                                                                                         |======================================================                                           |  56%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.505337 seconds (Warm-up)
+               0.005678 seconds (Sampling)
+               0.511015 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.495159 seconds (Warm-up)
+               0.005216 seconds (Sampling)
+               0.500375 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.484467 seconds (Warm-up)
+               0.00519 seconds (Sampling)
+               0.489657 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.490258 seconds (Warm-up)
+               0.005667 seconds (Sampling)
+               0.495925 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.488874 seconds (Warm-up)
+               0.005794 seconds (Sampling)
+               0.494668 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.483089 seconds (Warm-up)
+               0.005168 seconds (Sampling)
+               0.488257 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.476321 seconds (Warm-up)
+               0.00553 seconds (Sampling)
+               0.481851 seconds (Total)
+
+  |                                                                                                         |=======================================================                                          |  56%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.478555 seconds (Warm-up)
+               0.005127 seconds (Sampling)
+               0.483682 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.482565 seconds (Warm-up)
+               0.005054 seconds (Sampling)
+               0.487619 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.494874 seconds (Warm-up)
+               0.006718 seconds (Sampling)
+               0.501592 seconds (Total)
+
+  |                                                                                                         |=======================================================                                          |  57%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.006873 seconds (Warm-up)
+               0.005411 seconds (Sampling)
+               0.012284 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497229 seconds (Warm-up)
+               0.0056 seconds (Sampling)
+               0.502829 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.492219 seconds (Warm-up)
+               0.005325 seconds (Sampling)
+               0.497544 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.498932 seconds (Warm-up)
+               0.006454 seconds (Sampling)
+               0.505386 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.504198 seconds (Warm-up)
+               0.007424 seconds (Sampling)
+               0.511622 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.482021 seconds (Warm-up)
+               0.005493 seconds (Sampling)
+               0.487514 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.008338 seconds (Warm-up)
+               0.005724 seconds (Sampling)
+               0.014062 seconds (Total)
+
+  |                                                                                                         |========================================================                                         |  57%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.495005 seconds (Warm-up)
+               0.00588 seconds (Sampling)
+               0.500885 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.500772 seconds (Warm-up)
+               0.005263 seconds (Sampling)
+               0.506035 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.47332 seconds (Warm-up)
+               0.005617 seconds (Sampling)
+               0.478937 seconds (Total)
+
+  |                                                                                                         |========================================================                                         |  58%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.491121 seconds (Warm-up)
+               0.006012 seconds (Sampling)
+               0.497133 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.498616 seconds (Warm-up)
+               0.007103 seconds (Sampling)
+               0.505719 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.531396 seconds (Warm-up)
+               0.005551 seconds (Sampling)
+               0.536947 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.507344 seconds (Warm-up)
+               0.007281 seconds (Sampling)
+               0.514625 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.496945 seconds (Warm-up)
+               0.006455 seconds (Sampling)
+               0.5034 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.477949 seconds (Warm-up)
+               0.005751 seconds (Sampling)
+               0.4837 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.556332 seconds (Warm-up)
+               0.007275 seconds (Sampling)
+               0.563607 seconds (Total)
+
+  |                                                                                                         |=========================================================                                        |  58%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.545113 seconds (Warm-up)
+               0.006549 seconds (Sampling)
+               0.551662 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.009915 seconds (Warm-up)
+               0.006679 seconds (Sampling)
+               0.016594 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.632856 seconds (Warm-up)
+               0.006336 seconds (Sampling)
+               0.639192 seconds (Total)
+
+  |                                                                                                         |=========================================================                                        |  59%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.564715 seconds (Warm-up)
+               0.006511 seconds (Sampling)
+               0.571226 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.582275 seconds (Warm-up)
+               0.006906 seconds (Sampling)
+               0.589181 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.620613 seconds (Warm-up)
+               0.007215 seconds (Sampling)
+               0.627828 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.626809 seconds (Warm-up)
+               0.010309 seconds (Sampling)
+               0.637118 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.630159 seconds (Warm-up)
+               0.006788 seconds (Sampling)
+               0.636947 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.663892 seconds (Warm-up)
+               0.006705 seconds (Sampling)
+               0.670597 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.560531 seconds (Warm-up)
+               0.006371 seconds (Sampling)
+               0.566902 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.555888 seconds (Warm-up)
+               0.006992 seconds (Sampling)
+               0.56288 seconds (Total)
+
+  |                                                                                                         |==========================================================                                       |  59%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.531648 seconds (Warm-up)
+               0.006076 seconds (Sampling)
+               0.537724 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.533461 seconds (Warm-up)
+               0.006028 seconds (Sampling)
+               0.539489 seconds (Total)
+
+  |                                                                                                         |==========================================================                                       |  60%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.500223 seconds (Warm-up)
+               0.007395 seconds (Sampling)
+               0.507618 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.476628 seconds (Warm-up)
+               0.006095 seconds (Sampling)
+               0.482723 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.491558 seconds (Warm-up)
+               0.005072 seconds (Sampling)
+               0.49663 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497771 seconds (Warm-up)
+               0.006046 seconds (Sampling)
+               0.503817 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.483031 seconds (Warm-up)
+               0.006967 seconds (Sampling)
+               0.489998 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.486186 seconds (Warm-up)
+               0.005526 seconds (Sampling)
+               0.491712 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.499773 seconds (Warm-up)
+               0.005193 seconds (Sampling)
+               0.504966 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.486438 seconds (Warm-up)
+               0.005349 seconds (Sampling)
+               0.491787 seconds (Total)
+
+  |                                                                                                         |===========================================================                                      |  60%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.49293 seconds (Warm-up)
+               0.005265 seconds (Sampling)
+               0.498195 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.497227 seconds (Warm-up)
+               0.005658 seconds (Sampling)
+               0.502885 seconds (Total)
+
+  |                                                                                                         |===========================================================                                      |  61%WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.471847 seconds (Warm-up)
+               0.006559 seconds (Sampling)
+               0.478406 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.507572 seconds (Warm-up)
+               0.005361 seconds (Sampling)
+               0.512933 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.499816 seconds (Warm-up)
+               0.005242 seconds (Sampling)
+               0.505058 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.480296 seconds (Warm-up)
+               0.005199 seconds (Sampling)
+               0.485495 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.48705 seconds (Warm-up)
+               0.005664 seconds (Sampling)
+               0.492714 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+
+
+ Elapsed Time: 0.499655 seconds (Warm-up)
+               0.005225 seconds (Sampling)
+               0.50488 seconds (Total)
+
+WARNING: No variance estimation is
+         performed for num_warmup < 20
+

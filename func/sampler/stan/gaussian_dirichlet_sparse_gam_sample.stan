@@ -38,8 +38,8 @@ transformed data {
 }
 
 parameters {
-  matrix[Q,P] B;        	   		  // covariate coeffcient   
-  vector<lower=0>[P] sigma_b;         // regularization for covariate coeffcient   
+  vector[Q] B;        	   		  // covariate coeffcient   
+  real<lower=0> sigma_b;         // regularization for covariate coeffcient   
 
   simplex[P] V_spx[K];                // latent factor for source profile (matrix)        
   matrix<lower=0>[N, K] U;            // factor loading for population/source emission  
@@ -60,17 +60,15 @@ transformed parameters{
     V[, k] = V_spx[k];   
   }
 
-  //Theta = X * B + log(U * D * V');
-  Theta = X * B;
-
+  Theta = U * D * V';
+  // Theta = X * B + U * D * V';
 }
 
 model {
   // the covariate coefficients 
-  for (p in 1:P){
-  	B[,p] ~ multi_normal(mu_Q, sigma_b[p] * Sig_Q);
-  	sigma_b[p] ~ inv_gamma(1, 1);
-  }
+  B ~ multi_normal(mu_Q, sigma_b * Sig_Q);
+  sigma_b ~ inv_gamma(1, 1);
+  
 
   // the priors 
   for (k in 1:K){
@@ -86,6 +84,7 @@ model {
 
   //The likelihood
   for(j in 1:N){
-    Y[j] ~ multi_normal(Theta[j], Sig_P); 
+    Y[j] ~ multi_normal(X[j] * B + log(Theta[j]), Sig_P);   
   }
 }
+

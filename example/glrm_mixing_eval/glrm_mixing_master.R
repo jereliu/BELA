@@ -13,7 +13,7 @@ print("Mr Handy: and who gets to read all this mumble jumble? Me, that's who..."
 #### 1. Config Generation/Read In ====
 n_data <- 1
 n_rep <- 1e2
-n_run_per_worker <- 5
+n_run_per_worker <- 4
 
 cfig_file <- "cfigList.csv"
 if (!file.exists(cfig_file)){
@@ -31,7 +31,7 @@ if (!file.exists(cfig_file)){
       SNR = 100, LAMBDA = 10,
       FAMILY = c("gaussian", "poisson"),
       PRIOR = c("gaussian"),
-      SAMPLR = c("hmc_stan", "vi_stan")
+      SAMPLR = c("vi_stan")#, "hmc_stan")
     )
   
   cfig_list_sparse <-
@@ -43,7 +43,7 @@ if (!file.exists(cfig_file)){
       SNR = 100, LAMBDA = 10,
       FAMILY = c("gaussian", "poisson"),
       PRIOR = c("sparse"),
-      SAMPLR = c("hmc_stan", "vi_stan")
+      SAMPLR = c("vi_stan")#, "hmc_stan")
     )
   
   cfig_list <- 
@@ -91,7 +91,7 @@ for (config_idx in config_idx_list){
   record_freq <- 
     ifelse(cfig$SAMPLR == "vi_stan", 1, 1)
   iter_max <- 
-    ifelse(cfig$SAMPLR == "vi_stan", 5e2, 5e2)
+    ifelse(cfig$SAMPLR == "vi_stan", 2e3, 5e2)
   
   status <- 
     glrm_worker(

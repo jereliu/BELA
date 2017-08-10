@@ -28,7 +28,9 @@ glrm <-
     family_name = c("gaussian", "poisson", "binomial"),
     prior_name = 
       c("gaussian", "sparse", "sparse_plus", 
-        "dirichlet", "dirichlet_sparse", "gam_dirichlet_sparse"),
+        "dirichlet", "dirichlet_sparse", 
+        "dirichlet_sparse_gam_full",
+        "dirichlet_sparse_gam_sample"),
     # sampler parameters: generic
     iter_max = c(1e5, 1e4), 
     record_freq = 10,
@@ -87,7 +89,7 @@ glrm <-
     }
     
     if (length(grep("gam", prior_name)) > 0){
-      config$prior$ns_df <- 20
+      config$prior$ns_df <- 2
     }
     
     #### 2. initiate ####

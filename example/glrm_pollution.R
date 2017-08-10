@@ -19,7 +19,8 @@ sourceDir("./func")
 
 
 addr_targ <- 
-  paste0("../../Dropbox (Personal)/Research/Harvard/Lorenzo/1. MComp/Paper/plot/")
+  paste0("../../Dropbox (Personal)/Research/",
+         "Harvard/Thesis/Lorenzo/1. MComp/Paper/plot/")
 
 #### 1. Data Import ####
 dStudy <- 
@@ -91,7 +92,7 @@ class(V_est) <- "matrix"
 V_est[V_est < 0] <- 0
 
 #### 2. Naive Model ####
-Y_plot <- 
+Y_plot <-
   do.call(data.frame,
           lapply(Y, function(x) 
             replace(x, is.infinite(x),NA))) %>% 
@@ -99,21 +100,50 @@ Y_plot <-
 # rm_idx <- which(Y_plot[, 1] > 0)
 Y <- na.omit(Y_plot) %>% as.matrix()
 Y_ana <- exp(Y) %>% scale(center = FALSE)
+n_iter <- 5e2
 
+# dirichlet model
 rec_pollution <-
   glrm(Y_ana, 
        lambda = 1, 
-       k = 5, 
+       k = 10, 
        true_par = NULL,
        init = NULL, 
        samplr_name = "hmc_stan",
        family_name = "gaussian",
-       prior_name = "dirichlet",
-       iter_max = c(1e3, 1e4),
-       record_freq = 1
+       prior_name = "dirichlet_sparse",
+       iter_max = c(1e3, n_iter),
+       record_freq = 10
   )
 
-error <- 
+rec_pollution_gam <-
+  glrm(Y_ana, 
+       lambda = 1, 
+       k = 10, 
+       true_par = NULL,
+       init = NULL, 
+       samplr_name = "hmc_stan",
+       family_name = "gaussian",
+       prior_name = "dirichlet_sparse_gam_sample",
+       iter_max = c(1e3, n_iter),
+       record_freq = 10
+  )
+
+# gaussian model
+# rec_pollution <-
+#   glrm(scale(Y),
+#        lambda = 1, 
+#        k = 5, 
+#        true_par = NULL,
+#        init = NULL, 
+#        samplr_name = "hmc_stan",
+#        family_name = "gaussian",
+#        prior_name = "sparse",
+#        iter_max = c(1e3, n_iter),
+#        record_freq = 1
+#   )
+
+error <-
   apply(rec_pollution$Theta, 1, 
         function(Theta) 
           mean((Y_ana - log(Theta))^2/Y_ana^2)
@@ -125,18 +155,24 @@ V_trace <-
 V_vol <- 
   apply(rec_pollution$V, 1, function(V) determinant(t(V) %*% V)$modulus)
 
-rec_pollution$V[5e3, , ] %>% round(3)
-rec_pollution$V[1e4, , ] %>% round(3)
-
+rec_pollution$V[5e2, , ] %>% round(3)
+rec_pollution$V[1e3, , ] %>% round(3)
 
 V_trace <- 
-  apply(rec_pollution$V[1e3:1e4, ,], 1, function(V) sum(V[, 5]^2))
+  apply(rec_pollution$V[n_iter/2:n_iter, ,], 1, 
+        function(V) sum(V[, 5]^2))
 
 save(rec_pollution, 
      file = "./result/pollution/rec_pollution_naive.RData")
 
+save(rec_pollution_gam, 
+     file = "./result/pollution/rec_pollution_gam.RData")
+
+
 # prediction
 load("./result/pollution/rec_pollution_naive.RData")
+load("./result/pollution/rec_pollution_gam.RData")
+
 pred_num <- 100
 max_iter <- dim(rec_pollution$U)[1]
 pred_iter <- seq(max_iter/pred_num, max_iter, length.out = pred_num)
@@ -169,7 +205,7 @@ plot(pred_iter[-1], pred_error[-1],
      type = "l", main = "Prediction Error")
 dev.off()
 
-# 
+# varimax
 idx <- 
   round((dim(rec_pollution$V)[1] * 0.9):(dim(rec_pollution$V)[1]))
 
@@ -190,28 +226,102 @@ out <- aggregate(V_est_vm, by=list(V_est_clust$cluster),FUN = mean)
 out <- t(out[1:8, -1])
 rownames(out) <- elem_name
 
+# prediction
+factor_mat <- list()
+for (k in 1:10){
+  factor_mat[[k]] <- list()
+  for (iter in 1:n_iter){
+    factor_mat[[k]][[iter]] <- 
+      rec_pollution$U[iter+1, , k] %*% 
+      t(rec_pollution$V[iter+1, , k])
+  }
+  factor_mat[[k]] <- 
+    abind(factor_mat[[k]], along = 3)
+}
 
+scale2 <- 
+  function(x) (x-min(x))/(max(x) - min(x))
 
-#### 1.2 for dirichlet ----
-idx <- 
-  round((dim(rec_pollution$V)[1] * 0.9):(dim(rec_pollution$V)[1]))
+plot(scale2(Y_ana[, 1]), 
+     col = 2, type = "l", lwd = 2)
 
+for (p in 1:16){
+  lines(factor_mat[[3]][,p,5e2] %>% scale2,
+        col = p)
+}
+
+#### 1.2 check population distribution of dirichlet factors ----
+idx <-
+  round((dim(rec_pollution_gam$V)[1] * 0.9):
+          (dim(rec_pollution_gam$V)[1]))
+
+# fixed effect prediction
+time <- 1:nrow(Y)
+X <- cbind(1, ns(time, df = 2))
+B_est <- apply(rec_pollution_gam$B, c(2,3), mean)
+Yh_t <- X %*% t(B_est)
+
+for (i in 1:ncol(Y_ana)){
+  plot(Y_ana[, i], 
+       type = "l", col = 2, main = elem_name[i])
+  lines(Yh_t)
+}
+
+# overall factor distribution
 V_est_all <- 
   lapply(idx, function(i) lof(rec_pollution$V[i, , ])) %>% 
   simplify2array %>% apply(1, rbind) %>% unique
 
-image(lof(t(V_est_all)))
+image(lof(t(V_est_all)), col = rev(heat.colors(12)))
 
 V_est_clust <- Rtsne(V_est_all, dims = 2)
 plot(V_est_clust$Y)
 
 rownames(out) <- elem_name
 
+# factor distribution by factor index
+rec_pollution_gam <- rec_pollution 
+K <- dim(rec_pollution_gam$U)[3]
+idx <- 1:(dim(rec_pollution_gam$V)[1]/2 - 3)
+# round((dim(rec_pollution_gam$V)[1] * 0.9):
+#         (dim(rec_pollution_gam$V)[1]))
+
+factor_imp <- 
+  apply(rec_pollution_gam$gamma_rank_cumprod[idx, ,], 
+        2, mean)
+
+V_est_k <- 
+  lapply(
+    1:K, function(k) 
+      t(rec_pollution_gam$V[idx, , k])
+  )
+
+for (k in 1:K){
+  #pdf(paste0(addr_targ, "factor_", k, ".pdf"),
+  #    width = 10, height = 5)
+  #par(cex = 1.3)
+  image(V_est_k[[k]], 
+        col = rev(heat.colors(12)), 
+        main = paste0("Factor ", k, 
+                      ", Importance ", round(factor_imp[k], 4)),
+        xlab = "Element Probability",
+        ylab = "Iteration",
+        axes = FALSE)
+  axis(1, at = seq(0, 1, length.out = length(elem_name)), 
+       labels= elem_name)
+  axis(2, at = seq(0, 1, length.out = 5), 
+       labels= seq(0, (dim(rec_pollution_gam$U)[1]-1)*10, 
+                   length.out = 5))
+  #dev.off()
+}
+
+
 
 #### 3. Plot ====
 
 # before rotation 
-csv <- V_est
+csv <- V_est <- apply(rec_pollution$V, c(2,3) , mean)
+
 # V_est_vm <- varimax(t(V_est))$loadings
 # csv <- t(t(abs(V_est_vm))/colSums(abs(V_est_vm)))
 class(csv) <- "matrix"
